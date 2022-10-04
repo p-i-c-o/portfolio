@@ -1,0 +1,11 @@
+#parent{
+    width: 500px;
+}
+#child1{
+    float: left;
+    width: 40%;
+}
+#child2{
+    float: right;
+    width: 40%;
+}
