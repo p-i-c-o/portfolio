@@ -1,5 +1,3 @@
-theme: minimalistic
-
 <img src="https://user-images.githubusercontent.com/95228665/193668617-32c8a254-cb94-4f4c-b353-567ed2c55fad.png" alt="drawing" align="right" width="300"/>
 
 # elie m
