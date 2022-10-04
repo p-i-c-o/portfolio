@@ -33,9 +33,17 @@ CLIChatter is a python based chat software, with optional  Fernet encryption and
 
 <a href='https://github.com/p-i-c-o/clichatter' target="_blank"><img alt='GitHub' src='https://img.shields.io/badge/Star-100000?style=for-the-badge&logo=GitHub&logoColor=white&labelColor=black&color=black'/></a>
 
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
 
-\
-\
-\
-\
-![My Statistics](https://github-readme-stats.vercel.app/api?username=p-i-c-o&show_icons=true)
+![Github Stats](https://github-readme-stats.vercel.app/api?username=p-i-c-o&count_private=true&show_icons=true&include_all_commits=true)
+![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=p-i-c-o&hide=TeX&layout=compact)
