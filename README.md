@@ -29,7 +29,7 @@ Hi, my name is Elie, I’m based in Switzerland. I work on different projects an
 ##### CLIChatter
 CLIChatter is a python based chat software, with optional  Fernet encryption and accepts up to 10 people on one server. The messages sent between users are saved on a file on the server and is easily accessible for future reading. Even though this project is fully working, I am still working on developing it further to make it as usefull and advanced as possible.
 
-<a href='https://github.com/p-i-c-o/clichatter' target="_blank"><img alt='GitHub' src='https://img.shields.io/badge/Star-100000?style=for-the-badge&logo=GitHub&logoColor=white&labelColor=black&color=black'/></a>
+<a href='https://github.com/p-i-c-o/clichatter' target="_blank"><img alt='GitHub' src='https://img.shields.io/badge/View-100000?style=for-the-badge&logo=GitHub&logoColor=white&labelColor=black&color=black'/></a>
 
 \
 \
