@@ -15,13 +15,6 @@ Hi, my name is Elie, I’m based in Switzerland. I work on different projects an
 <a href='https://www.atom.io/' target="_blank"><img alt='Atom' src='https://img.shields.io/badge/Atom-100000?style=for-the-badge&logo=Atom&logoColor=white&labelColor=black&color=black'/></a>
 <img alt='GNOME Terminal' src='https://img.shields.io/badge/Terminal-100000?style=for-the-badge&logo=GNOME Terminal&logoColor=white&labelColor=black&color=black'/>
 
-### Social and Contact:
-
-<a href='https://www.python.org/' target="_blank"><img alt='Instagram' src='https://img.shields.io/badge/___elie___-100000?style=for-the-badge&logo=Instagram&logoColor=white&labelColor=black&color=black'/></a>
-<a href='' target="_blank"><img alt='Discord' src='https://img.shields.io/badge/pico_3186-100000?style=for-the-badge&logo=Discord&logoColor=white&labelColor=black&color=black'/></a>
-<a href='maito:elie@monnickendam.ch' target="_blank"><img alt='Gmail' src='https://img.shields.io/badge/elie@monnickendam.ch-100000?style=for-the-badge&logo=Gmail&logoColor=white&labelColor=black&color=black'/></a>
-
-
 ### Projects
 
 <img src="https://monnickendam.ch/imageedit_5_8553328800.png" alt="drawing" align="right" width="400"/>
@@ -31,10 +24,17 @@ CLIChatter is a python based chat software, with optional  Fernet encryption and
 
 <a href='https://github.com/p-i-c-o/clichatter' target="_blank"><img alt='GitHub' src='https://img.shields.io/badge/View-100000?style=for-the-badge&logo=GitHub&logoColor=white&labelColor=black&color=black'/></a>
 
-\
-\
-\
-\
-\
+
+### Do you want to work with me?
+
+I would love to work with anyone with an interesting project idea, contact me at any time!
+
+### Social and Contact:
+
+<a href='https://www.python.org/' target="_blank"><img alt='Instagram' src='https://img.shields.io/badge/___elie___-100000?style=for-the-badge&logo=Instagram&logoColor=white&labelColor=black&color=black'/></a>
+<a href='' target="_blank"><img alt='Discord' src='https://img.shields.io/badge/pico_3186-100000?style=for-the-badge&logo=Discord&logoColor=white&labelColor=black&color=black'/></a>
+<a href='maito:elie@monnickendam.ch' target="_blank"><img alt='Gmail' src='https://img.shields.io/badge/elie@monnickendam.ch-100000?style=for-the-badge&logo=Gmail&logoColor=white&labelColor=black&color=black'/></a>
+
+
 ![Github Stats](https://github-readme-stats.vercel.app/api?username=p-i-c-o&count_private=true&show_icons=true&include_all_commits=true)
 ![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=p-i-c-o&hide=TeX&layout=compact)
