@@ -33,7 +33,7 @@ I would love to work with anyone with an interesting project idea, contact me at
 
 <a href='https://www.python.org/' target="_blank"><img alt='Instagram' src='https://img.shields.io/badge/___elie___-100000?style=for-the-badge&logo=Instagram&logoColor=white&labelColor=black&color=black'/></a>
 <a href='' target="_blank"><img alt='Discord' src='https://img.shields.io/badge/pico_3186-100000?style=for-the-badge&logo=Discord&logoColor=white&labelColor=black&color=black'/></a>
-<a href='maito:elie@monnickendam.ch' target="_blank"><img alt='Gmail' src='https://img.shields.io/badge/elie@monnickendam.ch-100000?style=for-the-badge&logo=Gmail&logoColor=white&labelColor=black&color=black'/></a>
+<a href='maito:elie@monnickendam.ch'><img alt='Gmail' src='https://img.shields.io/badge/elie@monnickendam.ch-100000?style=for-the-badge&logo=Gmail&logoColor=white&labelColor=black&color=black'/></a>
 
 
 ![Github Stats](https://github-readme-stats.vercel.app/api?username=p-i-c-o&count_private=true&show_icons=true&include_all_commits=true)
