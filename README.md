@@ -11,7 +11,7 @@ The site introduces Elie Monnickendam, links to projects and writing, lists sele
 ├── index.html        # Main page content
 ├── styles.css        # Site styling
 ├── contact.js        # Contact form submission handler
-├── assets/           # Images and other static assets
+├── assets/           # Images, fonts, and other static assets
 └── server-side/      # Server deployment helper and cron notes
 ```
 
@@ -66,3 +66,4 @@ If the contact workflow changes, update the `WEBHOOK_URL` constant in `contact.j
 - No build step is required.
 - No package manager dependencies are required.
 - Keep image assets under `assets/` and reference them with relative paths from `index.html`.
+- The JetBrains Mono webfont is bundled under `assets/fonts/`.
