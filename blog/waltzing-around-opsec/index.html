@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Too Much Waltzing Around! And How Not To | monnickendam.ch</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [["$", "$"], ["\\(", "\\)"]],
+          displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+        },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        themeVariables: {
+          background: "#020305",
+          mainBkg: "#050608",
+          primaryColor: "#050608",
+          primaryTextColor: "#EFE5C0",
+          primaryBorderColor: "#EFE5C0",
+          lineColor: "#EFE5C0",
+          secondaryColor: "#020305",
+          secondaryTextColor: "#EFE5C0",
+          secondaryBorderColor: "#EFE5C0",
+          tertiaryColor: "#050608",
+          tertiaryTextColor: "#EFE5C0",
+          tertiaryBorderColor: "#EFE5C0",
+          nodeTextColor: "#EFE5C0",
+          textColor: "#EFE5C0",
+          actorBkg: "#050608",
+          actorTextColor: "#EFE5C0",
+          actorBorder: "#EFE5C0",
+          signalColor: "#EFE5C0",
+          signalTextColor: "#EFE5C0",
+          labelBoxBkgColor: "#050608",
+          labelTextColor: "#EFE5C0",
+          noteBkgColor: "#050608",
+          noteTextColor: "#EFE5C0",
+          noteBorderColor: "#EFE5C0",
+          activationBkgColor: "#050608",
+          activationBorderColor: "#EFE5C0",
+          git0: "#EFE5C0",
+          git1: "#EFE5C0",
+          git2: "#EFE5C0",
+          git3: "#EFE5C0",
+          git4: "#EFE5C0",
+          git5: "#EFE5C0",
+          git6: "#EFE5C0",
+          git7: "#EFE5C0",
+          gitBranchLabel0: "#EFE5C0",
+          gitBranchLabel1: "#EFE5C0",
+          gitBranchLabel2: "#EFE5C0",
+          gitBranchLabel3: "#EFE5C0",
+          gitBranchLabel4: "#EFE5C0",
+          gitBranchLabel5: "#EFE5C0",
+          gitBranchLabel6: "#EFE5C0",
+          gitBranchLabel7: "#EFE5C0",
+          gitBranchLabelBackground: "#050608",
+          commitLabelColor: "#EFE5C0",
+          commitLabelBackground: "#050608",
+          commitLabelFontSize: "11px",
+          commitLabelPadding: "6px",
+          tagLabelColor: "#EFE5C0",
+          tagLabelBackground: "#050608",
+          tagLabelBorder: "#EFE5C0",
+          fontFamily: "JetBrains Mono, Courier New, monospace"
+        }
+      });
+    </script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chartText = "#EFE5C0";
+        const chartPanel = "#050608";
+        const chartGrid = "rgba(239, 229, 192, 0.25)";
+        const chartSeries = [
+          { backgroundColor: "#EFE5C0", borderColor: "#EFE5C0" },
+          { backgroundColor: "rgba(239, 229, 192, 0.18)", borderColor: "#EFE5C0", borderDash: [6, 4] },
+          { backgroundColor: "rgba(239, 229, 192, 0.42)", borderColor: "#EFE5C0", borderDash: [2, 3] },
+          { backgroundColor: "rgba(239, 229, 192, 0.08)", borderColor: "#EFE5C0", borderWidth: 3 }
+        ];
+
+        const commonChartOptions = (payload, extra = {}) => ({
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          layout: { padding: 8 },
+          plugins: {
+            title: {
+              display: Boolean(payload.title),
+              text: payload.title,
+              color: chartText,
+              font: { family: "JetBrains Mono, Courier New, monospace", size: 14, weight: "normal" },
+              padding: { bottom: 14 }
+            },
+            legend: {
+              display: payload.series.length > 1 || ["pie", "donut"].includes(payload.type),
+              labels: {
+                color: chartText,
+                boxWidth: 14,
+                boxHeight: 10,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              }
+            },
+            tooltip: {
+              backgroundColor: chartPanel,
+              borderColor: chartText,
+              borderWidth: 1,
+              titleColor: chartText,
+              bodyColor: chartText,
+              displayColors: false,
+              titleFont: { family: "JetBrains Mono, Courier New, monospace" },
+              bodyFont: { family: "JetBrains Mono, Courier New, monospace" }
+            }
+          },
+          scales: {
+            x: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.xLabel),
+                text: payload.xLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                maxRotation: 35,
+                minRotation: 0,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            },
+            y: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.yLabel),
+                text: payload.yLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            }
+          },
+          ...extra
+        });
+
+        const seriesStyle = (index, overrides = {}) => ({
+          borderColor: chartSeries[index % chartSeries.length].borderColor,
+          backgroundColor: chartSeries[index % chartSeries.length].backgroundColor,
+          borderDash: chartSeries[index % chartSeries.length].borderDash,
+          borderWidth: chartSeries[index % chartSeries.length].borderWidth ?? 1.5,
+          pointBackgroundColor: chartPanel,
+          pointBorderColor: chartText,
+          pointRadius: 3,
+          tension: 0.25,
+          ...overrides
+        });
+
+        const doughnutPalette = (count) => Array.from({ length: count }, (_, index) => [
+          "#EFE5C0",
+          "rgba(239, 229, 192, 0.18)",
+          "rgba(239, 229, 192, 0.42)",
+          "rgba(239, 229, 192, 0.08)"
+        ][index % 4]);
+
+        const chartConfig = (payload) => {
+          if (payload.type === "scatter") {
+            return {
+              type: "scatter",
+              data: {
+                datasets: [{
+                  label: payload.yLabel || payload.series[1]?.name || "Value",
+                  data: payload.labels.map((label, index) => ({
+                    x: payload.series[0].values[index],
+                    y: payload.series[1].values[index],
+                    label
+                  })),
+                  ...seriesStyle(0)
+                }]
+              },
+              options: commonChartOptions(payload)
+            };
+          }
+
+          if (["pie", "donut"].includes(payload.type)) {
+            return {
+              type: payload.type === "donut" ? "doughnut" : "pie",
+              data: {
+                labels: payload.labels,
+                datasets: [{
+                  label: payload.series[0]?.name || "Value",
+                  data: payload.series[0]?.values || [],
+                  backgroundColor: doughnutPalette(payload.labels.length),
+                  borderColor: chartText,
+                  borderWidth: 1.5
+                }]
+              },
+              options: commonChartOptions(payload, { scales: {} })
+            };
+          }
+
+          const type = ["bar", "stacked-bar", "horizontal-bar"].includes(payload.type) ? "bar" : "line";
+          return {
+            type,
+            data: {
+              labels: payload.labels,
+              datasets: payload.series.map((item, index) => seriesStyle(index, {
+                label: item.name,
+                data: item.values,
+                fill: payload.type === "area",
+                backgroundColor: payload.type === "area"
+                  ? chartSeries[index % chartSeries.length].backgroundColor
+                  : chartSeries[index % chartSeries.length].backgroundColor
+              }))
+            },
+            options: commonChartOptions(payload, payload.type === "horizontal-bar" ? { indexAxis: "y" } : {})
+          };
+        };
+
+        if (window.Chart) {
+          Chart.defaults.color = chartText;
+          Chart.defaults.font.family = "JetBrains Mono, Courier New, monospace";
+
+          document.querySelectorAll(".chart-data").forEach((script) => {
+            const target = document.getElementById(script.dataset.chartTarget);
+            if (!target) return;
+            const payload = JSON.parse(script.textContent);
+            new Chart(target, chartConfig(payload));
+          });
+        }
+
+        document.querySelectorAll(".copy-code").forEach((button) => {
+          button.addEventListener("click", async () => {
+            const block = button.closest(".code-block");
+            const code = Array.from(block?.querySelectorAll(".line-content") ?? [])
+              .map((line) => line.textContent)
+              .join("\n");
+            const originalText = button.textContent;
+
+            try {
+              await navigator.clipboard.writeText(code);
+              button.textContent = "copied";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            } catch {
+              button.textContent = "failed";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            }
+          });
+        });
+      });
+    </script>
+</head>
+<body>
+<div class="container">
+    <a class="banner" href="../../index.html">
+      <img src="../../assets/banner.png" alt="monnickendam.ch">
+    </a>
+    <div class="block">
+        <div class="header path-header"><a href="../../index.html">home</a>/<a href="../">blog</a>/waltzing-around-opsec.md</div>
+        <div class="body blog-post">
+          <h1>Too Much Waltzing Around! And How Not To</h1>
+          <p class="blog-date">2025-04-06 12:00</p>
+<p>Michael Waltz, National Security Advisor, did a bit too much waltzing on March 11th, when he created a group chat on the Signal application. The use of this mobile application, in this context, is a cookie-cutter case of insecure messaging when dealing with sensitive information. This Signal group chat was used to discuss imminent military activity against the Houthis in Yemen.</p>
+<p>This pep-rally style group chat had many members, notably J.D. Vance, Marco Rubio, and Pete Hegseth. When Michael Waltz accidentally added Jeffrey Goldberg, The Atlantic&#x27;s editor-in-chief, the whole group chat was released to the press and is now known as SignalGate.</p>
+<p>OPSEC, operational security, usually dictates sensitive information to be discussed on closed, monitored, and managed sources, so it is a big surprise that so many politically influential figures chose Signal to communicate such valuable info. Signal is a public application that is open source. Anyone can look at the code, and it is not unheard of to hear stories of countries attempting to hack through Signal&#x27;s encryption.</p>
+<p>Ironically enough, one too many members of the group chat have made public statements flaming Hillary Clinton&#x27;s use of a private email server during her tenure as a US diplomat. The US Defence Department recently sent out a department-wide notice warning members of the dangers of using a non-secured, public application for communication, warning them of its vulnerability.</p>
+<p>How does one not make this mistake? Good question. In this day and age, it is difficult to properly communicate without the fear of being listened to. If used for casual, non-classified communication, Signal is an incredible option to communicate with your friends and family. Other apps that work similarly are Briar, Session, SimpleX, Telegram, Threema, Viber, and Wire. These applications are independent secure messaging apps that allow users to communicate in more private settings.</p>
+<p>End-to-end encryption is the most popular method of secure communication. This method forces each user to encrypt the message they want to send before even sending it, which restricts people from reading your messages while they are on their way to the designated receiver. Therefore, E2E encryption is designed to specifically prevent what we call MitM attacks, man-in-the-middle attacks, which target information while it is in movement.</p>
+<p>Some other methods of private communication are auto-deleting messages, which will delete your messages after a predetermined period of time, similar to Snapchat. As we all know, the weakest link in the chain when it comes to cybersecurity is humans. Without secure passwords, you can consider yourself an open book. Keeping your messages private relies heavily on how securely you keep your phone.</p>
+<p>If you are really worried about your messages being read by others, you can encrypt your messages manually. Using a well-known encryption standard such as AES-256, you can lock your messages behind a one-way encryption method that requires a key to decrypt, to make it readable.</p>
+<p>Whether you are a doomsday prepper or a security-curious person, it is always advisable to know how secure your messages are.</p>
+<h2>Sources</h2>
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/United_States_government_group_chat_leak#Members">Wikipedia: United States government group chat leak</a></li>
+  <li><a href="https://slate.com/news-and-politics/2025/03/signalgate-group-chat-atlantic-editor-jeffrey-goldberg-trump-bondi.html">Slate: SignalGate reporting</a></li>
+  <li><a href="https://www.wired.com/story/signalgate-is-driving-the-most-us-downloads-of-signal-ever/">Wired: SignalGate and Signal downloads</a></li>
+  <li><a href="https://foreignpolicy.com/2025/03/25/signalgate-trump-leak-goldberg-yemen-questions/">Foreign Policy: questions around SignalGate</a></li>
+  <li><a href="https://theconversation.com/signal-is-not-the-place-for-top-secret-communications-but-it-might-be-the-right-choice-for-you-a-cybersecurity-expert-on-what-to-look-for-in-a-secure-messaging-app-250906">The Conversation: secure messaging analysis</a></li>
+  <li><a href="https://www.privacysense.net/best-practices-for-secure-communication/">PrivacySense: secure communication practices</a></li>
+</ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

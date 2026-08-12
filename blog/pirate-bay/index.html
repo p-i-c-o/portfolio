@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirate Bay - Rebellion on the Internet | monnickendam.ch</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [["$", "$"], ["\\(", "\\)"]],
+          displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+        },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        themeVariables: {
+          background: "#020305",
+          mainBkg: "#050608",
+          primaryColor: "#050608",
+          primaryTextColor: "#EFE5C0",
+          primaryBorderColor: "#EFE5C0",
+          lineColor: "#EFE5C0",
+          secondaryColor: "#020305",
+          secondaryTextColor: "#EFE5C0",
+          secondaryBorderColor: "#EFE5C0",
+          tertiaryColor: "#050608",
+          tertiaryTextColor: "#EFE5C0",
+          tertiaryBorderColor: "#EFE5C0",
+          nodeTextColor: "#EFE5C0",
+          textColor: "#EFE5C0",
+          actorBkg: "#050608",
+          actorTextColor: "#EFE5C0",
+          actorBorder: "#EFE5C0",
+          signalColor: "#EFE5C0",
+          signalTextColor: "#EFE5C0",
+          labelBoxBkgColor: "#050608",
+          labelTextColor: "#EFE5C0",
+          noteBkgColor: "#050608",
+          noteTextColor: "#EFE5C0",
+          noteBorderColor: "#EFE5C0",
+          activationBkgColor: "#050608",
+          activationBorderColor: "#EFE5C0",
+          git0: "#EFE5C0",
+          git1: "#EFE5C0",
+          git2: "#EFE5C0",
+          git3: "#EFE5C0",
+          git4: "#EFE5C0",
+          git5: "#EFE5C0",
+          git6: "#EFE5C0",
+          git7: "#EFE5C0",
+          gitBranchLabel0: "#EFE5C0",
+          gitBranchLabel1: "#EFE5C0",
+          gitBranchLabel2: "#EFE5C0",
+          gitBranchLabel3: "#EFE5C0",
+          gitBranchLabel4: "#EFE5C0",
+          gitBranchLabel5: "#EFE5C0",
+          gitBranchLabel6: "#EFE5C0",
+          gitBranchLabel7: "#EFE5C0",
+          gitBranchLabelBackground: "#050608",
+          commitLabelColor: "#EFE5C0",
+          commitLabelBackground: "#050608",
+          commitLabelFontSize: "11px",
+          commitLabelPadding: "6px",
+          tagLabelColor: "#EFE5C0",
+          tagLabelBackground: "#050608",
+          tagLabelBorder: "#EFE5C0",
+          fontFamily: "JetBrains Mono, Courier New, monospace"
+        }
+      });
+    </script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chartText = "#EFE5C0";
+        const chartPanel = "#050608";
+        const chartGrid = "rgba(239, 229, 192, 0.25)";
+        const chartSeries = [
+          { backgroundColor: "#EFE5C0", borderColor: "#EFE5C0" },
+          { backgroundColor: "rgba(239, 229, 192, 0.18)", borderColor: "#EFE5C0", borderDash: [6, 4] },
+          { backgroundColor: "rgba(239, 229, 192, 0.42)", borderColor: "#EFE5C0", borderDash: [2, 3] },
+          { backgroundColor: "rgba(239, 229, 192, 0.08)", borderColor: "#EFE5C0", borderWidth: 3 }
+        ];
+
+        const commonChartOptions = (payload, extra = {}) => ({
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          layout: { padding: 8 },
+          plugins: {
+            title: {
+              display: Boolean(payload.title),
+              text: payload.title,
+              color: chartText,
+              font: { family: "JetBrains Mono, Courier New, monospace", size: 14, weight: "normal" },
+              padding: { bottom: 14 }
+            },
+            legend: {
+              display: payload.series.length > 1 || ["pie", "donut"].includes(payload.type),
+              labels: {
+                color: chartText,
+                boxWidth: 14,
+                boxHeight: 10,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              }
+            },
+            tooltip: {
+              backgroundColor: chartPanel,
+              borderColor: chartText,
+              borderWidth: 1,
+              titleColor: chartText,
+              bodyColor: chartText,
+              displayColors: false,
+              titleFont: { family: "JetBrains Mono, Courier New, monospace" },
+              bodyFont: { family: "JetBrains Mono, Courier New, monospace" }
+            }
+          },
+          scales: {
+            x: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.xLabel),
+                text: payload.xLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                maxRotation: 35,
+                minRotation: 0,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            },
+            y: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.yLabel),
+                text: payload.yLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            }
+          },
+          ...extra
+        });
+
+        const seriesStyle = (index, overrides = {}) => ({
+          borderColor: chartSeries[index % chartSeries.length].borderColor,
+          backgroundColor: chartSeries[index % chartSeries.length].backgroundColor,
+          borderDash: chartSeries[index % chartSeries.length].borderDash,
+          borderWidth: chartSeries[index % chartSeries.length].borderWidth ?? 1.5,
+          pointBackgroundColor: chartPanel,
+          pointBorderColor: chartText,
+          pointRadius: 3,
+          tension: 0.25,
+          ...overrides
+        });
+
+        const doughnutPalette = (count) => Array.from({ length: count }, (_, index) => [
+          "#EFE5C0",
+          "rgba(239, 229, 192, 0.18)",
+          "rgba(239, 229, 192, 0.42)",
+          "rgba(239, 229, 192, 0.08)"
+        ][index % 4]);
+
+        const chartConfig = (payload) => {
+          if (payload.type === "scatter") {
+            return {
+              type: "scatter",
+              data: {
+                datasets: [{
+                  label: payload.yLabel || payload.series[1]?.name || "Value",
+                  data: payload.labels.map((label, index) => ({
+                    x: payload.series[0].values[index],
+                    y: payload.series[1].values[index],
+                    label
+                  })),
+                  ...seriesStyle(0)
+                }]
+              },
+              options: commonChartOptions(payload)
+            };
+          }
+
+          if (["pie", "donut"].includes(payload.type)) {
+            return {
+              type: payload.type === "donut" ? "doughnut" : "pie",
+              data: {
+                labels: payload.labels,
+                datasets: [{
+                  label: payload.series[0]?.name || "Value",
+                  data: payload.series[0]?.values || [],
+                  backgroundColor: doughnutPalette(payload.labels.length),
+                  borderColor: chartText,
+                  borderWidth: 1.5
+                }]
+              },
+              options: commonChartOptions(payload, { scales: {} })
+            };
+          }
+
+          const type = ["bar", "stacked-bar", "horizontal-bar"].includes(payload.type) ? "bar" : "line";
+          return {
+            type,
+            data: {
+              labels: payload.labels,
+              datasets: payload.series.map((item, index) => seriesStyle(index, {
+                label: item.name,
+                data: item.values,
+                fill: payload.type === "area",
+                backgroundColor: payload.type === "area"
+                  ? chartSeries[index % chartSeries.length].backgroundColor
+                  : chartSeries[index % chartSeries.length].backgroundColor
+              }))
+            },
+            options: commonChartOptions(payload, payload.type === "horizontal-bar" ? { indexAxis: "y" } : {})
+          };
+        };
+
+        if (window.Chart) {
+          Chart.defaults.color = chartText;
+          Chart.defaults.font.family = "JetBrains Mono, Courier New, monospace";
+
+          document.querySelectorAll(".chart-data").forEach((script) => {
+            const target = document.getElementById(script.dataset.chartTarget);
+            if (!target) return;
+            const payload = JSON.parse(script.textContent);
+            new Chart(target, chartConfig(payload));
+          });
+        }
+
+        document.querySelectorAll(".copy-code").forEach((button) => {
+          button.addEventListener("click", async () => {
+            const block = button.closest(".code-block");
+            const code = Array.from(block?.querySelectorAll(".line-content") ?? [])
+              .map((line) => line.textContent)
+              .join("\n");
+            const originalText = button.textContent;
+
+            try {
+              await navigator.clipboard.writeText(code);
+              button.textContent = "copied";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            } catch {
+              button.textContent = "failed";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            }
+          });
+        });
+      });
+    </script>
+</head>
+<body>
+<div class="container">
+    <a class="banner" href="../../index.html">
+      <img src="../../assets/banner.png" alt="monnickendam.ch">
+    </a>
+    <div class="block">
+        <div class="header path-header"><a href="../../index.html">home</a>/<a href="../">blog</a>/pirate-bay.md</div>
+        <div class="body blog-post">
+          <h1>Pirate Bay - Rebellion on the Internet</h1>
+          <p class="blog-date">2024-12-15 12:00</p>
+<p>Everyone loves free things; some love it more than others. Today I will be talking about The Pirate Bay, a notorious website known for its defiance and fame in the world of piracy and distribution of digital media. Some of you may already know The Pirate Bay, considering how Netflix is raising their prices once more.</p>
+<p><em>Foreword: this article contains information that can be perceived as immoral or illegal. This article provides this information purely for educational purposes and does not condone criminal actions. Please do your own research if you act upon this information.</em></p>
+<p>The Pirate Bay in itself is a simple concept: a website that allows people to share content without limiting or restricting anything. The website allows people to distribute content via a P2P system, peer-to-peer, which works by sharing content not directly but via other people sharing it simultaneously. Users of The Pirate Bay primarily use the P2P system to distribute and share movies and TV shows without having to pay a single cent. This, of course, is a legal issue for many as piracy entails a breach of copyright laws. But that never really stopped <a href="https://en.wikipedia.org/wiki/The_Pirate_Bay">The Pirate Bay</a> or its users. Since 2003, The Pirate Bay has been subject to a vast variety of ups and downs.</p>
+<p>The Pirate Bay was founded on the 15th of September 2003 by the Swedish anti-copyright organisation named Piratbyran. However, in October 2004 it became its own individual organisation. Considering the questionable legality of The Pirate Bay website, hosting the website was quite a complicated task. At first the website was hosted on PRQ servers, PRQ being a large &quot;no-questions-asked&quot; web hosting service.</p>
+<p>Google reported that over 6,000 formal complaints were made and a total of 80,500 URLs were demanded to be removed from the Google search engine. In December of 2014, the Swedish police raided The Pirate Bay offices, bringing the website down. The Pirate Bay promptly reappeared on the internet three days later. Users that had made copies of The Pirate Bay index set up alternative websites that provided the same content.</p>
+<p>The Pirate Bay admins had, and still have, a strong bias towards the distribution of copyrighted content. When large media corporations emailed them with cease and desist letters demanding their website be shut down, the admins replied with strong emotions. One widely shared example is their <a href="https://www.reddit.com/r/Damnthatsinteresting/comments/sp4o5l/pirate_bay_response_to_legal_threats_from/">response to a legal threat from DreamWorks</a>.</p>
+<p>Even though the concept of The Pirate Bay website seems simple, the technology is quite complex. P2P systems work by sharing a file between multiple users at the same time. Seeders are users that share the file to others; these seeders already have the content and send the content when a new peer requests the files. Peers are users that are not particularly active. They are present on the network but do not share the files.</p>
+<p>Piracy in Switzerland, however, is an interesting subject. Swiss law contains a document named <a href="https://www.fedlex.admin.ch/eli/cc/1993/1798_1798_1798/en">CopA</a>. According to the interpretation of this legal document by <a href="https://www.digitec.ch/en/page/swiss-copyright-law-what-can-and-cant-i-download-30429">Digitec</a>, the laws in Switzerland dictate that &quot;published works may be used for private use&quot; under the condition that it is &quot;any personal use of a work or use within a circle of persons closely connected to each other, such as relatives or friends&quot;. Digitec also claims that these restrictions apply to e-books, films, and shows. One important detail is that Swiss law explicitly states that downloading copyrighted material is legal, but uploading copyrighted material is illegal. This affects how legal The Pirate Bay is because the P2P network functions by uploading and downloading a file at the same time.</p>
+<p>All in all, The Pirate Bay website and organization have an interesting story and an incredibly large community. No matter the legality of the website, I commend the efforts that the community has made in order to protect their motives. I suggest you do some research of your own if you want to really understand the whole matter. I recommend the 92nd episode of Darknet Diaries, available on any major streaming service.</p>
+<h2>Sources</h2>
+<ul>
+  <li><a href="https://darknetdiaries.com/episode/92/">Darknet Diaries, episode 92</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/The_Pirate_Bay">Wikipedia: The Pirate Bay</a></li>
+  <li><a href="https://www.britannica.com/topic/The-Pirate-Bay">Britannica: The Pirate Bay</a></li>
+  <li><a href="https://www.digitec.ch/en/page/swiss-copyright-law-what-can-and-cant-i-download-30429">Digitec: piracy laws in Switzerland</a></li>
+</ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

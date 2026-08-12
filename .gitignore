@@ -2,3 +2,9 @@
 .codex/
 .agents/
 
+# Local build/cache artifacts
+__pycache__/
+*.py[cod]
+
+# Source extraction scratch files
+lgb-express-articles.pdf
