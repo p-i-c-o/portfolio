@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Revenge - Honey Scams the World | monnickendam.ch</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [["$", "$"], ["\\(", "\\)"]],
+          displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+        },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        themeVariables: {
+          background: "#020305",
+          mainBkg: "#050608",
+          primaryColor: "#050608",
+          primaryTextColor: "#EFE5C0",
+          primaryBorderColor: "#EFE5C0",
+          lineColor: "#EFE5C0",
+          secondaryColor: "#020305",
+          secondaryTextColor: "#EFE5C0",
+          secondaryBorderColor: "#EFE5C0",
+          tertiaryColor: "#050608",
+          tertiaryTextColor: "#EFE5C0",
+          tertiaryBorderColor: "#EFE5C0",
+          nodeTextColor: "#EFE5C0",
+          textColor: "#EFE5C0",
+          actorBkg: "#050608",
+          actorTextColor: "#EFE5C0",
+          actorBorder: "#EFE5C0",
+          signalColor: "#EFE5C0",
+          signalTextColor: "#EFE5C0",
+          labelBoxBkgColor: "#050608",
+          labelTextColor: "#EFE5C0",
+          noteBkgColor: "#050608",
+          noteTextColor: "#EFE5C0",
+          noteBorderColor: "#EFE5C0",
+          activationBkgColor: "#050608",
+          activationBorderColor: "#EFE5C0",
+          git0: "#EFE5C0",
+          git1: "#EFE5C0",
+          git2: "#EFE5C0",
+          git3: "#EFE5C0",
+          git4: "#EFE5C0",
+          git5: "#EFE5C0",
+          git6: "#EFE5C0",
+          git7: "#EFE5C0",
+          gitBranchLabel0: "#EFE5C0",
+          gitBranchLabel1: "#EFE5C0",
+          gitBranchLabel2: "#EFE5C0",
+          gitBranchLabel3: "#EFE5C0",
+          gitBranchLabel4: "#EFE5C0",
+          gitBranchLabel5: "#EFE5C0",
+          gitBranchLabel6: "#EFE5C0",
+          gitBranchLabel7: "#EFE5C0",
+          gitBranchLabelBackground: "#050608",
+          commitLabelColor: "#EFE5C0",
+          commitLabelBackground: "#050608",
+          commitLabelFontSize: "11px",
+          commitLabelPadding: "6px",
+          tagLabelColor: "#EFE5C0",
+          tagLabelBackground: "#050608",
+          tagLabelBorder: "#EFE5C0",
+          fontFamily: "JetBrains Mono, Courier New, monospace"
+        }
+      });
+    </script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chartText = "#EFE5C0";
+        const chartPanel = "#050608";
+        const chartGrid = "rgba(239, 229, 192, 0.25)";
+        const chartSeries = [
+          { backgroundColor: "#EFE5C0", borderColor: "#EFE5C0" },
+          { backgroundColor: "rgba(239, 229, 192, 0.18)", borderColor: "#EFE5C0", borderDash: [6, 4] },
+          { backgroundColor: "rgba(239, 229, 192, 0.42)", borderColor: "#EFE5C0", borderDash: [2, 3] },
+          { backgroundColor: "rgba(239, 229, 192, 0.08)", borderColor: "#EFE5C0", borderWidth: 3 }
+        ];
+
+        const commonChartOptions = (payload, extra = {}) => ({
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          layout: { padding: 8 },
+          plugins: {
+            title: {
+              display: Boolean(payload.title),
+              text: payload.title,
+              color: chartText,
+              font: { family: "JetBrains Mono, Courier New, monospace", size: 14, weight: "normal" },
+              padding: { bottom: 14 }
+            },
+            legend: {
+              display: payload.series.length > 1 || ["pie", "donut"].includes(payload.type),
+              labels: {
+                color: chartText,
+                boxWidth: 14,
+                boxHeight: 10,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              }
+            },
+            tooltip: {
+              backgroundColor: chartPanel,
+              borderColor: chartText,
+              borderWidth: 1,
+              titleColor: chartText,
+              bodyColor: chartText,
+              displayColors: false,
+              titleFont: { family: "JetBrains Mono, Courier New, monospace" },
+              bodyFont: { family: "JetBrains Mono, Courier New, monospace" }
+            }
+          },
+          scales: {
+            x: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.xLabel),
+                text: payload.xLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                maxRotation: 35,
+                minRotation: 0,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            },
+            y: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.yLabel),
+                text: payload.yLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            }
+          },
+          ...extra
+        });
+
+        const seriesStyle = (index, overrides = {}) => ({
+          borderColor: chartSeries[index % chartSeries.length].borderColor,
+          backgroundColor: chartSeries[index % chartSeries.length].backgroundColor,
+          borderDash: chartSeries[index % chartSeries.length].borderDash,
+          borderWidth: chartSeries[index % chartSeries.length].borderWidth ?? 1.5,
+          pointBackgroundColor: chartPanel,
+          pointBorderColor: chartText,
+          pointRadius: 3,
+          tension: 0.25,
+          ...overrides
+        });
+
+        const doughnutPalette = (count) => Array.from({ length: count }, (_, index) => [
+          "#EFE5C0",
+          "rgba(239, 229, 192, 0.18)",
+          "rgba(239, 229, 192, 0.42)",
+          "rgba(239, 229, 192, 0.08)"
+        ][index % 4]);
+
+        const chartConfig = (payload) => {
+          if (payload.type === "scatter") {
+            return {
+              type: "scatter",
+              data: {
+                datasets: [{
+                  label: payload.yLabel || payload.series[1]?.name || "Value",
+                  data: payload.labels.map((label, index) => ({
+                    x: payload.series[0].values[index],
+                    y: payload.series[1].values[index],
+                    label
+                  })),
+                  ...seriesStyle(0)
+                }]
+              },
+              options: commonChartOptions(payload)
+            };
+          }
+
+          if (["pie", "donut"].includes(payload.type)) {
+            return {
+              type: payload.type === "donut" ? "doughnut" : "pie",
+              data: {
+                labels: payload.labels,
+                datasets: [{
+                  label: payload.series[0]?.name || "Value",
+                  data: payload.series[0]?.values || [],
+                  backgroundColor: doughnutPalette(payload.labels.length),
+                  borderColor: chartText,
+                  borderWidth: 1.5
+                }]
+              },
+              options: commonChartOptions(payload, { scales: {} })
+            };
+          }
+
+          const type = ["bar", "stacked-bar", "horizontal-bar"].includes(payload.type) ? "bar" : "line";
+          return {
+            type,
+            data: {
+              labels: payload.labels,
+              datasets: payload.series.map((item, index) => seriesStyle(index, {
+                label: item.name,
+                data: item.values,
+                fill: payload.type === "area",
+                backgroundColor: payload.type === "area"
+                  ? chartSeries[index % chartSeries.length].backgroundColor
+                  : chartSeries[index % chartSeries.length].backgroundColor
+              }))
+            },
+            options: commonChartOptions(payload, payload.type === "horizontal-bar" ? { indexAxis: "y" } : {})
+          };
+        };
+
+        if (window.Chart) {
+          Chart.defaults.color = chartText;
+          Chart.defaults.font.family = "JetBrains Mono, Courier New, monospace";
+
+          document.querySelectorAll(".chart-data").forEach((script) => {
+            const target = document.getElementById(script.dataset.chartTarget);
+            if (!target) return;
+            const payload = JSON.parse(script.textContent);
+            new Chart(target, chartConfig(payload));
+          });
+        }
+
+        document.querySelectorAll(".copy-code").forEach((button) => {
+          button.addEventListener("click", async () => {
+            const block = button.closest(".code-block");
+            const code = Array.from(block?.querySelectorAll(".line-content") ?? [])
+              .map((line) => line.textContent)
+              .join("\n");
+            const originalText = button.textContent;
+
+            try {
+              await navigator.clipboard.writeText(code);
+              button.textContent = "copied";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            } catch {
+              button.textContent = "failed";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            }
+          });
+        });
+      });
+    </script>
+</head>
+<body>
+<div class="container">
+    <a class="banner" href="../../index.html">
+      <img src="../../assets/banner.png" alt="monnickendam.ch">
+    </a>
+    <div class="block">
+        <div class="header path-header"><a href="../../index.html">home</a>/<a href="../">blog</a>/sweet-revenge.md</div>
+        <div class="body blog-post">
+          <h1>Sweet Revenge - Honey Scams the World</h1>
+          <p class="blog-date">2025-01-19 12:00</p>
+<p>Online shopping has taken over the world. Everyone around me, including myself, uses online stores to buy whatever they need. Some people online even make a living using online shopping.</p>
+<p>In the year 2019, PayPal, the internet conglomerate, acquired the software Honey, a discount-code assistant, for a whopping 4 billion US dollars. Honey allows users to search for discount codes that can be applied to products when online shopping, absolutely free of charge. Sounds too good to be true, right? It is. A recent investigation revealed a shocking truth behind the Honey system and how it really generates profit.</p>
+<p>Some people can make a living using affiliate marketing, where they advertise certain products and make money if a person uses their link to buy that product. It is an interesting hustle that generates a nice paycheck at the end of the month. A <a href="https://www.youtube.com/watch?v=vc4yL3YTwWk">video by MegaLag</a> was published on the 22nd of December 2024, where he describes how the Honey shopping extension works. He discovers that Honey always applies its own affiliate code at the end of each purchase made while the Honey extension is installed.</p>
+<p>Affiliate codes are used to specify who receives a piece of a purchase as a reward for referring the person to the purchase. Simply put, Honey steals the affiliate commissions from whoever originally supplied the link by applying its own code. If the user does not have an affiliate code applied at all, Honey will still apply its own in order to receive the commission. Even if Honey does not find a discount code, it will still steal the commission.</p>
+<p>One viable reason why Honey was not discovered as scam software was due to the Snopes study on legitimacy of the Honey service in 2018, one year before PayPal purchased Honey. The practical timing brought Honey a good reputation and cleared it of any misdeeds and controversy.</p>
+<p>As Technopedia describes it, the whole situation is a textbook situation of lack of transparency. Technopedia also describes the situation as a nasty man-in-the-middle attack, which is a pretty cool reference to cybersecurity. The same group ran an experiment based on the MegaLag video and could recreate the same issues that MegaLag experienced, with Honey distracting the user with heavy popups and accessing browser data in order to change the affiliate link cookie.</p>
+<p>MegaLag surprisingly is not the first to pick up on Honey&#x27;s scam techniques. One Twitter nerd in 2021 discovered the affiliate link reprogramming and <a href="https://x.com/Barnacules/status/1434682891875749889?mx=2">posted about it</a>. He says: &quot;You can just pull up their codes and open a different browser and go there with original affiliate link so they do not steal the sale.&quot; Linus Media Group, one major media corporation, even decided to terminate their partnership with Honey because of the exact stuff they are doing now. A <a href="https://linustechtips.com/topic/1415146-weekly-sponsorship-suggestioncomplaint-thread-feb-28-2022/#comment-15285519">forum post</a> explains: &quot;Honey will override that tracking link even if they do not find you a deal.&quot; They also say that that behaviour does not &quot;jive&quot; with them, understandably so.</p>
+<h2>Sources</h2>
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=vc4yL3YTwWk">MegaLag: Honey investigation video</a></li>
+  <li><a href="https://x.com/Barnacules/status/1434682891875749889?mx=2">Barnacules post on X</a></li>
+  <li><a href="https://linustechtips.com/topic/1415146-weekly-sponsorship-suggestioncomplaint-thread-feb-28-2022/#comment-15285519">Linus Tech Tips forum sponsorship complaint thread</a></li>
+  <li><a href="https://www.snopes.com/news/2024/12/30/honey-browser-extension-scam/">Snopes: Honey browser extension scam</a></li>
+  <li><a href="https://www.techopedia.com/paypal-honey-accused-of-fraud">Techopedia: PayPal Honey accused of fraud</a></li>
+</ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

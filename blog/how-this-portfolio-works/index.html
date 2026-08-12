@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How This Portfolio Works | monnickendam.ch</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [["$", "$"], ["\\(", "\\)"]],
+          displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+        },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        themeVariables: {
+          background: "#020305",
+          mainBkg: "#050608",
+          primaryColor: "#050608",
+          primaryTextColor: "#EFE5C0",
+          primaryBorderColor: "#EFE5C0",
+          lineColor: "#EFE5C0",
+          secondaryColor: "#020305",
+          secondaryTextColor: "#EFE5C0",
+          secondaryBorderColor: "#EFE5C0",
+          tertiaryColor: "#050608",
+          tertiaryTextColor: "#EFE5C0",
+          tertiaryBorderColor: "#EFE5C0",
+          nodeTextColor: "#EFE5C0",
+          textColor: "#EFE5C0",
+          actorBkg: "#050608",
+          actorTextColor: "#EFE5C0",
+          actorBorder: "#EFE5C0",
+          signalColor: "#EFE5C0",
+          signalTextColor: "#EFE5C0",
+          labelBoxBkgColor: "#050608",
+          labelTextColor: "#EFE5C0",
+          noteBkgColor: "#050608",
+          noteTextColor: "#EFE5C0",
+          noteBorderColor: "#EFE5C0",
+          activationBkgColor: "#050608",
+          activationBorderColor: "#EFE5C0",
+          git0: "#EFE5C0",
+          git1: "#EFE5C0",
+          git2: "#EFE5C0",
+          git3: "#EFE5C0",
+          git4: "#EFE5C0",
+          git5: "#EFE5C0",
+          git6: "#EFE5C0",
+          git7: "#EFE5C0",
+          gitBranchLabel0: "#EFE5C0",
+          gitBranchLabel1: "#EFE5C0",
+          gitBranchLabel2: "#EFE5C0",
+          gitBranchLabel3: "#EFE5C0",
+          gitBranchLabel4: "#EFE5C0",
+          gitBranchLabel5: "#EFE5C0",
+          gitBranchLabel6: "#EFE5C0",
+          gitBranchLabel7: "#EFE5C0",
+          gitBranchLabelBackground: "#050608",
+          commitLabelColor: "#EFE5C0",
+          commitLabelBackground: "#050608",
+          commitLabelFontSize: "11px",
+          commitLabelPadding: "6px",
+          tagLabelColor: "#EFE5C0",
+          tagLabelBackground: "#050608",
+          tagLabelBorder: "#EFE5C0",
+          fontFamily: "JetBrains Mono, Courier New, monospace"
+        }
+      });
+    </script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chartText = "#EFE5C0";
+        const chartPanel = "#050608";
+        const chartGrid = "rgba(239, 229, 192, 0.25)";
+        const chartSeries = [
+          { backgroundColor: "#EFE5C0", borderColor: "#EFE5C0" },
+          { backgroundColor: "rgba(239, 229, 192, 0.18)", borderColor: "#EFE5C0", borderDash: [6, 4] },
+          { backgroundColor: "rgba(239, 229, 192, 0.42)", borderColor: "#EFE5C0", borderDash: [2, 3] },
+          { backgroundColor: "rgba(239, 229, 192, 0.08)", borderColor: "#EFE5C0", borderWidth: 3 }
+        ];
+
+        const commonChartOptions = (payload, extra = {}) => ({
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          layout: { padding: 8 },
+          plugins: {
+            title: {
+              display: Boolean(payload.title),
+              text: payload.title,
+              color: chartText,
+              font: { family: "JetBrains Mono, Courier New, monospace", size: 14, weight: "normal" },
+              padding: { bottom: 14 }
+            },
+            legend: {
+              display: payload.series.length > 1 || ["pie", "donut"].includes(payload.type),
+              labels: {
+                color: chartText,
+                boxWidth: 14,
+                boxHeight: 10,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              }
+            },
+            tooltip: {
+              backgroundColor: chartPanel,
+              borderColor: chartText,
+              borderWidth: 1,
+              titleColor: chartText,
+              bodyColor: chartText,
+              displayColors: false,
+              titleFont: { family: "JetBrains Mono, Courier New, monospace" },
+              bodyFont: { family: "JetBrains Mono, Courier New, monospace" }
+            }
+          },
+          scales: {
+            x: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.xLabel),
+                text: payload.xLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                maxRotation: 35,
+                minRotation: 0,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            },
+            y: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.yLabel),
+                text: payload.yLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            }
+          },
+          ...extra
+        });
+
+        const seriesStyle = (index, overrides = {}) => ({
+          borderColor: chartSeries[index % chartSeries.length].borderColor,
+          backgroundColor: chartSeries[index % chartSeries.length].backgroundColor,
+          borderDash: chartSeries[index % chartSeries.length].borderDash,
+          borderWidth: chartSeries[index % chartSeries.length].borderWidth ?? 1.5,
+          pointBackgroundColor: chartPanel,
+          pointBorderColor: chartText,
+          pointRadius: 3,
+          tension: 0.25,
+          ...overrides
+        });
+
+        const doughnutPalette = (count) => Array.from({ length: count }, (_, index) => [
+          "#EFE5C0",
+          "rgba(239, 229, 192, 0.18)",
+          "rgba(239, 229, 192, 0.42)",
+          "rgba(239, 229, 192, 0.08)"
+        ][index % 4]);
+
+        const chartConfig = (payload) => {
+          if (payload.type === "scatter") {
+            return {
+              type: "scatter",
+              data: {
+                datasets: [{
+                  label: payload.yLabel || payload.series[1]?.name || "Value",
+                  data: payload.labels.map((label, index) => ({
+                    x: payload.series[0].values[index],
+                    y: payload.series[1].values[index],
+                    label
+                  })),
+                  ...seriesStyle(0)
+                }]
+              },
+              options: commonChartOptions(payload)
+            };
+          }
+
+          if (["pie", "donut"].includes(payload.type)) {
+            return {
+              type: payload.type === "donut" ? "doughnut" : "pie",
+              data: {
+                labels: payload.labels,
+                datasets: [{
+                  label: payload.series[0]?.name || "Value",
+                  data: payload.series[0]?.values || [],
+                  backgroundColor: doughnutPalette(payload.labels.length),
+                  borderColor: chartText,
+                  borderWidth: 1.5
+                }]
+              },
+              options: commonChartOptions(payload, { scales: {} })
+            };
+          }
+
+          const type = ["bar", "stacked-bar", "horizontal-bar"].includes(payload.type) ? "bar" : "line";
+          return {
+            type,
+            data: {
+              labels: payload.labels,
+              datasets: payload.series.map((item, index) => seriesStyle(index, {
+                label: item.name,
+                data: item.values,
+                fill: payload.type === "area",
+                backgroundColor: payload.type === "area"
+                  ? chartSeries[index % chartSeries.length].backgroundColor
+                  : chartSeries[index % chartSeries.length].backgroundColor
+              }))
+            },
+            options: commonChartOptions(payload, payload.type === "horizontal-bar" ? { indexAxis: "y" } : {})
+          };
+        };
+
+        if (window.Chart) {
+          Chart.defaults.color = chartText;
+          Chart.defaults.font.family = "JetBrains Mono, Courier New, monospace";
+
+          document.querySelectorAll(".chart-data").forEach((script) => {
+            const target = document.getElementById(script.dataset.chartTarget);
+            if (!target) return;
+            const payload = JSON.parse(script.textContent);
+            new Chart(target, chartConfig(payload));
+          });
+        }
+
+        document.querySelectorAll(".copy-code").forEach((button) => {
+          button.addEventListener("click", async () => {
+            const block = button.closest(".code-block");
+            const code = Array.from(block?.querySelectorAll(".line-content") ?? [])
+              .map((line) => line.textContent)
+              .join("\n");
+            const originalText = button.textContent;
+
+            try {
+              await navigator.clipboard.writeText(code);
+              button.textContent = "copied";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            } catch {
+              button.textContent = "failed";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            }
+          });
+        });
+      });
+    </script>
+</head>
+<body>
+<div class="container">
+    <a class="banner" href="../../index.html">
+      <img src="../../assets/banner.png" alt="monnickendam.ch">
+    </a>
+    <div class="block">
+        <div class="header path-header"><a href="../../index.html">home</a>/<a href="../">blog</a>/how-this-portfolio-works.md</div>
+        <div class="body blog-post">
+          <h1>How This Portfolio Works</h1>
+          <p class="blog-date">2026-08-11 23:58</p>
+<p>I built this website in a way that I can actually keep in my head. That was the main rule. I did not want a portfolio that only made sense while the development server was running, or one that needed a dashboard, a database, and a pile of dependencies just to publish a few pages.</p>
+<p>So <code>monnickendam.ch</code> is mostly just files. HTML, CSS, a bit of JavaScript, some assets, and generated blog pages. When someone opens the site, the server does not do anything clever. It sends the files over and the browser renders them.</p>
+<p>This is not the fanciest way to build a website, but it is a very maintainable way to build this website.</p>
+<h2>The Shape Of The Site</h2>
+<p>The homepage is plain <code>index.html</code>. That file is the front door: intro, projects, certifications, experience, contact form, and links. The styling is in <code>styles.css</code>, and the font is bundled locally in <code>assets/fonts/</code>.</p>
+<p>The visual style is intentionally narrow. Off-black, off-white, hard borders, monospace. I like websites that look like they have rules. This one is not trying to look like a startup landing page. It is closer to a document or a small terminal interface.</p>
+<p>The contact form is the one part of the homepage that talks to anything outside the site. The code for that lives in <code>contact.js</code>, and it sends the form submission to a webhook. The rest of the homepage is static.</p>
+<h2>Writing Posts Without A CMS</h2>
+<p>The blog is the only part that needs a small build step. I do not want to write full HTML every time I publish something, but I also do not want to run a full blogging platform. Markdown is enough.</p>
+<p>Every post starts as a file in <code>blog-posts/</code>.</p>
+<p>Each article starts with a small front matter block:</p>
+<div class="code-block"><div class="code-label">markdown</div><button class="copy-code" type="button">copy</button><pre><code class="language-markdown"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">---</span></span><span class="code-line"><span class="line-number" aria-hidden="true">2</span><span class="line-content">title: How This Portfolio Works</span></span><span class="code-line"><span class="line-number" aria-hidden="true">3</span><span class="line-content">slug: how-this-portfolio-works</span></span><span class="code-line"><span class="line-number" aria-hidden="true">4</span><span class="line-content">date: <span class="tok-number">2026</span>-<span class="tok-number">08</span>-<span class="tok-number">11</span> <span class="tok-number">23</span>:<span class="tok-number">58</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">5</span><span class="line-content">description: How monnickendam.ch is built.</span></span><span class="code-line"><span class="line-number" aria-hidden="true">6</span><span class="line-content">---</span></span></code></pre></div>
+<p>That little block at the top tells the build script what the post is called, what URL to use, what date to sort it by, and what summary to show on the blog index. After that, it is just the article.</p>
+<p>When I run the build script, it reads the Markdown files and writes finished HTML into <code>blog/</code>.</p>
+<div class="code-block"><div class="code-label">bash</div><button class="copy-code" type="button">copy</button><pre><code class="language-bash"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">python3 scripts/build-blog.py</span></span></code></pre></div>
+<p>So this source file:</p>
+<div class="code-block"><div class="code-label">text</div><button class="copy-code" type="button">copy</button><pre><code class="language-text"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">blog-posts/how-this-portfolio-works.md</span></span></code></pre></div>
+<p>turns into this published page:</p>
+<div class="code-block"><div class="code-label">text</div><button class="copy-code" type="button">copy</button><pre><code class="language-text"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">blog/how-this-portfolio-works/index.html</span></span></code></pre></div>
+<p>The blog index is rebuilt at the same time. It shows newest posts first, but the numbers are based on publication order from oldest to newest. So if an article is <code>[04]</code>, it stays <code>[04]</code>. New posts do not reshuffle old ones.</p>
+<h2>The Build Step</h2>
+<p>This build script is probably the closest thing the site has to a backend. It runs before the site is deployed. It does not run when someone visits a page.</p>
+<div class="mermaid">flowchart TD
+    subgraph Source[repository source]
+        HOME[index.html]
+        CSS[styles.css]
+        ASSETS[assets/]
+        POSTS[blog-posts/*.md]
+        BUILDER[scripts/build-blog.py]
+    end
+
+    POSTS --&gt; META[read title, slug, date, description]
+    POSTS --&gt; BODY[convert Markdown body]
+    META --&gt; INDEX[generate blog index]
+    BODY --&gt; PAGES[generate article pages]
+    CSS --&gt; SHELL[shared page shell]
+    ASSETS --&gt; SHELL
+    INDEX --&gt; BLOG[blog/]
+    PAGES --&gt; BLOG
+    HOME --&gt; SITE[static site folder]
+    BLOG --&gt; SITE
+    SHELL --&gt; SITE</div>
+<p>The Markdown renderer is small on purpose. It supports the things I actually use here: headings, paragraphs, lists, tables, blockquotes, code blocks, math blocks, Mermaid diagrams, and Chart.js graphs.</p>
+<p>The more complicated rendering is handed off to proper libraries. Mermaid draws diagrams. MathJax handles math. Chart.js handles graphs. The Python script just prepares the page around them.</p>
+<h2>Deployment</h2>
+<p>Deployment is deliberately plain. The web directory is not special and it does not need to be a Git repository. It is just the folder that receives the built site.</p>
+<p>The deploy script is <code>server-side/deploy-monnickendam.sh</code>. It can be run manually, but the intended use is cron. It clones the GitHub repo into a temporary directory, builds the blog, and syncs the result into:</p>
+<div class="code-block"><div class="code-label">text</div><button class="copy-code" type="button">copy</button><pre><code class="language-text"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">~/www/monnickendam.ch</span></span></code></pre></div>
+<p>The full deploy flow is basically:</p>
+<div class="mermaid">sequenceDiagram
+    participant Cron
+    participant Script as deploy-monnickendam.sh
+    participant GitHub
+    participant Temp as temporary clone
+    participant Builder as build-blog.py
+    participant Web as ~/www/monnickendam.ch
+
+    Cron-&gt;&gt;Script: run deploy script
+    Script-&gt;&gt;Temp: create clean temporary folder
+    Script-&gt;&gt;GitHub: clone selected branch
+    GitHub--&gt;&gt;Temp: repository files
+    Script-&gt;&gt;Builder: build blog pages
+    Builder--&gt;&gt;Temp: generated blog/ directory
+    Script-&gt;&gt;Web: rsync static output
+    Script-&gt;&gt;Temp: delete temporary clone</div>
+<p>I like this because the live folder is disposable. If something goes wrong, there are only a few places to look: the repo, the build script, or the deploy script. There should not be some mystery state on the server that only exists because I clicked something months ago.</p>
+<h2>What Happens When Someone Visits</h2>
+<p>Once the site is deployed, visitors get the boring path:</p>
+<div class="mermaid">flowchart LR
+    USER[visitor browser] --&gt; WEB[static web server]
+    WEB --&gt; HTML[HTML page]
+    HTML --&gt; CSS[styles.css]
+    HTML --&gt; ASSETS[assets/]
+    HTML --&gt; CDN[jsDelivr libraries]
+    CDN --&gt; MERMAID[Mermaid]
+    CDN --&gt; MATHJAX[MathJax]
+    CDN --&gt; CHARTJS[Chart.js]</div>
+<p>No Python runs here. The Markdown has already been turned into HTML. The browser gets static files, loads the CSS, and pulls in the few runtime libraries needed for diagrams, math, and charts.</p>
+<p>That keeps hosting simple. A basic static web server is enough.</p>
+<h2>Why Keep It This Small?</h2>
+<p>A bigger framework would make some things easier. I am not pretending otherwise. But it would also make the site feel less like mine. For a personal portfolio, I care more about being able to understand the whole thing than having every possible feature ready in advance.</p>
+<p>There are tradeoffs. The Markdown parser is small and opinionated. The build script is very specific to this site. If I want a new content feature, I usually have to edit the script. That is fine. The project is narrow enough that those choices are still easy to see.</p>
+<p>The entire site mostly lives in a few files:</p>
+<div class="code-block"><div class="code-label">text</div><button class="copy-code" type="button">copy</button><pre><code class="language-text"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">index.html</span></span><span class="code-line"><span class="line-number" aria-hidden="true">2</span><span class="line-content">styles.css</span></span><span class="code-line"><span class="line-number" aria-hidden="true">3</span><span class="line-content">contact.js</span></span><span class="code-line"><span class="line-number" aria-hidden="true">4</span><span class="line-content">scripts/build-blog.py</span></span><span class="code-line"><span class="line-number" aria-hidden="true">5</span><span class="line-content">server-side/deploy-monnickendam.sh</span></span></code></pre></div>
+<p>That is the part I like. It is not a platform pretending to be a portfolio. It is just a portfolio with enough machinery to make writing and publishing comfortable.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
