@@ -7,7 +7,10 @@
   const supportsChromeIntents =
     isAndroid && /(Chrome|Chromium|SamsungBrowser|EdgA|OPR|GSA)/i.test(userAgent);
 
-  if (!supportsChromeIntents) return;
+  if (!supportsChromeIntents) {
+    button.download = "Elie-Monnickendam.vcf";
+    return;
+  }
 
   const value = encodeURIComponent;
   const fallback = new URL("elie-monnickendam.vcf", window.location.href).href;
