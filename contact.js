@@ -2,7 +2,7 @@
 
 (() => {
     const WEBHOOK_URL =
-      "https://n8n.devkey.ch/webhook-test/c3219ad0-2620-41b1-afb1-e2a6ca4b2b0d";
+      "https://n8n.devkey.ch/webhook/c3219ad0-2620-41b1-afb1-e2a6ca4b2b0d";
   
     const form = document.querySelector(".contact form");
     if (!form) return;
@@ -56,4 +56,3 @@
       }
     });
   })();
-  
