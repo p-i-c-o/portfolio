@@ -1,0 +1,13 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Monnickendam;Elie;;;
+FN:Elie Monnickendam
+TITLE:BSc Cybersecurity Student
+EMAIL;TYPE=INTERNET,HOME:elie@monnickendam.ch
+EMAIL;TYPE=INTERNET,SCHOOL:Elie.Monnickendam@warwick.ac.uk
+URL:https://monnickendam.ch
+X-SOCIALPROFILE;TYPE=linkedin:https://linkedin.com/in/monnickendam
+X-SOCIALPROFILE;TYPE=instagram:https://www.instagram.com/___elie___/
+X-SOCIALPROFILE;TYPE=telegram:https://t.me/picolovesroot
+X-SOCIALPROFILE;TYPE=github:https://github.com/p-i-c-o
+END:VCARD

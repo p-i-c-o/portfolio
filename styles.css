@@ -671,6 +671,51 @@
   font-size: clamp(1.5rem, 6vw, 2.5rem);
 }
 
+.save-contact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 18px;
+  background: var(--text);
+  color: var(--bg);
+  border: 1px solid var(--text);
+  box-shadow: 0 0 12px rgba(239, 229, 192, 0.12);
+  text-decoration: none;
+}
+
+.save-contact:visited {
+  color: var(--bg);
+}
+
+.save-contact:hover,
+.save-contact:focus-visible {
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+}
+
+.save-contact strong,
+.save-contact small {
+  display: block;
+}
+
+.save-contact strong {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.save-contact small {
+  margin-top: 4px;
+  font-size: 0.75rem;
+}
+
+.save-contact-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
 .contact-links {
   display: flex;
   flex-direction: column;
