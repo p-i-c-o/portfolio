@@ -776,3 +776,31 @@
   outline: none;
   box-shadow: inset 0 0 0 1px var(--text), 0 0 6px rgba(230, 226, 138, 0.4);
 }
+
+/* Explorable homelab */
+.lab-badge { float: right; font-size: 10px; opacity: .65; letter-spacing: 0; }
+.lab-intro { margin: 0 0 6px; }
+.lab-note { margin: 0 0 20px; font-size: 12px; opacity: .65; }
+.lab-layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); border: 1px solid #efe5c040; }
+.lab-map { position: relative; min-height: 380px; background-image: radial-gradient(#efe5c023 1px, transparent 1px); background-size: 16px 16px; }
+.lab-wires { position: absolute; width: 100%; height: 100%; inset: 0; }
+.lab-wires path { fill: none; stroke: #efe5c040; stroke-width: 1.5; vector-effect: non-scaling-stroke; transition: stroke .2s; }
+.lab-wires path.is-connected { stroke: var(--text); }
+.lab-node { position: absolute; left: var(--x); top: var(--y); transform: translate(-50%, -50%); width: 28%; max-width: 130px; padding: 10px 3px; border: 1px solid #efe5c070; background: var(--panel-bg); color: var(--text); font: inherit; font-size: 12px; cursor: pointer; }
+.lab-node small { display: block; font-size: 9px; opacity: .65; margin-top: 4px; }
+.lab-icon { display: block; margin-bottom: 5px; font-size: 16px; }
+.lab-node:hover, .lab-node[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.lab-node:focus-visible { outline: 2px solid var(--text); outline-offset: 4px; }
+.lab-map-label { position: absolute; bottom: 12px; left: 12px; font-size: 10px; letter-spacing: .12em; opacity: .45; }
+.lab-details { border-left: 1px solid #efe5c040; padding: 24px 20px; display: flex; flex-direction: column; justify-content: center; }
+.lab-eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: .12em; opacity: .65; }
+.lab-details h2 { font-size: 20px; font-weight: normal; margin: 12px 0; }
+.lab-details p { font-size: 13px; line-height: 1.65; margin: 0; }
+.lab-details .lab-services { font-size: 11px; border-top: 1px solid #efe5c040; padding-top: 14px; margin-top: 20px; opacity: .7; }
+@media (max-width: 600px) {
+  .lab-layout { grid-template-columns: 1fr; }
+  .lab-map { min-height: 350px; }
+  .lab-details { border-left: 0; border-top: 1px solid #efe5c040; min-height: 240px; padding: 20px; }
+  .lab-badge { float: none; display: block; margin-top: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .lab-wires path { transition: none; } }
