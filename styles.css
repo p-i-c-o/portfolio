@@ -804,3 +804,14 @@
   .lab-badge { float: none; display: block; margin-top: 6px; }
 }
 @media (prefers-reduced-motion: reduce) { .lab-wires path { transition: none; } }
+
+.lab-trace-controls { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
+#lab-trace { flex-shrink: 0; border: 1px solid var(--text); background: transparent; color: var(--text); padding: 10px 12px; font: inherit; font-size: 12px; cursor: pointer; }
+#lab-trace:hover { background: var(--text); color: var(--bg); }
+#lab-trace:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+#lab-trace:disabled { opacity: .5; cursor: wait; }
+#lab-trace-status { margin: 0; font-size: 11px; opacity: .7; }
+.lab-wires path.is-tracing { stroke: var(--text); stroke-width: 3; stroke-dasharray: 5 7; animation: packet-flow .6s linear infinite; }
+@keyframes packet-flow { to { stroke-dashoffset: -24; } }
+@media (max-width: 600px) { .lab-trace-controls { align-items: flex-start; flex-direction: column; gap: 10px; } }
+@media (prefers-reduced-motion: reduce) { .lab-wires path.is-tracing { animation: none; } }

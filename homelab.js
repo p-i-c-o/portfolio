@@ -20,5 +20,42 @@
       lab.querySelector(`#lab-${field}`).textContent = node[field];
     }
   }
-  buttons.forEach(button => button.addEventListener('click', () => selectNode(button.dataset.node)));
+  const traceButton = lab.querySelector('#lab-trace');
+  const traceStatus = lab.querySelector('#lab-trace-status');
+  let timers = [];
+  function resetTrace() {
+    timers.forEach(clearTimeout);
+    timers = [];
+    links.forEach(link => link.classList.remove('is-tracing'));
+    traceButton.disabled = false;
+  }
+  buttons.forEach(button => button.addEventListener('click', () => {
+    resetTrace();
+    traceStatus.textContent = 'Follow a simulated request from the client to the server.';
+    selectNode(button.dataset.node);
+  }));
+  traceButton.addEventListener('click', () => {
+    resetTrace();
+    traceButton.disabled = true;
+    const steps = [
+      ['client', null, '1 / 3 — The client requests a self-hosted app.'],
+      ['router', 'router client', '2 / 3 — The gateway routes it to the server subnet in this example.'],
+      ['compute', 'router compute', '3 / 3 — The server receives the request. Destination reached.']
+    ];
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const showStep = ([id, edge, message]) => {
+      selectNode(id);
+      links.forEach(link => link.classList.toggle('is-tracing', link.dataset.link === edge));
+      traceStatus.textContent = message;
+    };
+    if (reducedMotion) {
+      showStep(steps[2]);
+      traceStatus.textContent = 'Simulation complete: client → gateway → compute. The gateway routes between subnets in this example.';
+      resetTrace();
+      return;
+    }
+    showStep(steps[0]);
+    steps.slice(1).forEach((step, i) => timers.push(setTimeout(() => showStep(step), (i + 1) * 1100)));
+    timers.push(setTimeout(resetTrace, 3300));
+  });
 })();
