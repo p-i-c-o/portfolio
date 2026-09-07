@@ -59,6 +59,8 @@
   }
   
   .block .header {
+    margin: 0;
+    font-weight: 400;
     padding: 12px;
     border-bottom: 1px solid var(--text);
     font-size: 13px;
@@ -775,6 +777,42 @@
 .message-box:focus {
   outline: none;
   box-shadow: inset 0 0 0 1px var(--text), 0 0 6px rgba(230, 226, 138, 0.4);
+}
+
+/* Keep linked thumbnails within narrow screens. */
+.project-entry > a {
+  max-width: 100%;
+}
+
+.project-img {
+  max-width: 100%;
+}
+
+.project-img img {
+  display: block;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.project-text,
+.certs-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.project-text a {
+  color: inherit;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 4px;
+}
+
+.connect-intro .connect-prompt {
+  margin: 0 0 8px;
+  font-weight: 400;
 }
 
 /* Interactive portfolio toolbox */
