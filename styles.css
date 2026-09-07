@@ -814,3 +814,43 @@ button:focus-visible {
   margin: 0 0 8px;
   font-weight: 400;
 }
+
+/* Interactive portfolio toolbox */
+.lab-intro { margin: 0 0 6px; }
+.lab-note { margin: 0 0 20px; font-size: 12px; opacity: .7; }
+.lab-layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); border: 1px solid #efe5c040; }
+.lab-map { position: relative; background-image: radial-gradient(#efe5c023 1px, transparent 1px); background-size: 16px 16px; }
+.lab-wires { position: absolute; width: 100%; height: 100%; inset: 0; }
+.lab-wires path { fill: none; stroke: #efe5c040; stroke-width: 1.5; vector-effect: non-scaling-stroke; transition: stroke .2s; }
+.lab-wires path.is-connected { stroke: var(--text); stroke-dasharray: 5 5; animation: lab-signal .7s linear 2; }
+.lab-graph-nodes { position: absolute; inset: 0; }
+.lab-node { position: absolute; left: var(--x); top: var(--y); transform: translate(-50%, -50%); width: 40%; min-height: 64px; padding: 10px 6px; border: 1px solid #efe5c070; background: var(--panel-bg); color: var(--text); font: inherit; font-size: 12px; cursor: pointer; overflow-wrap: anywhere; }
+.lab-node small { display: block; font-size: 10px; opacity: .7; margin-top: 5px; }
+.lab-node:hover, .lab-node[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.lab-node:focus-visible, .lab-back:focus-visible, .lab-surprise:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+.lab-map-label { position: absolute; bottom: 14px; left: 12px; right: 12px; font-size: 9px; letter-spacing: .04em; opacity: .6; }
+.lab-details { border-left: 1px solid #efe5c040; padding: 24px 20px; display: flex; flex-direction: column; justify-content: flex-start; }
+.lab-eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; opacity: .7; }
+.lab-details h2 { font-size: 21px; font-weight: normal; margin: 12px 0; overflow-wrap: anywhere; }
+.lab-details p { font-size: 13px; line-height: 1.65; margin: 0; }
+.lab-details .lab-services { font-size: 11px; border-top: 1px solid #efe5c040; padding-top: 14px; margin-top: 20px; opacity: .75; }
+.lab-back, .lab-surprise { position: absolute; z-index: 2; top: 12px; min-height: 36px; padding: 7px 9px; background: var(--panel-bg); color: var(--text); border: 1px solid #efe5c070; font: inherit; font-size: 10px; cursor: pointer; }
+.lab-back { left: 12px; }
+.lab-surprise { right: 12px; }
+.lab-back:hover, .lab-surprise:hover { background: var(--text); color: var(--bg); }
+.homelab [hidden] { display: none; }
+@keyframes lab-signal { to { stroke-dashoffset: -20; } }
+@media (max-width: 600px) {
+  .lab-layout { grid-template-columns: 1fr; }
+  .lab-details { border-left: 0; border-top: 1px solid #efe5c040; min-height: 250px; padding: 20px; }
+  .lab-node { font-size: 11px; }
+  .lab-node small { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) { .lab-wires path { transition: none; } .lab-wires path.is-connected { animation: none; } }
+
+.lab-project-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.lab-project-links a { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 8px 10px; color: var(--text); border: 1px solid #efe5c070; font-size: 11px; text-decoration: none; }
+.lab-project-links a:hover { color: var(--bg); background: var(--text); }
+.lab-project-links a:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+
+.github-icon { width: 15px; height: 15px; flex: 0 0 15px; background: currentColor; -webkit-mask: url("assets/github.svg") center / contain no-repeat; mask: url("assets/github.svg") center / contain no-repeat; }

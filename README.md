@@ -120,3 +120,21 @@ If the contact workflow changes, update the `WEBHOOK_URL` constant in `contact.j
 - No package manager dependencies are required.
 - Keep image assets under `assets/` and reference them with relative paths from `index.html`.
 - The JetBrains Mono webfont is bundled under `assets/fonts/`.
+
+## Interactive homelab
+
+The homepage graph is a curated portfolio tour of tools, grouped by purpose:
+automation, personal media/files, infrastructure, and technical utilities.
+Edit `topics` in `homelab.js` to change the groupings and tool stories.
+Each entry has a name, short subtitle, description, and takeaway.
+Edit `projectLinks` to maintain official websites and source repositories;
+GitHub links use the bundled icon in `assets/github.svg`.
+
+Branches unfold inside the existing graph and tool selections update its side
+panel. “Surprise me” explores a different tool on each click. Back or Escape
+returns to the overview with keyboard focus restored. Connection animations
+respect reduced-motion preferences. All interactions stay in the browser.
+
+This is editorial content, not an infrastructure inventory. Avoid adding private
+host mappings, addresses, hardware allocations, runtime status, or credentials.
+No build step or new dependencies are required.
