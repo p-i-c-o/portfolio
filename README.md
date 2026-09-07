@@ -123,12 +123,18 @@ If the contact workflow changes, update the `WEBHOOK_URL` constant in `contact.j
 
 ## Interactive homelab
 
-The homepage includes an example topology, explicitly labeled as placeholder content.
-Edit the `nodes` object in `homelab.js` to describe the actual devices and services;
-edit the buttons and SVG paths in `index.html` when changing the connections.
-The packet trace illustrates a client reaching a compute host through a gateway
-between subnets. It is a simulation, not live monitoring or a network probe.
+The homepage graph is a curated portfolio tour of tools, grouped by purpose:
+automation, personal media/files, infrastructure, and technical utilities.
+Edit `topics` in `homelab.js` to change the groupings and tool stories.
+Each entry has a name, short subtitle, description, and takeaway.
+Edit `projectLinks` to maintain official websites and source repositories;
+GitHub links use the bundled icon in `assets/github.svg`.
 
-Nodes support native keyboard activation and touch. Selecting a node cancels any
-active trace. Reduced-motion users receive the completed route immediately.
-No new dependencies or build step are required.
+Branches unfold inside the existing graph and tool selections update its side
+panel. “Surprise me” explores a different tool on each click. Back or Escape
+returns to the overview with keyboard focus restored. Connection animations
+respect reduced-motion preferences. All interactions stay in the browser.
+
+This is editorial content, not an infrastructure inventory. Avoid adding private
+host mappings, addresses, hardware allocations, runtime status, or credentials.
+No build step or new dependencies are required.

@@ -27,37 +27,27 @@
     </div>
 
     <section class="block homelab" aria-labelledby="homelab-title">
-      <div class="header" id="homelab-title">Inside the homelab <span class="lab-badge">Example topology</span></div>
+      <div class="header" id="homelab-title">Inside my homelab</div>
       <div class="body">
-        <p class="lab-intro">A little network to explore. Select a device to look inside.</p>
-        <p class="lab-note">An interactive sketch — devices and connections are placeholders until I add my actual setup.</p>
-        <div class="lab-layout">
-          <div class="lab-map" aria-label="Example network topology">
-            <svg class="lab-wires" viewBox="0 0 600 440" preserveAspectRatio="none" aria-hidden="true">
-              <path data-link="internet router" d="M300 60V170" />
-              <path data-link="router compute" d="M300 170V240H110V300" />
-              <path data-link="router storage" d="M300 170V300" />
-              <path data-link="router client" d="M300 170V240H490V300" />
-            </svg>
-            <button class="lab-node" data-node="internet" style="--x:50%;--y:14%" aria-pressed="false"><span class="lab-icon">[ ↑↓ ]</span>Internet<small>The outside world</small></button>
-            <button class="lab-node" data-node="router" style="--x:50%;--y:39%" aria-pressed="false"><span class="lab-icon">[ + ]</span>Gateway<small>Traffic control</small></button>
-            <button class="lab-node" data-node="compute" style="--x:18.33%;--y:75%" aria-pressed="false"><span class="lab-icon">[ ::: ]</span>Compute<small>Apps & services</small></button>
-            <button class="lab-node" data-node="storage" style="--x:50%;--y:75%" aria-pressed="false"><span class="lab-icon">[ = ]</span>Storage<small>A home for files</small></button>
-            <button class="lab-node" data-node="client" style="--x:81.67%;--y:75%" aria-pressed="false"><span class="lab-icon">[ &gt;_ ]</span>Client<small>Where it starts</small></button>
-            <span class="lab-map-label">NETWORK / 01</span>
+        <p class="lab-intro">I try to self-host everything. Here’s what that looks like.</p>
+        <p class="lab-note">Follow a branch, pick a tool, and you'll see why I use it!</p>
+        <div class="lab-layout" hidden>
+          <div class="lab-map" aria-label="Explore my tools and interests">
+            <button type="button" class="lab-back" hidden>← The big picture</button>
+            <button type="button" class="lab-surprise">Surprise me ↗</button>
+            <svg class="lab-wires" aria-hidden="true"></svg>
+            <div class="lab-graph-nodes"></div>
+            <span class="lab-map-label">SELECT A NODE TO EXPLORE</span>
           </div>
           <div class="lab-details" aria-live="polite" aria-atomic="true">
-            <span class="lab-eyebrow" id="lab-kind">Select a node</span>
-            <h2 id="lab-name">Every box has a story.</h2>
-            <p id="lab-description">Explore the devices to see the role each one plays in a small home network.</p>
-            <p id="lab-services" class="lab-services">Five nodes. One small ecosystem.</p>
+            <span class="lab-eyebrow" id="lab-kind"></span>
+            <h2 id="lab-name"></h2>
+            <p id="lab-description"></p>
+            <p id="lab-services" class="lab-services"></p>
+            <div class="lab-project-links" aria-label="Project links" hidden></div>
           </div>
         </div>
-        <div class="lab-trace-controls">
-          <button type="button" id="lab-trace">Trace a request <span aria-hidden="true">→</span></button>
-          <p id="lab-trace-status" role="status">Follow a simulated request from the client to the server.</p>
-        </div>
-        <noscript><p>This example connects the Internet to a gateway, which connects compute, storage, and a client. Enable JavaScript to explore each device.</p></noscript>
+        <noscript><p>My toolbox spans automation with n8n and Home Assistant, personal media with Immich and Jellyfin, networking with Proxmox and Tailscale, and utilities like CyberChef and Glance. Enable JavaScript to explore the connections.</p></noscript>
       </div>
     </section>
 
