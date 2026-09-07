@@ -26,6 +26,31 @@
         </div>
     </div>
 
+    <section class="block homelab" aria-labelledby="homelab-title">
+      <div class="header" id="homelab-title">Inside my homelab</div>
+      <div class="body">
+        <p class="lab-intro">I try to self-host everything. Here’s what that looks like.</p>
+        <p class="lab-note">Follow a branch, pick a tool, and you'll see why I use it!</p>
+        <div class="lab-layout" hidden>
+          <div class="lab-map" aria-label="Explore my tools and interests">
+            <button type="button" class="lab-back" hidden>← The big picture</button>
+            <button type="button" class="lab-surprise">Surprise me ↗</button>
+            <svg class="lab-wires" aria-hidden="true"></svg>
+            <div class="lab-graph-nodes"></div>
+            <span class="lab-map-label">SELECT A NODE TO EXPLORE</span>
+          </div>
+          <div class="lab-details" aria-live="polite" aria-atomic="true">
+            <span class="lab-eyebrow" id="lab-kind"></span>
+            <h2 id="lab-name"></h2>
+            <p id="lab-description"></p>
+            <p id="lab-services" class="lab-services"></p>
+            <div class="lab-project-links" aria-label="Project links" hidden></div>
+          </div>
+        </div>
+        <noscript><p>My toolbox spans automation with n8n and Home Assistant, personal media with Immich and Jellyfin, networking with Proxmox and Tailscale, and utilities like CyberChef and Glance. Enable JavaScript to explore the connections.</p></noscript>
+      </div>
+    </section>
+
     <div class="block project-log">
         <div class="header">Projects</div>
       
@@ -190,6 +215,7 @@
 </div>
 
 <script src="contact.js?v=20260902"></script>
+<script src="homelab.js"></script>
 
 </body>
 </html>
