@@ -6,7 +6,7 @@
   // Keep private infrastructure identifiers and configuration out of this file.
   const topics = [
     { name: 'Automate', subtitle: 'Less repetition', description: 'Connecting services, automating tasks, and making everyday systems work together. This is where a little tinkering can save a lot of clicking.', takeaway: 'Workflows · home automation · repeatable setup', tools: [
-      ['n8n', 'Connect the dots', 'A visual workbench for connecting services and automating tasks. It also powers the contact form on this portfolio: your message goes straight into an n8n workflow.', 'The small bit of automation behind this very page.'],
+      ['n8n', 'Connect the dots', 'A visual workbench for connecting services and automating tasks. It helps turn repeated steps into workflows I can inspect and improve.', 'A practical way to experiment with automation.'],
       ['Home Assistant', 'Make home programmable', 'A central place to bring home automation together. Devices and actions become pieces you can combine into something useful.', 'Exploring the meeting point of software and the physical world.'],
       ['Ansible', 'Write it down. Run it again.', 'Repeatable server configuration in playbooks. A way to turn a sequence of manual maintenance steps into something you can read, reuse, and improve.', 'Infrastructure as code, with fewer steps to remember.']
     ] },
