@@ -188,45 +188,21 @@
         </div>
       </div> 
 
-      <div class="block">
-        <h2 class="header">Contact Me</h2>
-        <div class="body contact">
-          <form method="post">
-      
-            <label for="email" >Email</label>
-            <div class="row">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                autocomplete="email"
-                placeholder="you@domain.com"
-                class="email-box"
-              />
-            </div>
-            
-            <label for="message">Message</label>
-            <div class="row">
-              <textarea
-                id="message"
-                name="message"
-                required
-                rows="8"
-                placeholder="Write your message here…"
-                class="message-box"
-              ></textarea>
-            </div>
-      
-            <div class="actions">
-              <button
-              type="submit"
-              class="send-box"
-              >Send</button>
-            </div>
-          </form>
+      <section class="block" aria-labelledby="enquiries-title">
+        <h2 class="header" id="enquiries-title">Professional Enquiries</h2>
+        <div class="body">
+          <div class="entry-text">
+            <p>Have a role, project, or collaboration in mind? I'd be glad to hear from you. Email me directly and I'll get back to you.</p>
+          </div>
         </div>
-      </div>
+        <div class="body contact-links">
+          <a class="contact-link" href="mailto:elie@monnickendam.ch?subject=Professional%20enquiry">
+            <span class="contact-label">Email me</span>
+            <span class="contact-value">elie@monnickendam.ch</span>
+            <span aria-hidden="true">-&gt;</span>
+          </a>
+        </div>
+      </section>
 
       <div class="block">
         <h2 class="header">Links</h2>
@@ -250,7 +226,6 @@
 
 </main>
 
-<script src="contact.js?v=20260902"></script>
 <script src="homelab.js"></script>
 
 </body>
