@@ -184,7 +184,6 @@
     const topic = topics[index];
     prepare(240 + Math.ceil(topic.tools.length / 2) * 84);
     back.hidden = false;
-    lab.querySelector('.lab-map-label').textContent = 'FOLLOW YOUR CURIOSITY / PICK A TOOL';
     const describeTopic = () => showDetails(topic.name, 'Inside my toolbox', topic.description, topic.takeaway);
     const root = node(topic.name, topic.subtitle, 50, 100, describeTopic);
     const tools = topic.tools.map(([name, subtitle, description, takeaway], i) => {
@@ -205,7 +204,6 @@
     activeTopic = null;
     prepare(420);
     back.hidden = true;
-    lab.querySelector('.lab-map-label').textContent = 'FOUR WAYS INTO THE LAB / CHOOSE A BRANCH';
     const describeLab = () => showDetails('A place to try things.', 'Self-hosting / hardware / curiosity',
       'I like understanding the tools I use, and running them myself is a good way to learn. My homelab is where networking, useful software, and side projects come together.',
       'Pick a branch to explore the tools behind it.');

@@ -2,7 +2,7 @@
 
 Static personal portfolio website for [monnickendam.ch](https://monnickendam.ch).
 
-The site introduces Elie Monnickendam, links to projects and writing, lists selected certifications and experience, and includes a small contact form.
+The site introduces Elie Monnickendam, covers work and education, links to projects and writing, lists selected certifications and experiences, and includes a small contact form.
 
 ## Project Structure
 
