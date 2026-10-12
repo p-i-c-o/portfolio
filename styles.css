@@ -828,7 +828,6 @@ button:focus-visible {
 .lab-node small { display: block; font-size: 10px; opacity: .7; margin-top: 5px; }
 .lab-node:hover, .lab-node[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
 .lab-node:focus-visible, .lab-back:focus-visible, .lab-surprise:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
-.lab-map-label { position: absolute; bottom: 14px; left: 12px; right: 12px; font-size: 9px; letter-spacing: .04em; opacity: .6; }
 .lab-details { border-left: 1px solid #efe5c040; padding: 24px 20px; display: flex; flex-direction: column; justify-content: flex-start; }
 .lab-eyebrow { font-size: 10px; text-transform: uppercase; letter-spacing: .1em; opacity: .7; }
 .lab-details h2 { font-size: 21px; font-weight: normal; margin: 12px 0; overflow-wrap: anywhere; }
