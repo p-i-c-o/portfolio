@@ -495,6 +495,7 @@ def page_shell(title: str, body: str, stylesheet: str, banner: str, home: str) -
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{html.escape(title)} | monnickendam.ch</title>
+    <link rel="icon" type="image/svg+xml" href="{html.escape(str(Path(banner).with_name('favicon.svg')))}">
     <link rel="stylesheet" href="{stylesheet}">
     <script>
       window.MathJax = {{

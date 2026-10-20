@@ -1396,6 +1396,10 @@
   line-height: 1;
 }
 
+.enquiries-link .save-contact-icon {
+  transform: translateY(3px);
+}
+
 .contact-links {
   display: flex;
   flex-direction: column;

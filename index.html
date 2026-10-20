@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elie Monnickendam | Projects &amp; Writing</title>
+    <title>monnickendam.ch</title>
     <meta name="description" content="Elie Monnickendam’s personal portfolio: networking, hardware, self-hosting, projects, and writing.">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -188,45 +189,20 @@
         </div>
       </div> 
 
-      <div class="block">
-        <h2 class="header">Contact Me</h2>
-        <div class="body contact">
-          <form method="post">
-      
-            <label for="email" >Email</label>
-            <div class="row">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                autocomplete="email"
-                placeholder="you@domain.com"
-                class="email-box"
-              />
-            </div>
-            
-            <label for="message">Message</label>
-            <div class="row">
-              <textarea
-                id="message"
-                name="message"
-                required
-                rows="8"
-                placeholder="Write your message here…"
-                class="message-box"
-              ></textarea>
-            </div>
-      
-            <div class="actions">
-              <button
-              type="submit"
-              class="send-box"
-              >Send</button>
-            </div>
-          </form>
+      <section class="block" aria-labelledby="enquiries-title">
+        <h2 class="header" id="enquiries-title">Professional Enquiries</h2>
+        <div class="body connect-intro">
+          <h3 class="connect-prompt">Let's talk.</h3>
+          <p>Have a role, project, or collaboration in mind? I'd be glad to hear from you.</p>
         </div>
-      </div>
+        <a class="save-contact enquiries-link" href="mailto:enquiries@monnickendam.ch?subject=Professional%20enquiry">
+          <span>
+            <strong>Email me</strong>
+            <small>enquiries@monnickendam.ch</small>
+          </span>
+          <span class="save-contact-icon" aria-hidden="true">↗</span>
+        </a>
+      </section>
 
       <div class="block">
         <h2 class="header">Links</h2>
@@ -250,7 +226,6 @@
 
 </main>
 
-<script src="contact.js?v=20260902"></script>
 <script src="homelab.js"></script>
 
 </body>
