@@ -821,15 +821,28 @@ def build_index(posts: list[Post]) -> None:
     if not items:
         items.append("          <p>No posts yet.</p>")
 
-    body = f"""    <div class="block">
+    body = f"""    <div class="block blog-account-card">
+        <div class="header">Account</div>
+        <div class="body">
+          <span class="blog-account-loading" role="status">Checking account…</span>
+          <div class="blog-account-guest" hidden><a href="../account/">Create an account or sign in</a></div>
+          <div class="blog-account-member" hidden>
+            <span>Signed in as <strong class="blog-account-username"></strong>.</span>
+            <a href="../account/#profile-title">Manage account</a>
+            <a href="../account/#inbox-title">Inbox <span class="blog-account-unread"></span></a>
+          </div>
+        </div>
+    </div>
+    <div class="block">
         <div class="header path-header"><a href="../index.html">home</a>/blog</div>
         <div class="body blog-list">
 {chr(10).join(items)}
         </div>
-    </div>"""
+    </div>
+    <script defer src="../blog-account.js?v=1"></script>"""
 
     (OUTPUT_DIR / "index.html").write_text(
-        page_shell("Blog", body, "../styles.css", "../assets/banner.png", "../index.html"),
+        page_shell("Blog", body, "../styles.css?v=comments14", "../assets/banner.png", "../index.html"),
         encoding="utf-8",
     )
 
@@ -846,13 +859,65 @@ def build_post(post: Post) -> None:
           {date}
 {post.html}
         </div>
-    </div>"""
+    </div>
+    <div class="block comment-account-card">
+        <div class="header">Account</div>
+        <div class="body comment-account">
+                <div class="comment-account-guest">
+                    <span>Want a username and comments that follow you across devices?</span>
+                    <a href="../../account/">Create an account or sign in</a>
+                </div>
+                <div class="comment-account-member" hidden>
+                    <span>Signed in as <strong class="comment-account-username"></strong>.</span>
+                    <a href="../../account/#inbox-title">Inbox <span class="comment-unread-count"></span></a>
+                    <a href="../../account/">Manage account</a>
+                </div>
+        </div>
+    </div>
+    <div class="block comment-form-card">
+        <div class="header">Leave a comment</div>
+        <div class="body">
+            <div class="comments-form-home"><form class="comments-form">
+                <h2 class="comments-form-title">Leave a comment</h2>
+                <p class="comments-target" hidden></p>
+                <p class="comment-identity">Posting as Anonymous commenter</p>
+                <label for="comment-body">Comment</label>
+                <textarea id="comment-body" name="body" maxlength="1000" rows="3" required></textarea>
+                <div class="comments-trap" aria-hidden="true">
+                    <label for="comment-website">Website</label>
+                    <input id="comment-website" name="website" tabindex="-1" autocomplete="off">
+                </div>
+                <p class="comments-note">Comments appear immediately. Plain text only, up to 1,000 characters.</p>
+                <div class="comments-form-actions">
+                    <button type="submit" disabled>Post comment</button>
+                    <button class="comments-cancel" type="button" hidden>Cancel</button>
+                </div>
+                <p class="comments-status" role="status" aria-live="polite"></p>
+            </form></div>
+        </div>
+    </div>
+    <div id="comments" class="block comments" data-comment-slug="{html.escape(post.slug, quote=True)}">
+        <div class="header">Comments</div>
+        <div class="body">
+            <div class="comments-discussion-bar" hidden>
+                <label for="comments-sort">Sort by
+                    <select id="comments-sort" class="comments-sort">
+                        <option value="newest">Newest</option>
+                        <option value="top">Most votes</option>
+                    </select>
+                </label>
+            </div>
+            <div class="comments-list" aria-live="polite">Loading comments…</div>
+            <button class="comments-more" type="button" hidden>Load more comments</button>
+        </div>
+    </div>
+    <script defer src="../../comments.js?v=14"></script>"""
 
     (post_dir / "index.html").write_text(
         page_shell(
             post.title,
             body,
-            "../../styles.css",
+            "../../styles.css?v=comments17",
             "../../assets/banner.png",
             "../../index.html",
         ),

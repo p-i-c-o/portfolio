@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog | monnickendam.ch</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../styles.css?v=comments14">
     <script>
       window.MathJax = {
         tex: {
@@ -273,6 +273,18 @@
     <a class="banner" href="../index.html">
       <img src="../assets/banner.png" alt="monnickendam.ch">
     </a>
+    <div class="block blog-account-card">
+        <div class="header">Account</div>
+        <div class="body">
+          <span class="blog-account-loading" role="status">Checking account…</span>
+          <div class="blog-account-guest" hidden><a href="../account/">Create an account or sign in</a></div>
+          <div class="blog-account-member" hidden>
+            <span>Signed in as <strong class="blog-account-username"></strong>.</span>
+            <a href="../account/#profile-title">Manage account</a>
+            <a href="../account/#inbox-title">Inbox <span class="blog-account-unread"></span></a>
+          </div>
+        </div>
+    </div>
     <div class="block">
         <div class="header path-header"><a href="../index.html">home</a>/blog</div>
         <div class="body blog-list">
@@ -313,6 +325,7 @@
           </div>
         </div>
     </div>
+    <script defer src="../blog-account.js?v=1"></script>
 </div>
 </body>
 </html>

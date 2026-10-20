@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account | monnickendam.ch</title>
+  <link rel="stylesheet" href="../styles.css?v=comments16">
+  <script defer src="../account.js?v=5"></script>
+</head>
+<body>
+<main class="container account-page">
+  <div class="banner"><img src="../assets/banner.png" alt=""></div>
+  <div class="block">
+    <div class="header path-header"><a href="../index.html">home</a>/<a href="../blog/">blog</a>/account</div>
+    <div class="body account-intro">
+      <h1>Your account</h1>
+      <p>Choose a unique username. Your 12-character key is your login on any device. No email or password is needed.</p>
+      <p class="account-loading" role="status">Checking your account…</p>
+    </div>
+  </div>
+
+  <div class="account-auth" hidden>
+    <section class="block" aria-labelledby="create-title">
+      <h2 class="header" id="create-title">Create an account</h2>
+      <div class="body account-card">
+        <p>Pick the name people will see beside your comments. Usernames are unique, ignoring case, and cannot be changed later.</p>
+        <form class="account-create-form">
+          <label for="account-create-username">Username</label>
+          <input id="account-create-username" name="username" minlength="3" maxlength="24" pattern="[A-Za-z][A-Za-z0-9_]{2,23}" autocomplete="off" spellcheck="false" required>
+          <p class="account-hint">3–24 characters. Start with a letter; use letters, numbers, or underscores.</p>
+          <p class="account-availability" role="status" aria-live="polite"></p>
+          <button type="submit">Create account</button>
+          <p class="account-create-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+    <section class="block" aria-labelledby="login-title">
+      <h2 class="header" id="login-title">Sign in</h2>
+      <div class="body account-card">
+        <p>Enter the key you saved when you created your account.</p>
+        <form class="account-login-form">
+          <label for="account-login-key">Account key</label>
+          <input id="account-login-key" name="key" type="password" maxlength="14" placeholder="XXXX-XXXX-XXXX" autocomplete="current-password" spellcheck="false" required>
+          <button type="submit">Sign in</button>
+          <p class="account-login-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <section class="block account-key-card" aria-labelledby="key-title" hidden>
+    <h2 class="header" id="key-title">Save your new key</h2>
+    <div class="body account-card">
+      <p>This key is shown only now. Save it in a password manager or another safe place. Anyone with it can access your account; without it, you cannot sign in again on another device.</p>
+      <div class="account-key-line"><code class="account-key-value"></code><button class="account-copy-key" type="button">Copy key</button></div>
+      <p class="account-key-status" role="status" aria-live="polite"></p>
+      <button class="account-key-done" type="button">I've saved my key</button>
+    </div>
+  </section>
+
+  <div class="account-dashboard" hidden>
+    <nav class="account-nav" role="tablist" aria-label="Account sections">
+      <a id="profile-tab" href="#profile-title" role="tab" aria-controls="profile-panel" aria-selected="true">Profile</a><a id="inbox-tab" href="#inbox-title" role="tab" aria-controls="inbox-panel" aria-selected="false" tabindex="-1">Inbox <span class="account-unread-nav"></span></a><a id="activity-tab" href="#activity-title" role="tab" aria-controls="activity-panel" aria-selected="false" tabindex="-1">My comments</a><a id="sessions-tab" href="#sessions-title" role="tab" aria-controls="sessions-panel" aria-selected="false" tabindex="-1">Sessions</a><a id="data-tab" href="#data-title" role="tab" aria-controls="data-panel" aria-selected="false" tabindex="-1">Data</a><a id="danger-tab" href="#danger-title" role="tab" aria-controls="danger-panel" aria-selected="false" tabindex="-1">Danger zone</a>
+    </nav>
+    <section class="block" id="profile-panel" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+      <h2 class="header" id="profile-title">Profile</h2>
+      <div class="body account-card">
+        <p class="account-greeting">Signed in as <strong class="account-current-username"></strong></p>
+        <p><span class="account-comment-count"></span> comments · <span class="account-session-count"></span> active sessions · <span class="account-unread-count"></span> unread replies</p>
+        <p><a class="account-public-profile" href="../profile/">View public profile</a></p>
+      </div>
+    </section>
+
+    <section class="block" id="inbox-panel" role="tabpanel" aria-labelledby="inbox-tab" tabindex="0" hidden>
+      <h2 class="header" id="inbox-title">Reply inbox</h2>
+      <div class="body account-card">
+        <div class="account-section-actions"><button class="account-read-all" type="button">Mark all as read</button></div>
+        <div class="account-inbox-list"></div>
+        <button class="account-inbox-more" type="button" hidden>Load more replies</button>
+        <p class="account-inbox-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="block" id="activity-panel" role="tabpanel" aria-labelledby="activity-tab" tabindex="0" hidden>
+      <h2 class="header" id="activity-title">My comments</h2>
+      <div class="body account-card">
+        <div class="account-comment-list"></div>
+        <button class="account-comments-more" type="button" hidden>Load more comments</button>
+        <p class="account-comments-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="block" id="sessions-panel" role="tabpanel" aria-labelledby="sessions-tab" tabindex="0" hidden>
+      <h2 class="header" id="sessions-title">Sessions and key</h2>
+      <div class="body account-card">
+        <div class="account-session-list"></div>
+        <p class="account-sessions-status" role="status" aria-live="polite"></p>
+        <h3>Replace account key</h3>
+        <p>Replace your key if it may have been shared. This signs out every device and shows a new key once.</p>
+        <form class="account-rotate-form">
+          <label for="account-current-key">Current key</label>
+          <input id="account-current-key" name="current_key" type="password" maxlength="14" placeholder="XXXX-XXXX-XXXX" autocomplete="current-password" required>
+          <button type="submit">Replace key</button>
+          <p class="account-rotate-status" role="status" aria-live="polite"></p>
+        </form>
+        <div class="account-session-actions">
+          <button class="account-signout" type="button">Sign out here</button>
+          <button class="account-signout-all" type="button">Sign out everywhere</button>
+        </div>
+        <p class="account-session-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="block" id="data-panel" role="tabpanel" aria-labelledby="data-tab" tabindex="0" hidden>
+      <h2 class="header" id="data-title">Your data</h2>
+      <div class="body account-card">
+        <p>Download a JSON copy of your account details, comments, and votes.</p>
+        <button class="account-export" type="button">Download my data</button>
+        <p class="account-export-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="block" id="danger-panel" role="tabpanel" aria-labelledby="danger-tab" tabindex="0" hidden>
+      <h2 class="header" id="danger-title">Danger zone</h2>
+      <div class="body account-card">
+        <h3>Delete account</h3>
+        <p>This permanently removes your login and sessions. Choose whether your comments stay visible without your username or become deleted placeholders. Replies from other people remain.</p>
+        <form class="account-delete-form">
+          <label for="account-delete-mode">My comments</label>
+          <select id="account-delete-mode" name="comments">
+            <option value="anonymize">Keep as Anonymous commenter</option>
+            <option value="delete">Delete their text</option>
+          </select>
+          <label for="account-delete-key">Enter your account key</label>
+          <input id="account-delete-key" name="current_key" type="password" maxlength="14" autocomplete="current-password" required>
+          <label for="account-delete-confirm">Type DELETE to confirm</label>
+          <input id="account-delete-confirm" name="confirm" type="text" pattern="DELETE" autocomplete="off" required>
+          <button type="submit">Delete account</button>
+          <p class="account-delete-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </div>
+</main>
+</body>
+</html>

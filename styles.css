@@ -303,6 +303,684 @@
   opacity: 0.75;
 }
 
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.comments-discussion-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin: 0 0 4px;
+}
+
+.comments-discussion-title {
+  font-size: 13px;
+  font-weight: normal;
+  margin: 0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.comments-discussion-bar label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+}
+
+.comments-sort {
+  background: var(--panel-bg);
+  color: var(--text);
+  border: 1px solid rgba(239, 229, 192, 0.55);
+  font: inherit;
+  padding: 3px 5px;
+}
+
+.comment {
+  border-bottom: 1px solid rgba(239, 229, 192, 0.25);
+  padding: 9px 0;
+  overflow-wrap: anywhere;
+}
+
+.comment-content {
+  display: block;
+}
+
+.comment-main {
+  min-width: 0;
+}
+
+.comment-votes {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.comment-actions .comment-votes button,
+.comment-votes-inactive button {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.comment-actions .comment-votes button:hover,
+.comment-actions .comment-votes button[aria-pressed="true"] {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.comment-votes button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.comment-score {
+  min-width: 18px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.comment-vote-status {
+  color: #f3a19d;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.comment-vote-status:empty {
+  display: none;
+}
+
+.comment-votes-inactive {
+  margin-top: 5px;
+  opacity: 0.6;
+}
+
+.comment-meta {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-bottom: 3px;
+  font-size: 12px;
+}
+
+.comment-meta time,
+.comments-note {
+  opacity: 0.7;
+}
+
+.comment p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.comment-body {
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.comment-body.is-collapsed {
+  max-height: 7em;
+  overflow: hidden;
+}
+
+.comment-more {
+  margin-top: 2px;
+  padding: 1px 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.comment-meta span,
+.comments-target {
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+.comment-meta .comment-account-badge {
+  border: 1px solid rgba(239, 229, 192, 0.5);
+  padding: 0 3px;
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+.comment-thread {
+  margin: 5px 0 0 8px;
+  padding-left: 12px;
+  border-left: 1px solid rgba(239, 229, 192, 0.3);
+}
+
+.comment-replies {
+  margin: 0;
+}
+
+.comment-reply {
+  padding: 6px 0 0;
+  border-bottom: 0;
+}
+
+.comment-children {
+  margin: 5px 0 0 8px;
+  padding-left: 12px;
+  border-left: 1px solid rgba(239, 229, 192, 0.3);
+}
+
+.comment-children-flat {
+  margin-left: 0;
+  padding-left: 8px;
+}
+
+.comment-actions,
+.comment-report,
+.comments-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin-top: 5px;
+}
+
+.comment-report button,
+.comment-report select,
+.comment-thread > button {
+  background: var(--panel-bg);
+  color: var(--text);
+  border: 1px solid rgba(239, 229, 192, 0.45);
+  font: inherit;
+  font-size: 12px;
+  padding: 3px 6px;
+}
+
+.comment-actions button {
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  font: inherit;
+  font-size: 12px;
+  padding: 2px 3px;
+}
+
+.comment-actions .comment-report-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+}
+
+.comment-report-toggle svg {
+  display: block;
+}
+
+.comment-actions button,
+.comment-report button,
+.comment-thread > button {
+  cursor: pointer;
+}
+
+.comment-actions > button:hover,
+.comment-report button:hover,
+.comment-thread > button:hover {
+  text-decoration: underline;
+}
+
+.comment-actions button:disabled,
+.comment-report button:disabled,
+.comment-thread > button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.comments-form-home {
+  width: 100%;
+}
+
+.comments-form-home .comments-form-title {
+  display: none;
+}
+
+.comment-account {
+  font-size: 12px;
+}
+
+.comment-account-card [hidden],
+.blog-account-card [hidden],
+.comment-form-card [hidden] {
+  display: none;
+}
+
+.comment-form-card[hidden] {
+  display: none;
+}
+
+.comment-account p {
+  margin: 0 0 7px;
+}
+
+.comment-account-guest,
+.comment-account-member,
+.blog-account-member {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 9px;
+}
+
+.comment-account a {
+  text-decoration: underline;
+}
+
+.account-page .account-intro h1 {
+  margin: 0 0 10px;
+  font-size: 22px;
+}
+
+.account-page.is-signed-in .account-intro {
+  display: none;
+}
+
+.account-page.is-signed-in > .block > .path-header {
+  border-bottom: 0;
+}
+
+.account-page [hidden],
+.profile-page [hidden] {
+  display: none;
+}
+
+.account-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0;
+  padding: 10px 13px;
+  border: 1px solid var(--text);
+  font-size: 12px;
+}
+
+.account-page a,
+.account-page a:visited,
+.profile-page a,
+.profile-page a:visited,
+.blog-account-card a,
+.blog-account-card a:visited,
+.comment-account-card a,
+.comment-account-card a:visited {
+  color: var(--text);
+}
+
+.account-nav a {
+  padding: 3px 0;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.account-nav a[aria-selected="true"] {
+  border-bottom-color: var(--text);
+}
+
+.account-nav a:hover,
+.account-nav a:focus-visible {
+  border-bottom-color: var(--text);
+}
+
+.account-page .account-intro p {
+  margin: 0 0 8px;
+}
+
+.account-auth {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.account-auth .block {
+  min-width: 0;
+  margin: 0;
+}
+
+.account-card {
+  font-size: 13px;
+}
+
+.account-card p {
+  margin: 0 0 11px;
+}
+
+.account-card form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+.account-card input,
+.account-card select,
+.account-card textarea,
+.account-card button {
+  background: var(--panel-bg);
+  color: var(--text);
+  border: 1px solid var(--text);
+  font: inherit;
+  padding: 7px 9px;
+}
+
+.account-card input,
+.account-card select,
+.account-card textarea {
+  box-sizing: border-box;
+  width: min(100%, 350px);
+}
+
+.account-card textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.account-card button {
+  cursor: pointer;
+}
+
+.account-card button:hover:not(:disabled) {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.account-card button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.account-card .account-hint,
+.account-card [role="status"] {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.account-card [role="status"]:empty {
+  display: none;
+}
+
+.account-key-line,
+.account-session-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.account-key-value {
+  padding: 9px 11px;
+  border: 1px solid var(--text);
+  font-size: 20px;
+  letter-spacing: 1px;
+  user-select: all;
+}
+
+.account-dashboard .block {
+  margin-top: 16px;
+}
+
+.account-dashboard #danger-panel h3 {
+  margin-top: 0;
+}
+
+.account-card h3 {
+  margin: 20px 0 8px;
+  font-size: 15px;
+}
+
+.account-section-actions {
+  margin-bottom: 8px;
+}
+
+.account-row-heading,
+.account-row-actions {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 5px 12px;
+}
+
+.account-row-heading span {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.account-row-actions {
+  margin-top: 7px;
+}
+
+.account-row-actions a {
+  text-decoration: underline;
+}
+
+.account-comment-edit {
+  margin-top: 9px;
+}
+
+.account-comment-edit textarea {
+  width: min(100%, 600px);
+}
+
+.account-inbox-row,
+.account-session-row {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(239, 229, 192, 0.25);
+}
+
+.account-inbox-row.is-unread {
+  border-left: 3px solid var(--text);
+  padding-left: 9px;
+}
+
+.account-inbox-row p {
+  margin: 5px 0;
+  overflow-wrap: anywhere;
+}
+
+.account-session-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.account-session-row p {
+  margin: 4px 0;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.account-session-row small {
+  opacity: 0.7;
+}
+
+.profile-summary {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+.profile-summary h1 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.profile-summary p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.profile-avatar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  width: 78px;
+  height: 78px;
+  padding: 5px;
+  gap: 2px;
+  border: 1px solid var(--text);
+  flex: none;
+}
+
+.profile-avatar .filled {
+  background: var(--avatar-color, var(--text));
+}
+
+.account-session-actions {
+  margin-top: 20px;
+}
+
+.account-comment-row {
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(239, 229, 192, 0.25);
+}
+
+.account-comment-row:last-child {
+  border-bottom: 0;
+}
+
+.account-comment-row a {
+  text-transform: capitalize;
+}
+
+.account-comment-row p {
+  margin: 4px 0 0;
+  opacity: 0.75;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+  .account-auth { grid-template-columns: 1fr; }
+  .account-key-value { font-size: 17px; }
+}
+
+.comment-inline-form:not(:empty) {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-left: 2px solid var(--text);
+  background: rgba(239, 229, 192, 0.035);
+}
+
+.comments-form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0;
+}
+
+.comments-form h2 {
+  font-size: 14px;
+  font-weight: normal;
+  margin: 0 0 2px;
+}
+
+.comments-form input,
+.comments-form textarea,
+.comments-form button,
+.comments-more {
+  background: var(--panel-bg);
+  color: var(--text);
+  border: 1px solid var(--text);
+  font: inherit;
+  padding: 6px 8px;
+}
+
+.comments-form input[name="name"] {
+  max-width: 320px;
+}
+
+.comments-form textarea {
+  resize: vertical;
+  min-height: 65px;
+}
+
+.comments-form button,
+.comments-more {
+  align-self: flex-start;
+  cursor: pointer;
+}
+
+.comments-more {
+  margin-top: 14px;
+}
+
+.comments-form button:hover,
+.comments-more:hover {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.comments-form button:disabled,
+.comments-more:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.comments-target,
+.comments-note,
+.comment-identity,
+.comments-status {
+  margin: 0;
+  font-size: 12px;
+}
+
+.comment-identity {
+  opacity: 0.8;
+}
+
+.comment-inline-form .comments-note {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .comment-thread,
+  .comment-children {
+    margin-left: 4px;
+    padding-left: 8px;
+  }
+
+  .comment-children-flat {
+    margin-left: 0;
+    padding-left: 5px;
+  }
+}
+
+.comments-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.comments [hidden] {
+  display: none;
+}
+
 .blog-post ul {
   margin: 0 0 14px;
   padding-left: 22px;
