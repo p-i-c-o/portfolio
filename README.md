@@ -11,6 +11,8 @@ The site introduces Elie Monnickendam, covers work and education, links to proje
 ├── index.html        # Main page content
 ├── styles.css        # Site styling
 ├── contact.js        # Contact form submission handler
+├── comments.js       # Blog comment interface
+├── api/              # PHP comment API for Hostpoint
 ├── blog-posts/       # Markdown source files for blog posts
 ├── blog/             # Generated static blog HTML
 ├── scripts/          # Local build scripts
@@ -113,6 +115,10 @@ The frontend currently makes browser-side network requests for:
 - Generated blog pages load Mermaid from `https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs` for diagram rendering.
 
 If the contact workflow changes, update the `WEBHOOK_URL` constant in `contact.js`.
+
+## Blog Comments
+
+Article pages include public comments with threaded replies, upvotes and downvotes, sorting by newest or score, reporting, and editing or deleting your comments. Visitors can create an anonymous account with a unique username and a 12-character login key at `/account/`; guest comments use the name “Anonymous commenter.” Account features include reply notifications, comment management, session controls, export, and deletion. Public profiles are available at `/profile/?u=USERNAME`. Comments are published immediately and stored in Hostpoint MariaDB through `api/comments.php`. The PHP endpoint is deployed with the static site; the Markdown blog remains statically generated. See [server-side/README.md](server-side/README.md#blog-comments) for setup.
 
 ## Notes
 
