@@ -3,6 +3,7 @@ CREATE TABLE comment_accounts (
     username VARCHAR(24) NULL,
     username_key VARCHAR(24) CHARACTER SET ascii COLLATE ascii_bin NULL,
     key_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+    is_admin TINYINT(1) NOT NULL DEFAULT 0,
     created_at DATETIME NOT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY comment_accounts_key_hash (key_hash),

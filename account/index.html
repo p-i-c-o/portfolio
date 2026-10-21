@@ -6,7 +6,7 @@
   <title>Account | monnickendam.ch</title>
   <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
   <link rel="stylesheet" href="../styles.css?v=comments16">
-  <script defer src="../account.js?v=5"></script>
+  <script defer src="../account.js?v=6"></script>
 </head>
 <body>
 <main class="container account-page">
@@ -61,12 +61,12 @@
 
   <div class="account-dashboard" hidden>
     <nav class="account-nav" role="tablist" aria-label="Account sections">
-      <a id="profile-tab" href="#profile-title" role="tab" aria-controls="profile-panel" aria-selected="true">Profile</a><a id="inbox-tab" href="#inbox-title" role="tab" aria-controls="inbox-panel" aria-selected="false" tabindex="-1">Inbox <span class="account-unread-nav"></span></a><a id="activity-tab" href="#activity-title" role="tab" aria-controls="activity-panel" aria-selected="false" tabindex="-1">My comments</a><a id="sessions-tab" href="#sessions-title" role="tab" aria-controls="sessions-panel" aria-selected="false" tabindex="-1">Sessions</a><a id="data-tab" href="#data-title" role="tab" aria-controls="data-panel" aria-selected="false" tabindex="-1">Data</a><a id="danger-tab" href="#danger-title" role="tab" aria-controls="danger-panel" aria-selected="false" tabindex="-1">Danger zone</a>
+      <a id="profile-tab" href="#profile-title" role="tab" aria-controls="profile-panel" aria-selected="true">Profile</a><a id="inbox-tab" href="#inbox-title" role="tab" aria-controls="inbox-panel" aria-selected="false" tabindex="-1">Inbox <span class="account-unread-nav"></span></a><a id="activity-tab" href="#activity-title" role="tab" aria-controls="activity-panel" aria-selected="false" tabindex="-1">My comments</a><a id="admin-tab" href="#admin-title" role="tab" aria-controls="admin-panel" aria-selected="false" tabindex="-1" hidden>Admin</a><a id="sessions-tab" href="#sessions-title" role="tab" aria-controls="sessions-panel" aria-selected="false" tabindex="-1">Sessions</a><a id="data-tab" href="#data-title" role="tab" aria-controls="data-panel" aria-selected="false" tabindex="-1">Data</a><a id="danger-tab" href="#danger-title" role="tab" aria-controls="danger-panel" aria-selected="false" tabindex="-1">Danger zone</a>
     </nav>
     <section class="block" id="profile-panel" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
       <h2 class="header" id="profile-title">Profile</h2>
       <div class="body account-card">
-        <p class="account-greeting">Signed in as <strong class="account-current-username"></strong></p>
+        <p class="account-greeting">Signed in as <strong class="account-current-username"></strong><span class="account-admin-label" hidden> · Admin</span></p>
         <p><span class="account-comment-count"></span> comments · <span class="account-session-count"></span> active sessions · <span class="account-unread-count"></span> unread replies</p>
         <p><a class="account-public-profile" href="../profile/">View public profile</a></p>
       </div>
@@ -88,6 +88,20 @@
         <div class="account-comment-list"></div>
         <button class="account-comments-more" type="button" hidden>Load more comments</button>
         <p class="account-comments-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="block" id="admin-panel" role="tabpanel" aria-labelledby="admin-tab" tabindex="0" hidden>
+      <h2 class="header" id="admin-title">Comment moderation</h2>
+      <div class="body account-card">
+        <label for="account-admin-filter">Show comments</label>
+        <select id="account-admin-filter" class="account-admin-filter">
+          <option value="reported">Reported</option>
+          <option value="all">All</option>
+        </select>
+        <div class="account-admin-list"></div>
+        <button class="account-admin-more" type="button" hidden>Load more comments</button>
+        <p class="account-admin-status" role="status" aria-live="polite"></p>
       </div>
     </section>
 

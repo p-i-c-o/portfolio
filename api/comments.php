@@ -128,6 +128,20 @@ function require_account(PDO $pdo): int
     return $id;
 }
 
+function is_admin(PDO $pdo, int $accountId): bool
+{
+    $query = $pdo->prepare('SELECT is_admin FROM comment_accounts WHERE id = ?');
+    $query->execute([$accountId]);
+    return (int) $query->fetchColumn() === 1;
+}
+
+function require_admin(PDO $pdo): int
+{
+    $accountId = require_account($pdo);
+    if (!is_admin($pdo, $accountId)) respond(403, ['error' => 'Admin access required.']);
+    return $accountId;
+}
+
 function account_username(PDO $pdo, int $accountId): ?string
 {
     $query = $pdo->prepare('SELECT username FROM comment_accounts WHERE id = ?');
@@ -353,7 +367,7 @@ try {
             [$pdo] = database();
             $accountId = account_id($pdo);
             if ($accountId === null) respond(200, ['signed_in' => false]);
-            $query = $pdo->prepare('SELECT username, created_at FROM comment_accounts WHERE id = ?');
+            $query = $pdo->prepare('SELECT username, created_at, is_admin FROM comment_accounts WHERE id = ?');
             $query->execute([$accountId]);
             $account = $query->fetch();
             $query = $pdo->prepare('SELECT COUNT(*) FROM comments WHERE account_id = ? AND deleted_at IS NULL');
@@ -367,11 +381,33 @@ try {
             respond(200, [
                 'signed_in' => true,
                 'username' => $account['username'],
+                'is_admin' => (bool) $account['is_admin'],
                 'created_at' => str_replace(' ', 'T', $account['created_at']) . 'Z',
                 'comment_count' => $commentCount,
                 'session_count' => $sessionCount,
                 'unread_count' => (int) $query->fetchColumn(),
             ]);
+        }
+        if (($_GET['admin_comments'] ?? null) === '1') {
+            [$pdo] = database();
+            require_admin($pdo);
+            $filter = $_GET['filter'] ?? 'reported';
+            if (!in_array($filter, ['reported', 'all'], true)) respond(400, ['error' => 'Invalid filter.']);
+            $sql = 'SELECT c.id, c.slug, c.body, c.created_at, c.deleted_at, c.hidden_at, '
+                . 'COALESCE(a.username, c.name) AS name, COALESCE(r.report_count, 0) AS report_count, '
+                . 'COALESCE(r.spam_count, 0) AS spam_count, COALESCE(r.harassment_count, 0) AS harassment_count, '
+                . 'COALESCE(r.other_count, 0) AS other_count '
+                . 'FROM comments c LEFT JOIN comment_accounts a ON a.id = c.account_id '
+                . 'LEFT JOIN (SELECT comment_id, COUNT(*) AS report_count, '
+                . "SUM(reason = 'spam') AS spam_count, SUM(reason = 'harassment') AS harassment_count, "
+                . "SUM(reason = 'other') AS other_count FROM comment_reports GROUP BY comment_id) r ON r.comment_id = c.id "
+                . ($filter === 'reported' ? 'WHERE r.comment_id IS NOT NULL ' : '')
+                . 'ORDER BY c.id DESC LIMIT 21 OFFSET ?';
+            $query = $pdo->prepare($sql);
+            $query->bindValue(1, query_offset(), PDO::PARAM_INT);
+            $query->execute();
+            $rows = $query->fetchAll();
+            respond(200, ['comments' => array_slice($rows, 0, 20), 'has_more' => count($rows) > 20]);
         }
         if (isset($_GET['profile'])) {
             $requested = $_GET['profile'];
@@ -525,6 +561,33 @@ try {
     check_rate_limits($pdo, $ipHash, 'all');
     $input = json_body();
     $accountAction = $method === 'POST' ? ($input['action'] ?? null) : null;
+    if ($accountAction === 'admin_moderate') {
+        require_admin($pdo);
+        $id = positive_id($input['id'] ?? null);
+        $decision = $input['decision'] ?? null;
+        if ($id === null || !in_array($decision, ['hide', 'restore', 'delete'], true)) {
+            respond(400, ['error' => 'Invalid moderation action.']);
+        }
+        $query = $pdo->prepare('SELECT id, deleted_at FROM comments WHERE id = ?');
+        $query->execute([$id]);
+        $comment = $query->fetch();
+        if (!$comment) respond(404, ['error' => 'Comment not found.']);
+        if ($comment['deleted_at'] !== null) respond(409, ['error' => 'This comment was deleted.']);
+        $pdo->beginTransaction();
+        if ($decision === 'hide') {
+            $pdo->prepare('UPDATE comments SET hidden_at = COALESCE(hidden_at, UTC_TIMESTAMP()) WHERE id = ?')->execute([$id]);
+        } elseif ($decision === 'restore') {
+            $pdo->prepare('UPDATE comments SET hidden_at = NULL WHERE id = ?')->execute([$id]);
+            $pdo->prepare('DELETE FROM comment_reports WHERE comment_id = ?')->execute([$id]);
+        } else {
+            $pdo->prepare("UPDATE comments SET name = 'Deleted', body = '', owner_token_hash = NULL, deleted_at = UTC_TIMESTAMP(), hidden_at = NULL WHERE id = ?")
+                ->execute([$id]);
+            $pdo->prepare('DELETE FROM comment_reports WHERE comment_id = ?')->execute([$id]);
+            $pdo->prepare('DELETE FROM comment_notifications WHERE comment_id = ?')->execute([$id]);
+        }
+        $pdo->commit();
+        respond(200, ['ok' => true]);
+    }
     if ($accountAction === 'account_create') {
         check_rate_limits($pdo, $ipHash, 'account_create');
         [$username, $usernameKey] = valid_username($input['username'] ?? null);

@@ -16,14 +16,19 @@
   const inboxList = find('.account-inbox-list');
   const myMore = find('.account-comments-more');
   const inboxMore = find('.account-inbox-more');
+  const adminTab = find('#admin-tab');
+  const adminList = find('.account-admin-list');
+  const adminMore = find('.account-admin-more');
+  const adminFilter = find('.account-admin-filter');
   const tabs = [...page.querySelectorAll('.account-nav [role="tab"]')];
   let availabilityTimer;
   let availabilityRequest = 0;
   let myOffset = 0;
   let inboxOffset = 0;
+  let adminOffset = 0;
 
   function selectTab(hash = window.location.hash, scroll = false) {
-    const selected = tabs.find(tab => tab.getAttribute('href') === hash) || tabs[0];
+    const selected = tabs.find(tab => !tab.hidden && tab.getAttribute('href') === hash) || tabs[0];
     for (const tab of tabs) {
       const active = tab === selected;
       tab.setAttribute('aria-selected', String(active));
@@ -42,10 +47,11 @@
       selectTab(tab.getAttribute('href'), true);
     });
     tab.addEventListener('keydown', event => {
-      const index = tabs.indexOf(tab);
-      const next = event.key === 'ArrowRight' ? tabs[(index + 1) % tabs.length]
-        : event.key === 'ArrowLeft' ? tabs[(index + tabs.length - 1) % tabs.length]
-          : event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs[tabs.length - 1] : null;
+      const available = tabs.filter(item => !item.hidden);
+      const index = available.indexOf(tab);
+      const next = event.key === 'ArrowRight' ? available[(index + 1) % available.length]
+        : event.key === 'ArrowLeft' ? available[(index + available.length - 1) % available.length]
+          : event.key === 'Home' ? available[0] : event.key === 'End' ? available[available.length - 1] : null;
       if (!next) return;
       event.preventDefault();
       next.click();
@@ -119,8 +125,11 @@
     dashboard.hidden = !profile.signed_in;
     if (!profile.signed_in) {
       keyCard.hidden = true;
+      adminTab.hidden = true;
       return;
     }
+    adminTab.hidden = !profile.is_admin;
+    find('.account-admin-label').hidden = !profile.is_admin;
     selectTab();
     const name = profile.username || '(no username)';
     find('.account-current-username').textContent = name;
@@ -131,6 +140,60 @@
     find('.account-public-profile').href = profile.username
       ? `../profile/?u=${encodeURIComponent(profile.username)}` : '../profile/';
     find('.account-public-profile').hidden = !profile.username;
+  }
+
+  async function loadAdminComments(reset = false) {
+    const status = find('.account-admin-status');
+    if (reset) { adminOffset = 0; adminList.replaceChildren(); }
+    adminMore.disabled = true;
+    status.textContent = 'Loading comments…';
+    try {
+      const result = await get(`admin_comments=1&filter=${adminFilter.value}&offset=${adminOffset}`);
+      if (reset && !result.comments.length) adminList.textContent = 'No comments in this view.';
+      for (const comment of result.comments) {
+        const row = document.createElement('div');
+        row.className = 'account-comment-row';
+        const heading = document.createElement('div');
+        heading.className = 'account-row-heading';
+        const author = document.createElement('strong');
+        author.textContent = comment.name;
+        const when = document.createElement('span');
+        when.textContent = dateLabel(comment.created_at);
+        heading.append(author, articleLink(comment.slug), when);
+        const body = document.createElement('p');
+        body.textContent = comment.deleted_at ? 'Comment deleted.' : comment.body;
+        const reports = document.createElement('p');
+        reports.textContent = `${comment.report_count} reports · ${comment.spam_count} spam · ${comment.harassment_count} harassment · ${comment.other_count} other${comment.hidden_at ? ' · hidden' : ''}`;
+        const actions = document.createElement('div');
+        actions.className = 'account-row-actions';
+        if (!comment.deleted_at) {
+          for (const [decision, label] of [
+            [comment.hidden_at ? 'restore' : 'hide', comment.hidden_at ? 'Restore and clear reports' : 'Hide'],
+            ['delete', 'Delete']
+          ]) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = label;
+            button.addEventListener('click', async () => {
+              if (decision === 'delete' && !window.confirm('Delete this comment? Replies will stay visible.')) return;
+              button.disabled = true;
+              status.textContent = 'Saving decision…';
+              try {
+                await api('POST', { action: 'admin_moderate', id: Number(comment.id), decision });
+                await loadAdminComments(true);
+              } catch (error) { status.textContent = error.message; button.disabled = false; }
+            });
+            actions.append(button);
+          }
+        }
+        row.append(heading, body, reports, actions);
+        adminList.append(row);
+      }
+      adminOffset += result.comments.length;
+      adminMore.hidden = !result.has_more;
+      status.textContent = '';
+    } catch (error) { status.textContent = error.message; }
+    finally { adminMore.disabled = false; }
   }
 
   async function loadMyComments(reset = false) {
@@ -314,8 +377,9 @@
       const profile = await get('account=1');
       renderProfile(profile);
       if (profile.signed_in) {
-        await Promise.allSettled([loadMyComments(true), loadInbox(true), loadSessions()]);
-        if (tabs.some(tab => tab.getAttribute('href') === window.location.hash)) {
+        await Promise.allSettled([loadMyComments(true), loadInbox(true), loadSessions(),
+          ...(profile.is_admin ? [loadAdminComments(true)] : [])]);
+        if (tabs.some(tab => !tab.hidden && tab.getAttribute('href') === window.location.hash)) {
           requestAnimationFrame(() => find('.account-nav').scrollIntoView({ block: 'start' }));
         }
       }
@@ -400,6 +464,8 @@
 
   myMore.addEventListener('click', () => loadMyComments());
   inboxMore.addEventListener('click', () => loadInbox());
+  adminMore.addEventListener('click', () => loadAdminComments());
+  adminFilter.addEventListener('change', () => loadAdminComments(true));
   find('.account-read-all').addEventListener('click', async () => {
     const status = find('.account-inbox-status');
     try {
