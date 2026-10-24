@@ -1031,6 +1031,10 @@
   padding-left: 22px;
 }
 
+.block .body.blog-post {
+  line-height: 1.7;
+}
+
 .blog-post code {
   background: #000;
   color: var(--text);
@@ -1038,6 +1042,12 @@
   padding: 1px 4px;
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+.blog-post :not(pre) > code {
+  padding: 1px 4px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .blog-post pre code {
