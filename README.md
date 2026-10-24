@@ -114,6 +114,11 @@ An introduction to the event.
 
 Each challenge is another Markdown file in that event directory:
 
+Copy `ctf-posts/_template.md` into the event folder as `challenge-name.md`
+for the standard structure: challenge, approach, solution, flag, and takeaway.
+Fill in the placeholders and set `draft: false` when ready to publish.
+The template itself is ignored by the builder because it sits outside event folders.
+
 ```markdown
 ---
 title: First Challenge
