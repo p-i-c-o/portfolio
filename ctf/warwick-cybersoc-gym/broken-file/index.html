@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broken File | Warwick CyberSoc Gym | monnickendam.ch</title>
+    <link rel="icon" type="image/svg+xml" href="../../../assets/favicon.svg">
+    <link rel="stylesheet" href="../../../styles.css">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [["$", "$"], ["\\(", "\\)"]],
+          displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+        },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        themeVariables: {
+          background: "#020305",
+          mainBkg: "#050608",
+          primaryColor: "#050608",
+          primaryTextColor: "#EFE5C0",
+          primaryBorderColor: "#EFE5C0",
+          lineColor: "#EFE5C0",
+          secondaryColor: "#020305",
+          secondaryTextColor: "#EFE5C0",
+          secondaryBorderColor: "#EFE5C0",
+          tertiaryColor: "#050608",
+          tertiaryTextColor: "#EFE5C0",
+          tertiaryBorderColor: "#EFE5C0",
+          nodeTextColor: "#EFE5C0",
+          textColor: "#EFE5C0",
+          actorBkg: "#050608",
+          actorTextColor: "#EFE5C0",
+          actorBorder: "#EFE5C0",
+          signalColor: "#EFE5C0",
+          signalTextColor: "#EFE5C0",
+          labelBoxBkgColor: "#050608",
+          labelTextColor: "#EFE5C0",
+          noteBkgColor: "#050608",
+          noteTextColor: "#EFE5C0",
+          noteBorderColor: "#EFE5C0",
+          activationBkgColor: "#050608",
+          activationBorderColor: "#EFE5C0",
+          git0: "#EFE5C0",
+          git1: "#EFE5C0",
+          git2: "#EFE5C0",
+          git3: "#EFE5C0",
+          git4: "#EFE5C0",
+          git5: "#EFE5C0",
+          git6: "#EFE5C0",
+          git7: "#EFE5C0",
+          gitBranchLabel0: "#EFE5C0",
+          gitBranchLabel1: "#EFE5C0",
+          gitBranchLabel2: "#EFE5C0",
+          gitBranchLabel3: "#EFE5C0",
+          gitBranchLabel4: "#EFE5C0",
+          gitBranchLabel5: "#EFE5C0",
+          gitBranchLabel6: "#EFE5C0",
+          gitBranchLabel7: "#EFE5C0",
+          gitBranchLabelBackground: "#050608",
+          commitLabelColor: "#EFE5C0",
+          commitLabelBackground: "#050608",
+          commitLabelFontSize: "11px",
+          commitLabelPadding: "6px",
+          tagLabelColor: "#EFE5C0",
+          tagLabelBackground: "#050608",
+          tagLabelBorder: "#EFE5C0",
+          fontFamily: "JetBrains Mono, Courier New, monospace"
+        }
+      });
+    </script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chartText = "#EFE5C0";
+        const chartPanel = "#050608";
+        const chartGrid = "rgba(239, 229, 192, 0.25)";
+        const chartSeries = [
+          { backgroundColor: "#EFE5C0", borderColor: "#EFE5C0" },
+          { backgroundColor: "rgba(239, 229, 192, 0.18)", borderColor: "#EFE5C0", borderDash: [6, 4] },
+          { backgroundColor: "rgba(239, 229, 192, 0.42)", borderColor: "#EFE5C0", borderDash: [2, 3] },
+          { backgroundColor: "rgba(239, 229, 192, 0.08)", borderColor: "#EFE5C0", borderWidth: 3 }
+        ];
+
+        const commonChartOptions = (payload, extra = {}) => ({
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          layout: { padding: 8 },
+          plugins: {
+            title: {
+              display: Boolean(payload.title),
+              text: payload.title,
+              color: chartText,
+              font: { family: "JetBrains Mono, Courier New, monospace", size: 14, weight: "normal" },
+              padding: { bottom: 14 }
+            },
+            legend: {
+              display: payload.series.length > 1 || ["pie", "donut"].includes(payload.type),
+              labels: {
+                color: chartText,
+                boxWidth: 14,
+                boxHeight: 10,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              }
+            },
+            tooltip: {
+              backgroundColor: chartPanel,
+              borderColor: chartText,
+              borderWidth: 1,
+              titleColor: chartText,
+              bodyColor: chartText,
+              displayColors: false,
+              titleFont: { family: "JetBrains Mono, Courier New, monospace" },
+              bodyFont: { family: "JetBrains Mono, Courier New, monospace" }
+            }
+          },
+          scales: {
+            x: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.xLabel),
+                text: payload.xLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                maxRotation: 35,
+                minRotation: 0,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            },
+            y: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.yLabel),
+                text: payload.yLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            }
+          },
+          ...extra
+        });
+
+        const seriesStyle = (index, overrides = {}) => ({
+          borderColor: chartSeries[index % chartSeries.length].borderColor,
+          backgroundColor: chartSeries[index % chartSeries.length].backgroundColor,
+          borderDash: chartSeries[index % chartSeries.length].borderDash,
+          borderWidth: chartSeries[index % chartSeries.length].borderWidth ?? 1.5,
+          pointBackgroundColor: chartPanel,
+          pointBorderColor: chartText,
+          pointRadius: 3,
+          tension: 0.25,
+          ...overrides
+        });
+
+        const doughnutPalette = (count) => Array.from({ length: count }, (_, index) => [
+          "#EFE5C0",
+          "rgba(239, 229, 192, 0.18)",
+          "rgba(239, 229, 192, 0.42)",
+          "rgba(239, 229, 192, 0.08)"
+        ][index % 4]);
+
+        const chartConfig = (payload) => {
+          if (payload.type === "scatter") {
+            return {
+              type: "scatter",
+              data: {
+                datasets: [{
+                  label: payload.yLabel || payload.series[1]?.name || "Value",
+                  data: payload.labels.map((label, index) => ({
+                    x: payload.series[0].values[index],
+                    y: payload.series[1].values[index],
+                    label
+                  })),
+                  ...seriesStyle(0)
+                }]
+              },
+              options: commonChartOptions(payload)
+            };
+          }
+
+          if (["pie", "donut"].includes(payload.type)) {
+            return {
+              type: payload.type === "donut" ? "doughnut" : "pie",
+              data: {
+                labels: payload.labels,
+                datasets: [{
+                  label: payload.series[0]?.name || "Value",
+                  data: payload.series[0]?.values || [],
+                  backgroundColor: doughnutPalette(payload.labels.length),
+                  borderColor: chartText,
+                  borderWidth: 1.5
+                }]
+              },
+              options: commonChartOptions(payload, { scales: {} })
+            };
+          }
+
+          const type = ["bar", "stacked-bar", "horizontal-bar"].includes(payload.type) ? "bar" : "line";
+          return {
+            type,
+            data: {
+              labels: payload.labels,
+              datasets: payload.series.map((item, index) => seriesStyle(index, {
+                label: item.name,
+                data: item.values,
+                fill: payload.type === "area",
+                backgroundColor: payload.type === "area"
+                  ? chartSeries[index % chartSeries.length].backgroundColor
+                  : chartSeries[index % chartSeries.length].backgroundColor
+              }))
+            },
+            options: commonChartOptions(payload, payload.type === "horizontal-bar" ? { indexAxis: "y" } : {})
+          };
+        };
+
+        if (window.Chart) {
+          Chart.defaults.color = chartText;
+          Chart.defaults.font.family = "JetBrains Mono, Courier New, monospace";
+
+          document.querySelectorAll(".chart-data").forEach((script) => {
+            const target = document.getElementById(script.dataset.chartTarget);
+            if (!target) return;
+            const payload = JSON.parse(script.textContent);
+            new Chart(target, chartConfig(payload));
+          });
+        }
+
+        document.querySelectorAll(".copy-code").forEach((button) => {
+          button.addEventListener("click", async () => {
+            const block = button.closest(".code-block");
+            const code = Array.from(block?.querySelectorAll(".line-content") ?? [])
+              .map((line) => line.textContent)
+              .join("\n");
+            const originalText = button.textContent;
+
+            try {
+              await navigator.clipboard.writeText(code);
+              button.textContent = "copied";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            } catch {
+              button.textContent = "failed";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            }
+          });
+        });
+      });
+    </script>
+</head>
+<body>
+<div class="container">
+    <a class="banner" href="../../../index.html">
+      <img src="../../../assets/banner.png" alt="monnickendam.ch">
+    </a>
+<main>
+<section class="block">
+<nav class="header path-header" aria-label="Breadcrumb"><a href="../../../index.html">home</a> / <a href="../../">ctf</a> / <a href="../">Warwick CyberSoc Gym</a> / <span aria-current="page">Broken File</span></nav>
+<div class="body blog-post"><h1>Broken File</h1>
+<p class="blog-date">Misc · Easy</p><h2>The challenge</h2>
+<blockquote>
+  <p>Our picture is broken but we&#x27;re not sure why. We archived it up to keep it from breaking even more.</p>
+</blockquote>
+<ul>
+  <li><strong>Creator:</strong> jdb_jdb</li>
+  <li><strong>Score:</strong> 500</li>
+  <li><strong>Provided file:</strong> <code>1000.tar.gz</code></li>
+</ul>
+<p>I needed to recover the picture and find the flag. Before investigating the image itself, I had to get through its packaging.</p>
+<h2>Following the archive chain</h2>
+<p>I started by checking the file type and listing the archive&#x27;s contents:</p>
+<div class="code-block"><div class="code-label">bash</div><button class="copy-code" type="button">copy</button><pre><code class="language-bash"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">file <span class="tok-number">1000</span>.tar.gz</span></span><span class="code-line"><span class="line-number" aria-hidden="true">2</span><span class="line-content">tar <span class="tok-flag">-tzf</span> <span class="tok-number">1000</span>.tar.gz</span></span></code></pre></div>
+<p><code>file</code> identified gzip-compressed data. The manual archive listing showed just <code>999.tar.gz</code>, rather than an image. That established at least one nested archive; the descending name suggested a chain, but did not establish its depth or contents.</p>
+<p>The two parts of <code>.tar.gz</code> describe different jobs. TAR packages file contents and metadata, including member names, into an archive. GZIP compresses that archive&#x27;s byte stream. Decompressing GZIP therefore reveals a TAR archive, not necessarily the file I ultimately want. Here, the TAR member was another complete gzip-compressed TAR archive. <a href="https://www.gnu.org/software/gzip/manual/gzip.html">GNU&#x27;s Gzip manual</a> describes the two tools as complementary.</p>
+<p>The initial listing suggested a repeatable operation: inspect the current archive, then check whether its contents are another archive. I originally followed the chain programmatically and later shortened the script using the known depth. The version below is a retrospective improvement: it discovers the stopping point instead of encoding the answer. It is not a claim that I used this exact script during the original investigation.</p>
+<h2>Discovering where the chain ends</h2>
+<p>I use the single-member structure from the initial listing as a condition to check at each layer, not an assumption about every archive. A filename ending in <code>.tar.gz</code> is only a clue, so the script attempts to open the member&#x27;s bytes as a TAR archive before continuing.</p>
+<p>Run this with Python 3.12 or later, from the directory containing <code>1000.tar.gz</code>:</p>
+<div class="code-block"><div class="code-label">python</div><button class="copy-code" type="button">copy</button><pre><code class="language-python"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content"><span class="tok-keyword">import</span> io</span></span><span class="code-line"><span class="line-number" aria-hidden="true">2</span><span class="line-content"><span class="tok-keyword">import</span> tarfile</span></span><span class="code-line"><span class="line-number" aria-hidden="true">3</span><span class="line-content"><span class="tok-keyword">from</span> pathlib <span class="tok-keyword">import</span> Path</span></span><span class="code-line"><span class="line-number" aria-hidden="true">4</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">5</span><span class="line-content">data = Path(<span class="tok-string">&quot;1000.tar.gz&quot;</span>).read_bytes()</span></span><span class="code-line"><span class="line-number" aria-hidden="true">6</span><span class="line-content">output = Path(<span class="tok-string">&quot;broken-file-output&quot;</span>)</span></span><span class="code-line"><span class="line-number" aria-hidden="true">7</span><span class="line-content">depth = <span class="tok-number">0</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">8</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">9</span><span class="line-content"><span class="tok-keyword">while</span> <span class="tok-keyword">True</span>:</span></span><span class="code-line"><span class="line-number" aria-hidden="true">10</span><span class="line-content">    <span class="tok-keyword">with</span> tarfile.open(fileobj=io.BytesIO(data), mode=<span class="tok-string">&quot;r:*&quot;</span>) <span class="tok-keyword">as</span> archive:</span></span><span class="code-line"><span class="line-number" aria-hidden="true">11</span><span class="line-content">        members = archive.getmembers()</span></span><span class="code-line"><span class="line-number" aria-hidden="true">12</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">13</span><span class="line-content">        <span class="tok-keyword">if</span> len(members) == <span class="tok-number">1</span> <span class="tok-keyword">and</span> members[<span class="tok-number">0</span>].isfile():</span></span><span class="code-line"><span class="line-number" aria-hidden="true">14</span><span class="line-content">            candidate = archive.extractfile(members[<span class="tok-number">0</span>]).read()</span></span><span class="code-line"><span class="line-number" aria-hidden="true">15</span><span class="line-content">            <span class="tok-keyword">try</span>:</span></span><span class="code-line"><span class="line-number" aria-hidden="true">16</span><span class="line-content">                <span class="tok-keyword">with</span> tarfile.open(fileobj=io.BytesIO(candidate), mode=<span class="tok-string">&quot;r:*&quot;</span>):</span></span><span class="code-line"><span class="line-number" aria-hidden="true">17</span><span class="line-content">                    <span class="tok-keyword">pass</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">18</span><span class="line-content">            <span class="tok-keyword">except</span> tarfile.ReadError:</span></span><span class="code-line"><span class="line-number" aria-hidden="true">19</span><span class="line-content">                <span class="tok-keyword">pass</span>  <span class="tok-comment"># A single non-archive file also ends the chain.</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">20</span><span class="line-content">            <span class="tok-keyword">else</span>:</span></span><span class="code-line"><span class="line-number" aria-hidden="true">21</span><span class="line-content">                data = candidate</span></span><span class="code-line"><span class="line-number" aria-hidden="true">22</span><span class="line-content">                depth += <span class="tok-number">1</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">23</span><span class="line-content">                <span class="tok-keyword">continue</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">24</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">25</span><span class="line-content">        output.mkdir()  <span class="tok-comment"># Refuse to overwrite an existing output directory.</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">26</span><span class="line-content">        archive.extractall(output, filter=<span class="tok-string">&quot;data&quot;</span>)</span></span><span class="code-line"><span class="line-number" aria-hidden="true">27</span><span class="line-content">        print(f<span class="tok-string">&quot;Unwrapped {depth} nested layers&quot;</span>)</span></span><span class="code-line"><span class="line-number" aria-hidden="true">28</span><span class="line-content">        <span class="tok-keyword">for</span> member <span class="tok-keyword">in</span> members:</span></span><span class="code-line"><span class="line-number" aria-hidden="true">29</span><span class="line-content">            print(member.name)</span></span><span class="code-line"><span class="line-number" aria-hidden="true">30</span><span class="line-content">        <span class="tok-keyword">break</span></span></span></code></pre></div>
+<p><a href="https://docs.python.org/3/library/io.html#io.BytesIO"><code>io.BytesIO</code></a> gives the current bytes a file-like interface, including reading and seeking. <a href="https://docs.python.org/3/library/tarfile.html#tarfile.open"><code>tarfile</code>&#x27;s <code>r:*</code> mode</a> reads TAR archives with automatic compression detection. Together, they let me inspect the next layer without saving every intermediate archive to disk.</p>
+<p>The loop continues only when there is exactly one regular-file member and its contents open as another TAR archive. Otherwise, it keeps the current archive open and extracts its members. That matters for the final layer: I want to preserve all its contents, not select the first file and discard the rest. <code>depth</code> counts successful transitions into nested archives, excluding the final extraction.</p>
+<p>The fresh output directory avoids replacing an earlier run&#x27;s files. The <code>data</code> extraction filter rejects unsafe paths and some dangerous member types; it does not make arbitrary archives harmless. This remains a tool for following a single chain: multiple members, including a directory entry alongside an archive, stop traversal for inspection. It reads candidate members fully into memory and has no resource limits. For larger or untrusted inputs, I would add size and depth limits before using it.</p>
+<p>Running this revised script on the supplied file produces:</p>
+<div class="code-block"><div class="code-label">text</div><button class="copy-code" type="button">copy</button><pre><code class="language-text"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">Unwrapped <span class="tok-number">1001</span> nested layers</span></span><span class="code-line"><span class="line-number" aria-hidden="true">2</span><span class="line-content">challenge.png</span></span><span class="code-line"><span class="line-number" aria-hidden="true">3</span><span class="line-content">message.txt</span></span></code></pre></div>
+<p>The traversal reaches <code>folder.tar.gz</code> after the numbered wrappers from <code>1000.tar.gz</code> through <code>0.tar.gz</code>. Its two members end the single-file chain, and both are saved into <code>broken-file-output/</code>. Their names come from the archive listing, not the script.</p>
+<p>The recovered <code>message.txt</code> brings the investigation back to the picture:</p>
+<blockquote>
+  <p>Please you could you help me? My image is broken and I don&#x27;t know why</p>
+</blockquote>
+<h2>A PNG by name, but not by signature</h2>
+<p>Despite its <code>.png</code> extension, <code>file</code> identified <code>challenge.png</code> only as <code>data</code>. The filename suggested a format, but the identification result did not confirm it. That made the header worth inspecting before changing anything:</p>
+<div class="code-block"><div class="code-label">bash</div><button class="copy-code" type="button">copy</button><pre><code class="language-bash"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">file broken-file-output/challenge.png</span></span><span class="code-line"><span class="line-number" aria-hidden="true">2</span><span class="line-content">xxd <span class="tok-flag">-l</span> <span class="tok-number">16</span> broken-file-output/challenge.png</span></span></code></pre></div>
+<div class="code-block"><div class="code-label">text</div><button class="copy-code" type="button">copy</button><pre><code class="language-text"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content"><span class="tok-number">00000000</span>: <span class="tok-number">8950</span> 4e4a 0d0a 1a0a <span class="tok-number">0000</span> 000d <span class="tok-number">4948</span> <span class="tok-number">4452</span>  .PNJ........IHDR</span></span></code></pre></div>
+<p>An extension is a label in the filename; renaming a file does not change its contents. The <a href="https://github.com/file/file/blob/master/doc/file.man"><code>file</code> utility</a> uses content tests, including recognisable byte patterns, to identify formats. Its generic <code>data</code> result did not establish that the image data was destroyed, only that it had not recognised a more specific type.</p>
+<p>The first eight bytes here are <code>89 50 4e 4a 0d 0a 1a 0a</code>. The <a href="https://www.w3.org/TR/png/#5PNG-file-signature">PNG specification</a> requires <code>89 50 4e 47 0d 0a 1a 0a</code>. At zero-based offset 3, this file has <code>4a</code> (<code>J</code>) where it should have <code>47</code> (<code>G</code>): <code>PNJ</code> instead of <code>PNG</code>.</p>
+<p>There was supporting evidence immediately after the signature. <code>00 00 00 0d</code> represents a 13-byte chunk payload, followed by <code>49 48 44 52</code>, or <code>IHDR</code>. PNG begins with an IHDR chunk containing the dimensions, bit depth, colour type, and decoding parameters. That layout matched the <a href="https://www.w3.org/TR/png/#11IHDR">specified image header</a>, making a damaged PNG signature a much stronger explanation than a misleading extension alone.</p>
+<p>This still did not prove that the remaining chunks were intact. It gave me a precise, minimal change to test.</p>
+<h2>Repairing one byte</h2>
+<div class="code-block"><div class="code-label">python</div><button class="copy-code" type="button">copy</button><pre><code class="language-python"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content"><span class="tok-keyword">from</span> pathlib <span class="tok-keyword">import</span> Path</span></span><span class="code-line"><span class="line-number" aria-hidden="true">2</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">3</span><span class="line-content">output = Path(<span class="tok-string">&quot;broken-file-output&quot;</span>)</span></span><span class="code-line"><span class="line-number" aria-hidden="true">4</span><span class="line-content">data = bytearray((output / <span class="tok-string">&quot;challenge.png&quot;</span>).read_bytes())</span></span><span class="code-line"><span class="line-number" aria-hidden="true">5</span><span class="line-content"><span class="tok-keyword">assert</span> data[:<span class="tok-number">8</span>] == b<span class="tok-string">&quot;\x89PNJ\r\n\x1a\n&quot;</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">6</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">7</span><span class="line-content">data[<span class="tok-number">3</span>] = 0x47</span></span><span class="code-line"><span class="line-number" aria-hidden="true">8</span><span class="line-content">(output / <span class="tok-string">&quot;fixed.png&quot;</span>).write_bytes(data)</span></span></code></pre></div>
+<p><code>bytearray</code> lets me change the byte at offset 3 without altering the rest of the file. The assertion checks that the input has the exact damaged signature I inspected. I then save a separate copy, preserving the original for comparison.</p>
+<p>This repairs format recognition, not pixel data. PNG&#x27;s signature sits before its chunks; changing it leaves their contents and CRCs untouched. A valid signature alone would not repair damaged image data, so the useful test was whether the resulting file actually decoded.</p>
+<h2>Result</h2>
+<p>The repaired copy opened successfully as a 527 × 367 image, with the flag written across a coloured background. That confirmed that the single-byte repair was sufficient for this file.</p>
+<p><a href="../../../assets/ctf/warwick-cybersoc-gym/broken-file/fixed.png" target="_blank" rel="noopener noreferrer">View the repaired image</a></p>
+<div class="code-block"><div class="code-label">text</div><button class="copy-code" type="button">copy</button><pre><code class="language-text"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">WMG{h0W_d1d_th3_pnG_brEAk}</span></span></code></pre></div>
+<h2>Takeaway</h2>
+<p>The useful distinction here was between packaging, identification, and image content. The archives could be unpacked correctly while carrying a broken file. The <code>.png</code> name could be correct about the intended format while its signature prevented recognition. Neither observation, by itself, said whether the pixels were recoverable.</p>
+<p>Binary inspection narrowed the problem to one specific mismatch. Keeping the original, changing only the byte supported by the evidence, and checking the decoded result made the repair easy to verify. The same approach would guide a harder case: if the signature fix had not worked, I would move on to chunk lengths, CRCs, and decoder errors rather than making more speculative edits.</p>
+<p class="ctf-back"><a href="../">← All challenges in Warwick CyberSoc Gym</a></p></div>
+</section>
+</main>
+</div>
+</body>
+</html>

@@ -59,10 +59,12 @@ def inline_markdown(value: str) -> str:
     value = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", value)
     value = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", value)
     value = re.sub(
-        r"\[([^\]]+)\]\((https?://[^)]+|[^)]+)\)",
+        r'\[([^\]]+)\]\((https?://[^)]+|[^)]+)\)(\{target=&quot;_blank&quot;\})?',
         lambda match: (
-            f'<a href="{html.escape(html.unescape(match.group(2)), quote=True)}">'
-            f"{html.escape(html.unescape(match.group(1)))}</a>"
+            f'<a href="{html.escape(html.unescape(match.group(2)), quote=True)}"'
+            + (' target="_blank" rel="noopener noreferrer"' if match.group(3) else '')
+            + '>'
+            f"{match.group(1)}</a>"
         ),
         value,
     )
