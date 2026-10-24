@@ -331,6 +331,23 @@
   opacity: 0.75;
 }
 
+.blog-post .ctf-list-title {
+  margin: 24px 0 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--text);
+  font-size: 15px;
+}
+
+.blog-post .ctf-back {
+  margin: 24px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--text);
+}
+
+.path-header {
+  overflow-wrap: anywhere;
+}
+
 .comments-list {
   display: flex;
   flex-direction: column;
