@@ -1297,6 +1297,10 @@
   opacity: 0.9;
 }
 
+.blog-post blockquote > :last-child {
+  margin-bottom: 0;
+}
+
 .table-wrap {
   overflow-x: auto;
   margin: 0 0 14px;
