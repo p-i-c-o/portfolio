@@ -74,6 +74,34 @@
     line-height: 1.4;
   }
   
+  .quick-links-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 0;
+    list-style: none;
+  }
+
+  .quick-links-list a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 14px;
+    color: var(--text);
+    text-decoration: underline;
+  }
+
+  .quick-links-list a:hover {
+    background: var(--text);
+    color: var(--bg);
+  }
+
+  .quick-links-list a:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 3px;
+  }
+
   /* PRE-FORMATTING BUT RESPONSIVE */
   pre {
     white-space: pre-wrap;
