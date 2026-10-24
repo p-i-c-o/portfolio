@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding RSA From First Principles | monnickendam.ch</title>
+    <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+    <link rel="stylesheet" href="../../styles.css?v=comments17">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [["$", "$"], ["\\(", "\\)"]],
+          displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+        },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        themeVariables: {
+          background: "#020305",
+          mainBkg: "#050608",
+          primaryColor: "#050608",
+          primaryTextColor: "#EFE5C0",
+          primaryBorderColor: "#EFE5C0",
+          lineColor: "#EFE5C0",
+          secondaryColor: "#020305",
+          secondaryTextColor: "#EFE5C0",
+          secondaryBorderColor: "#EFE5C0",
+          tertiaryColor: "#050608",
+          tertiaryTextColor: "#EFE5C0",
+          tertiaryBorderColor: "#EFE5C0",
+          nodeTextColor: "#EFE5C0",
+          textColor: "#EFE5C0",
+          actorBkg: "#050608",
+          actorTextColor: "#EFE5C0",
+          actorBorder: "#EFE5C0",
+          signalColor: "#EFE5C0",
+          signalTextColor: "#EFE5C0",
+          labelBoxBkgColor: "#050608",
+          labelTextColor: "#EFE5C0",
+          noteBkgColor: "#050608",
+          noteTextColor: "#EFE5C0",
+          noteBorderColor: "#EFE5C0",
+          activationBkgColor: "#050608",
+          activationBorderColor: "#EFE5C0",
+          git0: "#EFE5C0",
+          git1: "#EFE5C0",
+          git2: "#EFE5C0",
+          git3: "#EFE5C0",
+          git4: "#EFE5C0",
+          git5: "#EFE5C0",
+          git6: "#EFE5C0",
+          git7: "#EFE5C0",
+          gitBranchLabel0: "#EFE5C0",
+          gitBranchLabel1: "#EFE5C0",
+          gitBranchLabel2: "#EFE5C0",
+          gitBranchLabel3: "#EFE5C0",
+          gitBranchLabel4: "#EFE5C0",
+          gitBranchLabel5: "#EFE5C0",
+          gitBranchLabel6: "#EFE5C0",
+          gitBranchLabel7: "#EFE5C0",
+          gitBranchLabelBackground: "#050608",
+          commitLabelColor: "#EFE5C0",
+          commitLabelBackground: "#050608",
+          commitLabelFontSize: "11px",
+          commitLabelPadding: "6px",
+          tagLabelColor: "#EFE5C0",
+          tagLabelBackground: "#050608",
+          tagLabelBorder: "#EFE5C0",
+          fontFamily: "JetBrains Mono, Courier New, monospace"
+        }
+      });
+    </script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chartText = "#EFE5C0";
+        const chartPanel = "#050608";
+        const chartGrid = "rgba(239, 229, 192, 0.25)";
+        const chartSeries = [
+          { backgroundColor: "#EFE5C0", borderColor: "#EFE5C0" },
+          { backgroundColor: "rgba(239, 229, 192, 0.18)", borderColor: "#EFE5C0", borderDash: [6, 4] },
+          { backgroundColor: "rgba(239, 229, 192, 0.42)", borderColor: "#EFE5C0", borderDash: [2, 3] },
+          { backgroundColor: "rgba(239, 229, 192, 0.08)", borderColor: "#EFE5C0", borderWidth: 3 }
+        ];
+
+        const commonChartOptions = (payload, extra = {}) => ({
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          layout: { padding: 8 },
+          plugins: {
+            title: {
+              display: Boolean(payload.title),
+              text: payload.title,
+              color: chartText,
+              font: { family: "JetBrains Mono, Courier New, monospace", size: 14, weight: "normal" },
+              padding: { bottom: 14 }
+            },
+            legend: {
+              display: payload.series.length > 1 || ["pie", "donut"].includes(payload.type),
+              labels: {
+                color: chartText,
+                boxWidth: 14,
+                boxHeight: 10,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              }
+            },
+            tooltip: {
+              backgroundColor: chartPanel,
+              borderColor: chartText,
+              borderWidth: 1,
+              titleColor: chartText,
+              bodyColor: chartText,
+              displayColors: false,
+              titleFont: { family: "JetBrains Mono, Courier New, monospace" },
+              bodyFont: { family: "JetBrains Mono, Courier New, monospace" }
+            }
+          },
+          scales: {
+            x: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.xLabel),
+                text: payload.xLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                maxRotation: 35,
+                minRotation: 0,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            },
+            y: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.yLabel),
+                text: payload.yLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            }
+          },
+          ...extra
+        });
+
+        const seriesStyle = (index, overrides = {}) => ({
+          borderColor: chartSeries[index % chartSeries.length].borderColor,
+          backgroundColor: chartSeries[index % chartSeries.length].backgroundColor,
+          borderDash: chartSeries[index % chartSeries.length].borderDash,
+          borderWidth: chartSeries[index % chartSeries.length].borderWidth ?? 1.5,
+          pointBackgroundColor: chartPanel,
+          pointBorderColor: chartText,
+          pointRadius: 3,
+          tension: 0.25,
+          ...overrides
+        });
+
+        const doughnutPalette = (count) => Array.from({ length: count }, (_, index) => [
+          "#EFE5C0",
+          "rgba(239, 229, 192, 0.18)",
+          "rgba(239, 229, 192, 0.42)",
+          "rgba(239, 229, 192, 0.08)"
+        ][index % 4]);
+
+        const chartConfig = (payload) => {
+          if (payload.type === "scatter") {
+            return {
+              type: "scatter",
+              data: {
+                datasets: [{
+                  label: payload.yLabel || payload.series[1]?.name || "Value",
+                  data: payload.labels.map((label, index) => ({
+                    x: payload.series[0].values[index],
+                    y: payload.series[1].values[index],
+                    label
+                  })),
+                  ...seriesStyle(0)
+                }]
+              },
+              options: commonChartOptions(payload)
+            };
+          }
+
+          if (["pie", "donut"].includes(payload.type)) {
+            return {
+              type: payload.type === "donut" ? "doughnut" : "pie",
+              data: {
+                labels: payload.labels,
+                datasets: [{
+                  label: payload.series[0]?.name || "Value",
+                  data: payload.series[0]?.values || [],
+                  backgroundColor: doughnutPalette(payload.labels.length),
+                  borderColor: chartText,
+                  borderWidth: 1.5
+                }]
+              },
+              options: commonChartOptions(payload, { scales: {} })
+            };
+          }
+
+          const type = ["bar", "stacked-bar", "horizontal-bar"].includes(payload.type) ? "bar" : "line";
+          return {
+            type,
+            data: {
+              labels: payload.labels,
+              datasets: payload.series.map((item, index) => seriesStyle(index, {
+                label: item.name,
+                data: item.values,
+                fill: payload.type === "area",
+                backgroundColor: payload.type === "area"
+                  ? chartSeries[index % chartSeries.length].backgroundColor
+                  : chartSeries[index % chartSeries.length].backgroundColor
+              }))
+            },
+            options: commonChartOptions(payload, payload.type === "horizontal-bar" ? { indexAxis: "y" } : {})
+          };
+        };
+
+        if (window.Chart) {
+          Chart.defaults.color = chartText;
+          Chart.defaults.font.family = "JetBrains Mono, Courier New, monospace";
+
+          document.querySelectorAll(".chart-data").forEach((script) => {
+            const target = document.getElementById(script.dataset.chartTarget);
+            if (!target) return;
+            const payload = JSON.parse(script.textContent);
+            new Chart(target, chartConfig(payload));
+          });
+        }
+
+        document.querySelectorAll(".copy-code").forEach((button) => {
+          button.addEventListener("click", async () => {
+            const block = button.closest(".code-block");
+            const code = Array.from(block?.querySelectorAll(".line-content") ?? [])
+              .map((line) => line.textContent)
+              .join("\n");
+            const originalText = button.textContent;
+
+            try {
+              await navigator.clipboard.writeText(code);
+              button.textContent = "copied";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            } catch {
+              button.textContent = "failed";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            }
+          });
+        });
+      });
+    </script>
+</head>
+<body>
+<div class="container">
+    <a class="banner" href="../../index.html">
+      <img src="../../assets/banner.png" alt="monnickendam.ch">
+    </a>
+    <div class="block">
+        <div class="header path-header"><a href="../../index.html">home</a>/<a href="../">blog</a>/understanding-rsa-from-first-principles.md</div>
+        <div class="body blog-post">
+          <h1>Understanding RSA From First Principles</h1>
+          <p class="blog-date">2026-10-24 18:28</p>
+<p>RSA is built from familiar mathematical operations: multiplication, powers, and division with remainders. None of those operations is especially mysterious on its own. The interesting part is how RSA combines them to let someone publish an encryption key without also giving away the ability to decrypt messages.</p>
+<p>There is a catch, though. The underlying RSA calculation is not a complete, secure encryption system by itself. Used incorrectly, it can expose a message even when the key contains enormous numbers.</p>
+<p>To see both sides of RSA, we&#x27;ll start with small numbers that are easy to check, build a working key pair, and then look at exactly where <em>textbook RSA</em> can fail. The numbers and programs here are educational, not suitable for protecting real data.</p>
+<h2>One Key to Encrypt, Another to Decrypt</h2>
+<p>Imagine Alice wants Bob to send her a confidential message. With symmetric encryption, the two would first need to share a secret key securely. RSA takes a different approach: Alice can publish a key that Bob uses for encryption while keeping a separate key for decryption to herself.</p>
+<div class="mermaid">sequenceDiagram
+    participant A as Alice
+    participant B as Bob
+    A-&gt;&gt;B: Public key
+    B-&gt;&gt;B: Encrypt message
+    B-&gt;&gt;A: Ciphertext
+    A-&gt;&gt;A: Decrypt with private key</div>
+<p>The readable message is the <strong>plaintext</strong>. After encryption, the result is the <strong>ciphertext</strong>. Everyone is allowed to know the public key. An RSA system should remain secure without treating that key as a secret.</p>
+<p>RSA performs calculations on integers, so text must first be represented numerically. For instance, the bytes for <code>AB</code> are <code>0x41</code> and <code>0x42</code>. Read together as one big-endian hexadecimal integer, they form <code>0x4142</code>, which is 16706 in decimal. The bytes can later be recovered from that number, provided the encoding conventions are known.</p>
+<p>We&#x27;ll call this integer the message, or <code>m</code>.</p>
+<h2>The First Ingredient: Powers</h2>
+<p>A power means repeated multiplication:</p>
+<p>$$ 5^3 = 5 \times 5 \times 5 = 125 $$</p>
+<p>Here, 5 is the <strong>base</strong> and 3 is the <strong>exponent</strong>. If we know the result is 125 and that it was produced by cubing a positive integer, we can undo it by taking a cube root:</p>
+<p>$$ \sqrt[3]{125} = 5 $$</p>
+<p>The same applies to fourth powers, fifth powers, and so on. Raising a message to a known power, <em>without doing anything else</em>, would be easy to reverse. RSA needs another mathematical ingredient.</p>
+<h2>The Second Ingredient: Modulo</h2>
+<p><strong>Modulo</strong> means taking the remainder after division. For example, 17 divided by 5 gives three complete groups of five and a remainder of 2:</p>
+<p>$$ 17 = 3 \times 5 + 2 $$</p>
+<p>So we write:</p>
+<p>$$ 17 \bmod 5 = 2 $$</p>
+<p>One way to picture this is with boxes. Suppose we have 350 sweets and boxes that each hold 100. Three boxes can be filled, with 50 sweets left over. Modulo gives us <strong>50</strong>, not three:</p>
+<p>$$ 350 = 3(100) + 50 $$</p>
+<p>$$ 350 \bmod 100 = 50 $$</p>
+<p>If all we know is that 50 sweets remain, we cannot tell whether the original total was 50, 150, 250, or 350. The remainder doesn&#x27;t tell us how many boxes were filled.</p>
+<p>There is one particularly important case. What happens when the number is smaller than the box?</p>
+<p>$$ 625 \bmod 1000 = 625 $$</p>
+<p>A box with room for 1000 sweets cannot be filled by 625 sweets, so all 625 remain. <strong>If a nonnegative number is smaller than the modulus, modulo leaves it unchanged.</strong> Keep that in mind: it is central to the weakness we&#x27;ll examine later.</p>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Calculation</th>
+      <th>Result</th>
+      <th>Did the value change?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>17 % 5</code></td>
+      <td>2</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code>350 % 100</code></td>
+      <td>50</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code>625 % 1000</code></td>
+      <td>625</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<h2>Putting Powers and Modulo Together</h2>
+<p>The basic RSA encryption operation is:</p>
+<p>$$ \boxed{c = m^e \bmod n} $$</p>
+<p>Each letter has a job:</p>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Symbol</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>m</code></td>
+      <td>Plaintext represented as an integer</td>
+    </tr>
+    <tr>
+      <td><code>e</code></td>
+      <td>Public exponent</td>
+    </tr>
+    <tr>
+      <td><code>n</code></td>
+      <td>Modulus</td>
+    </tr>
+    <tr>
+      <td><code>c</code></td>
+      <td>Ciphertext</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p>Say we want to calculate <code>7³ mod 100</code>:</p>
+<p>$$ 7^3 = 343 $$</p>
+<p>$$ 343 \bmod 100 = 43 $$</p>
+<p>The result is 43. Taking the cube root of 43 does not recover 7 because modulo changed the number. This is just an arithmetic illustration; 100 is not a modulus generated as a valid two-prime RSA key.</p>
+<div class="mermaid">flowchart LR
+    M[Message m] --&gt; P[Raise to exponent e]
+    P --&gt; R[Reduce modulo n]
+    R --&gt; C[Ciphertext c]</div>
+<p>We now know what the encryption operation does. The next question is how RSA chooses the exponent and modulus so that a recipient can reverse it with a <em>different</em> exponent.</p>
+<h2>Why RSA Uses Prime Numbers</h2>
+<p>A <strong>prime number</strong> is a whole number greater than 1 that can be divided evenly only by 1 and itself. Examples are 5, 7, 11, and 13.</p>
+<p>RSA begins with two distinct primes, called <code>p</code> and <code>q</code>, and multiplies them:</p>
+<p>$$ \boxed{n = pq} $$</p>
+<p>Multiplying primes is straightforward. Recovering the original factors from a sufficiently large product is much more difficult. The primes are secret, but their product <code>n</code> is public.</p>
+<p>This factorisation difficulty is central to RSA&#x27;s design. It is not the whole security story, as we&#x27;ll see once we try encrypting an especially small message.</p>
+<h2>Building a Small RSA Key Pair</h2>
+<p>Let&#x27;s construct a complete, valid <em>toy</em> RSA key using numbers we can verify by hand. Choose:</p>
+<p>$$ p = 5, \qquad q = 11 $$</p>
+<p>Our modulus is:</p>
+<p>$$ n = 5 \times 11 = 55 $$</p>
+<p>To create the private key, we need a new quantity: <strong>Euler&#x27;s totient</strong>, written <code>φ(n)</code>. It counts the positive integers smaller than <code>n</code> that share no factor with <code>n</code> except 1. For the product of two distinct primes:</p>
+<p>$$ \varphi(n) = (p-1)(q-1) $$</p>
+<p>Here:</p>
+<p>$$ \varphi(55) = 4 \times 10 = 40 $$</p>
+<p>Next, choose a public exponent <code>e</code> that has no common factor greater than 1 with 40. Two numbers with that property are called <strong>coprime</strong>. We can choose:</p>
+<p>$$ e = 3 $$</p>
+<p>The public key is therefore <code>(n, e) = (55, 3)</code>.</p>
+<p>Now for the private exponent, <code>d</code>. We need a number such that multiplying <code>e</code> by <code>d</code> leaves a remainder of 1 when divided by <code>φ(n)</code>:</p>
+<p>$$ e d \bmod \varphi(n) = 1 $$</p>
+<p>Putting in our values:</p>
+<p>$$ 3d \bmod 40 = 1 $$</p>
+<p>Try 27:</p>
+<p>$$ 3 \times 27 = 81 $$</p>
+<p>$$ 81 \bmod 40 = 1 $$</p>
+<p>So <code>d = 27</code>. We call it the <strong>modular inverse</strong> of 3 modulo 40. We found it by inspection because the numbers are small; real implementations calculate inverses efficiently.</p>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Public key</th>
+      <th>Private information</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>n = 55</code></td>
+      <td><code>p = 5</code>, <code>q = 11</code></td>
+    </tr>
+    <tr>
+      <td><code>e = 3</code></td>
+      <td><code>d = 27</code></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p>The private exponent is <em>not</em> an arbitrary password. It is chosen for its mathematical relationship with the public exponent.</p>
+<h2>Encrypting and Decrypting a Message</h2>
+<p>Let&#x27;s encrypt the integer 7 with our public key:</p>
+<p>$$ c = 7^3 \bmod 55 $$</p>
+<p>Since <code>7³ = 343</code>, and <code>343 = 6(55) + 13</code>:</p>
+<p>$$ \boxed{c = 13} $$</p>
+<p>To decrypt, the recipient uses the private exponent instead of the public exponent:</p>
+<p>$$ \boxed{m = c^d \bmod n} $$</p>
+<p>In our example:</p>
+<p>$$ 13^{27} \bmod 55 = 7 $$</p>
+<p>We are back where we started. The public operation turned 7 into 13; the private operation turned 13 back into 7.</p>
+<div class="mermaid">flowchart LR
+    M[Plaintext: 7] --&gt; E[Encrypt: power 3, mod 55]
+    E --&gt; C[Ciphertext: 13]
+    C --&gt; D[Decrypt: power 27, mod 55]
+    D --&gt; R[Plaintext: 7]</div>
+<p>Python&#x27;s three-argument <code>pow()</code> function performs modular exponentiation efficiently. We don&#x27;t need to calculate a huge intermediate power and then divide it:</p>
+<div class="code-block"><div class="code-label">python</div><button class="copy-code" type="button">copy</button><pre><code class="language-python"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">n = <span class="tok-number">55</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">2</span><span class="line-content">public_exponent = <span class="tok-number">3</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">3</span><span class="line-content">private_exponent = <span class="tok-number">27</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">4</span><span class="line-content">message = <span class="tok-number">7</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">5</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">6</span><span class="line-content">ciphertext = pow(message, public_exponent, n)</span></span><span class="code-line"><span class="line-number" aria-hidden="true">7</span><span class="line-content">recovered = pow(ciphertext, private_exponent, n)</span></span><span class="code-line"><span class="line-number" aria-hidden="true">8</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">9</span><span class="line-content">print(ciphertext)  <span class="tok-comment"># 13</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">10</span><span class="line-content">print(recovered)   <span class="tok-comment"># 7</span></span></span></code></pre></div>
+<p>This snippet only calculates and prints values; it does not write files or change keys.</p>
+<h3>Why Does the Private Exponent Work?</h3>
+<p>The answer lies in the relationship we built into the keys:</p>
+<p>$$ ed \bmod \varphi(n) = 1 $$</p>
+<p>It means that <code>ed</code> is one more than a whole-number multiple of <code>φ(n)</code>. In this example, <code>3 × 27 = 81 = 2 × 40 + 1</code>.</p>
+<p>A theorem from number theory, <strong>Euler&#x27;s theorem</strong>, explains why this matters for messages that share no common factor with <code>n</code>. It says that raising such a message to the power <code>φ(n)</code> leaves a remainder of 1 modulo <code>n</code>. This allows the public and private exponents to undo each other.</p>
+<p>The full correctness result also covers the remaining messages for this ordinary two-prime RSA construction; that part can be shown using the <strong>Chinese remainder theorem</strong>. The key idea is enough for now: RSA creates <code>d</code> deliberately so that modular exponentiation can be reversed by someone who knows the private key.</p>
+<h2>When Textbook RSA Goes Wrong</h2>
+<p>Everything so far has described the underlying RSA mathematics. But consider a different message encrypted with the <strong>same valid toy public key</strong>, <code>(n, e) = (55, 3)</code>.</p>
+<p>This time our plaintext is 2:</p>
+<p>$$ c = 2^3 \bmod 55 $$</p>
+<p>First calculate the power:</p>
+<p>$$ 2^3 = 8 $$</p>
+<p>Then apply modulo:</p>
+<p>$$ 8 \bmod 55 = 8 $$</p>
+<p>Notice what happened: <strong>the modulo operation did nothing</strong>. Eight is smaller than 55, just as 625 sweets could not fill a box holding 1000.</p>
+<p>The ciphertext is simply:</p>
+<p>$$ c = 8 $$</p>
+<p>An observer who knows the public exponent can calculate:</p>
+<p>$$ \sqrt[3]{8} = 2 $$</p>
+<p>The plaintext is recovered without knowing the primes or the private exponent.</p>
+<p>This example is deliberately tiny, but the underlying mistake is not limited to tiny RSA moduli. A message can be small <em>relative to</em> a very large modulus. If the system encrypts it directly as an integer, the same problem occurs.</p>
+<h3>The Condition Behind the Attack</h3>
+<p>The encryption equation is:</p>
+<p>$$ c = m^e \bmod n $$</p>
+<p>If the powered message is still smaller than the modulus:</p>
+<p>$$ \boxed{m^e &lt; n} $$</p>
+<p>Then modulo doesn&#x27;t change it:</p>
+<p>$$ c = m^e $$</p>
+<p>Which means the original message can be recovered with an exact integer root:</p>
+<p>$$ \boxed{m = \sqrt[e]{c}} $$</p>
+<p>This is the <strong>small-message integer-root attack</strong> against unpadded, or <em>textbook</em>, RSA. A small public exponent makes the condition more likely for short messages, but <code>e</code> alone is not the vulnerability. The crucial fact is the relationship between <code>m</code>, <code>e</code>, and <code>n</code>.</p>
+<p>The comparison below uses ordinary modular arithmetic to isolate that relationship. The moduli in these rows are illustrative, not all valid RSA key parameters.</p>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Calculation</th>
+      <th>Powered message</th>
+      <th>Ciphertext</th>
+      <th>Direct root works?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>5³ mod 1000</code></td>
+      <td>125</td>
+      <td>125</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code>5³ mod 100</code></td>
+      <td>125</td>
+      <td>25</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><code>7³ mod 1000</code></td>
+      <td>343</td>
+      <td>343</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code>7³ mod 100</code></td>
+      <td>343</td>
+      <td>43</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p>A &#x27;No&#x27; here does <strong>not</strong> mean secure; it only means that taking the root of the ciphertext <em>directly</em> doesn&#x27;t return the original message.</p>
+<h2>Testing for an Exact Root</h2>
+<p>For large integers, floating-point approximations are unreliable. An integer-root function can tell us whether a ciphertext is <em>exactly</em> an integer power.</p>
+<p>For instance, using <code>gmpy2</code>:</p>
+<div class="code-block"><div class="code-label">python</div><button class="copy-code" type="button">copy</button><pre><code class="language-python"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content"><span class="tok-keyword">from</span> gmpy2 <span class="tok-keyword">import</span> iroot</span></span><span class="code-line"><span class="line-number" aria-hidden="true">2</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">3</span><span class="line-content">ciphertext = <span class="tok-number">8</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">4</span><span class="line-content">exponent = <span class="tok-number">3</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">5</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">6</span><span class="line-content">message, exact = iroot(ciphertext, exponent)</span></span><span class="code-line"><span class="line-number" aria-hidden="true">7</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">8</span><span class="line-content"><span class="tok-keyword">if</span> exact:</span></span><span class="code-line"><span class="line-number" aria-hidden="true">9</span><span class="line-content">    print(int(message))  <span class="tok-comment"># 2</span></span></span></code></pre></div>
+<p><code>iroot</code> returns the integer root rounded down and a Boolean indicating whether the power is exact. Here, <code>exact</code> is true because <code>2³ = 8</code>.</p>
+<p>An exact root gives a possible plaintext under the small-message assumption. It does not, by itself, prove that this was the message originally intended.</p>
+<h2>What If Modulo Actually Changed the Result?</h2>
+<p>Return to the boxes: if someone reports 25 sweets left over from boxes of 100, the original total might have been 25, 125, 225, 325, and so on.</p>
+<p>The same reasoning applies to modular exponentiation. There is some nonnegative whole number <code>k</code> such that:</p>
+<p>$$ m^e = c + kn $$</p>
+<p>The <code>k</code> is how many complete multiples of the modulus were removed. For example:</p>
+<p>$$ 5^4 = 625 = 25 + 6(100) $$</p>
+<p>An attacker might try adding multiples of <code>n</code> to <code>c</code> and checking for a perfect power. This can succeed in carefully constructed examples where <code>k</code> is small. But it is not a general way to decrypt RSA: <code>k</code> may be enormous, and a matching perfect power may be only a candidate rather than the intended message.</p>
+<h2>Why Real RSA Encryption Uses OAEP</h2>
+<p>It might sound as though increasing <code>e</code> is the solution. That can make the direct-root condition less likely, but it does not fix the deeper problem: <strong>textbook RSA is not secure encryption for arbitrary messages</strong>.</p>
+<p>Raw RSA is deterministic. Encrypt the same message twice under the same public key and you get the same ciphertext. That is a problem for short or predictable messages. Raw RSA also has algebraic properties that enable other attacks.</p>
+<p>Real applications therefore use an encoding scheme before applying the RSA operation. A widely used scheme for encryption is <strong>RSA-OAEP</strong> (<em>Optimal Asymmetric Encryption Padding</em>). OAEP includes randomness and structure in the encoded message, so encryption does not simply raise the original small plaintext integer directly to a power.</p>
+<div class="mermaid">flowchart LR
+    M[Message bytes] --&gt; O[OAEP encoding + randomness]
+    O --&gt; I[Encoded integer]
+    I --&gt; R[RSA public-key operation]
+    R --&gt; C[Ciphertext]</div>
+<p>OAEP should be provided by a trusted cryptographic library, not implemented from scratch. The RSA key must also be generated correctly, with adequately sized primes and valid exponents. A conventional public exponent for modern RSA is 65537.</p>
+<p>RSA is generally not used to encrypt large files directly. A common design is <strong>hybrid encryption</strong>: an authenticated symmetric cipher encrypts the actual data, while RSA-OAEP encrypts the random symmetric key. RSA can also produce digital signatures, but that is a separate operation with its own secure schemes, such as RSA-PSS.</p>
+<h2>What Actually Makes RSA Secure?</h2>
+<p>RSA isn&#x27;t protected by the mere presence of enormous prime numbers. Its security depends on a complete design: sound key generation, valid exponents, sufficient modulus size, secure padding, protected private keys, and careful implementation.</p>
+<p>The simplest vulnerability in this article needed none of the usual hard problems to be solved. An attacker did not need to factor the modulus. The message&#x27;s power was smaller than the modulus, so the modulo operation never changed it. Taking a root was enough.</p>
+<p>That is the distinction worth remembering: <strong>understanding the RSA equation is not the same as having a secure RSA encryption system</strong>. The mathematics is the foundation; the surrounding design determines whether it is safe to use.</p>
+        </div>
+    </div>
+    <div class="block comment-account-card">
+        <div class="header">Account</div>
+        <div class="body comment-account">
+                <div class="comment-account-guest">
+                    <span>Want a username and comments that follow you across devices?</span>
+                    <a href="../../account/">Create an account or sign in</a>
+                </div>
+                <div class="comment-account-member" hidden>
+                    <span>Signed in as <strong class="comment-account-username"></strong>.</span>
+                    <a href="../../account/#inbox-title">Inbox <span class="comment-unread-count"></span></a>
+                    <a href="../../account/">Manage account</a>
+                </div>
+        </div>
+    </div>
+    <div class="block comment-form-card">
+        <div class="header">Leave a comment</div>
+        <div class="body">
+            <div class="comments-form-home"><form class="comments-form">
+                <h2 class="comments-form-title">Leave a comment</h2>
+                <p class="comments-target" hidden></p>
+                <p class="comment-identity">Posting as Anonymous commenter</p>
+                <label for="comment-body">Comment</label>
+                <textarea id="comment-body" name="body" maxlength="1000" rows="3" required></textarea>
+                <div class="comments-trap" aria-hidden="true">
+                    <label for="comment-website">Website</label>
+                    <input id="comment-website" name="website" tabindex="-1" autocomplete="off">
+                </div>
+                <p class="comments-note">Comments appear immediately. Plain text only, up to 1,000 characters.</p>
+                <div class="comments-form-actions">
+                    <button type="submit" disabled>Post comment</button>
+                    <button class="comments-cancel" type="button" hidden>Cancel</button>
+                </div>
+                <p class="comments-status" role="status" aria-live="polite"></p>
+            </form></div>
+        </div>
+    </div>
+    <div id="comments" class="block comments" data-comment-slug="understanding-rsa-from-first-principles">
+        <div class="header">Comments</div>
+        <div class="body">
+            <div class="comments-discussion-bar" hidden>
+                <label for="comments-sort">Sort by
+                    <select id="comments-sort" class="comments-sort">
+                        <option value="newest">Newest</option>
+                        <option value="top">Most votes</option>
+                    </select>
+                </label>
+            </div>
+            <div class="comments-list" aria-live="polite">Loading comments…</div>
+            <button class="comments-more" type="button" hidden>Load more comments</button>
+        </div>
+    </div>
+    <script defer src="../../comments.js?v=14"></script>
+</div>
+</body>
+</html>
