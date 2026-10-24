@@ -82,6 +82,71 @@ Run, Markdown, Full page
 ```
 ````
 
+## CTF write-ups
+
+The CTF area lives at `/ctf/`. Each event has a challenge index, and each
+challenge opens as a blog-style solution write-up. The section starts empty,
+ready for events and challenges to be added.
+
+Keep Markdown sources in this structure:
+
+```text
+ctf-posts/
+└── event-name/
+    ├── index.md             # Event title, summary, and introduction
+    ├── first-challenge.md   # A solution write-up
+    └── second-challenge.md
+```
+
+Use lowercase letters, numbers, and hyphens for directory and file names.
+They determine the URLs: `/ctf/event-name/first-challenge/`.
+Each event requires an `index.md` with front matter:
+
+```markdown
+---
+title: Event Name
+date: 2026-10-24
+description: A short summary of the event.
+---
+
+An introduction to the event.
+```
+
+Each challenge is another Markdown file in that event directory:
+
+```markdown
+---
+title: First Challenge
+date: 2026-10-24
+description: A short summary of the challenge.
+category: Forensics
+difficulty: Medium
+---
+
+## The challenge
+
+Describe the task here.
+
+## Solution
+
+Explain the approach, include code, and discuss what you learned.
+```
+
+Only `title` is required. Dates use `YYYY-MM-DD`; dated entries appear newest
+first, followed by undated entries. Add `draft: true` to hide a challenge or
+an entire event. Empty published events show a message until write-ups are added.
+Write-ups support the same Markdown, code blocks, tables, math, diagrams, and
+charts as the blog.
+
+Rebuild after changing the sources, then refresh the running local site:
+
+```bash
+python3 scripts/build-ctf.py
+```
+
+The generated `ctf/` directory is replaced on each build, so edit the Markdown
+sources instead of generated HTML. Deployment builds both the blog and CTF area.
+
 ## Deployment
 
 Deploy the repository contents as static files with `index.html` at the web root. The production site is expected to be served from:

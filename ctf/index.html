@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTF write-ups | monnickendam.ch</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link rel="stylesheet" href="../styles.css">
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [["$", "$"], ["\\(", "\\)"]],
+          displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+        },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "base",
+        themeVariables: {
+          background: "#020305",
+          mainBkg: "#050608",
+          primaryColor: "#050608",
+          primaryTextColor: "#EFE5C0",
+          primaryBorderColor: "#EFE5C0",
+          lineColor: "#EFE5C0",
+          secondaryColor: "#020305",
+          secondaryTextColor: "#EFE5C0",
+          secondaryBorderColor: "#EFE5C0",
+          tertiaryColor: "#050608",
+          tertiaryTextColor: "#EFE5C0",
+          tertiaryBorderColor: "#EFE5C0",
+          nodeTextColor: "#EFE5C0",
+          textColor: "#EFE5C0",
+          actorBkg: "#050608",
+          actorTextColor: "#EFE5C0",
+          actorBorder: "#EFE5C0",
+          signalColor: "#EFE5C0",
+          signalTextColor: "#EFE5C0",
+          labelBoxBkgColor: "#050608",
+          labelTextColor: "#EFE5C0",
+          noteBkgColor: "#050608",
+          noteTextColor: "#EFE5C0",
+          noteBorderColor: "#EFE5C0",
+          activationBkgColor: "#050608",
+          activationBorderColor: "#EFE5C0",
+          git0: "#EFE5C0",
+          git1: "#EFE5C0",
+          git2: "#EFE5C0",
+          git3: "#EFE5C0",
+          git4: "#EFE5C0",
+          git5: "#EFE5C0",
+          git6: "#EFE5C0",
+          git7: "#EFE5C0",
+          gitBranchLabel0: "#EFE5C0",
+          gitBranchLabel1: "#EFE5C0",
+          gitBranchLabel2: "#EFE5C0",
+          gitBranchLabel3: "#EFE5C0",
+          gitBranchLabel4: "#EFE5C0",
+          gitBranchLabel5: "#EFE5C0",
+          gitBranchLabel6: "#EFE5C0",
+          gitBranchLabel7: "#EFE5C0",
+          gitBranchLabelBackground: "#050608",
+          commitLabelColor: "#EFE5C0",
+          commitLabelBackground: "#050608",
+          commitLabelFontSize: "11px",
+          commitLabelPadding: "6px",
+          tagLabelColor: "#EFE5C0",
+          tagLabelBackground: "#050608",
+          tagLabelBorder: "#EFE5C0",
+          fontFamily: "JetBrains Mono, Courier New, monospace"
+        }
+      });
+    </script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
+        const chartText = "#EFE5C0";
+        const chartPanel = "#050608";
+        const chartGrid = "rgba(239, 229, 192, 0.25)";
+        const chartSeries = [
+          { backgroundColor: "#EFE5C0", borderColor: "#EFE5C0" },
+          { backgroundColor: "rgba(239, 229, 192, 0.18)", borderColor: "#EFE5C0", borderDash: [6, 4] },
+          { backgroundColor: "rgba(239, 229, 192, 0.42)", borderColor: "#EFE5C0", borderDash: [2, 3] },
+          { backgroundColor: "rgba(239, 229, 192, 0.08)", borderColor: "#EFE5C0", borderWidth: 3 }
+        ];
+
+        const commonChartOptions = (payload, extra = {}) => ({
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: false,
+          layout: { padding: 8 },
+          plugins: {
+            title: {
+              display: Boolean(payload.title),
+              text: payload.title,
+              color: chartText,
+              font: { family: "JetBrains Mono, Courier New, monospace", size: 14, weight: "normal" },
+              padding: { bottom: 14 }
+            },
+            legend: {
+              display: payload.series.length > 1 || ["pie", "donut"].includes(payload.type),
+              labels: {
+                color: chartText,
+                boxWidth: 14,
+                boxHeight: 10,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              }
+            },
+            tooltip: {
+              backgroundColor: chartPanel,
+              borderColor: chartText,
+              borderWidth: 1,
+              titleColor: chartText,
+              bodyColor: chartText,
+              displayColors: false,
+              titleFont: { family: "JetBrains Mono, Courier New, monospace" },
+              bodyFont: { family: "JetBrains Mono, Courier New, monospace" }
+            }
+          },
+          scales: {
+            x: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.xLabel),
+                text: payload.xLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                maxRotation: 35,
+                minRotation: 0,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            },
+            y: {
+              stacked: payload.type === "stacked-bar",
+              title: {
+                display: Boolean(payload.yLabel),
+                text: payload.yLabel,
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              ticks: {
+                color: chartText,
+                font: { family: "JetBrains Mono, Courier New, monospace", size: 11 }
+              },
+              grid: { color: chartGrid },
+              border: { color: chartText }
+            }
+          },
+          ...extra
+        });
+
+        const seriesStyle = (index, overrides = {}) => ({
+          borderColor: chartSeries[index % chartSeries.length].borderColor,
+          backgroundColor: chartSeries[index % chartSeries.length].backgroundColor,
+          borderDash: chartSeries[index % chartSeries.length].borderDash,
+          borderWidth: chartSeries[index % chartSeries.length].borderWidth ?? 1.5,
+          pointBackgroundColor: chartPanel,
+          pointBorderColor: chartText,
+          pointRadius: 3,
+          tension: 0.25,
+          ...overrides
+        });
+
+        const doughnutPalette = (count) => Array.from({ length: count }, (_, index) => [
+          "#EFE5C0",
+          "rgba(239, 229, 192, 0.18)",
+          "rgba(239, 229, 192, 0.42)",
+          "rgba(239, 229, 192, 0.08)"
+        ][index % 4]);
+
+        const chartConfig = (payload) => {
+          if (payload.type === "scatter") {
+            return {
+              type: "scatter",
+              data: {
+                datasets: [{
+                  label: payload.yLabel || payload.series[1]?.name || "Value",
+                  data: payload.labels.map((label, index) => ({
+                    x: payload.series[0].values[index],
+                    y: payload.series[1].values[index],
+                    label
+                  })),
+                  ...seriesStyle(0)
+                }]
+              },
+              options: commonChartOptions(payload)
+            };
+          }
+
+          if (["pie", "donut"].includes(payload.type)) {
+            return {
+              type: payload.type === "donut" ? "doughnut" : "pie",
+              data: {
+                labels: payload.labels,
+                datasets: [{
+                  label: payload.series[0]?.name || "Value",
+                  data: payload.series[0]?.values || [],
+                  backgroundColor: doughnutPalette(payload.labels.length),
+                  borderColor: chartText,
+                  borderWidth: 1.5
+                }]
+              },
+              options: commonChartOptions(payload, { scales: {} })
+            };
+          }
+
+          const type = ["bar", "stacked-bar", "horizontal-bar"].includes(payload.type) ? "bar" : "line";
+          return {
+            type,
+            data: {
+              labels: payload.labels,
+              datasets: payload.series.map((item, index) => seriesStyle(index, {
+                label: item.name,
+                data: item.values,
+                fill: payload.type === "area",
+                backgroundColor: payload.type === "area"
+                  ? chartSeries[index % chartSeries.length].backgroundColor
+                  : chartSeries[index % chartSeries.length].backgroundColor
+              }))
+            },
+            options: commonChartOptions(payload, payload.type === "horizontal-bar" ? { indexAxis: "y" } : {})
+          };
+        };
+
+        if (window.Chart) {
+          Chart.defaults.color = chartText;
+          Chart.defaults.font.family = "JetBrains Mono, Courier New, monospace";
+
+          document.querySelectorAll(".chart-data").forEach((script) => {
+            const target = document.getElementById(script.dataset.chartTarget);
+            if (!target) return;
+            const payload = JSON.parse(script.textContent);
+            new Chart(target, chartConfig(payload));
+          });
+        }
+
+        document.querySelectorAll(".copy-code").forEach((button) => {
+          button.addEventListener("click", async () => {
+            const block = button.closest(".code-block");
+            const code = Array.from(block?.querySelectorAll(".line-content") ?? [])
+              .map((line) => line.textContent)
+              .join("\n");
+            const originalText = button.textContent;
+
+            try {
+              await navigator.clipboard.writeText(code);
+              button.textContent = "copied";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            } catch {
+              button.textContent = "failed";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 1200);
+            }
+          });
+        });
+      });
+    </script>
+</head>
+<body>
+<div class="container">
+    <a class="banner" href="../index.html">
+      <img src="../assets/banner.png" alt="monnickendam.ch">
+    </a>
+<main>
+<section class="block">
+<nav class="header path-header" aria-label="Breadcrumb"><a href="../index.html">home</a> / <span aria-current="page">ctf</span></nav>
+<div class="body blog-post"><h1>CTF write-ups</h1>
+<p>Capture the flag challenges, the paths to their solutions, and what I learned along the way.</p>
+<h2 class="ctf-list-title">Events</h2>
+<div class="blog-list"><p>No CTFs published yet. Check back for challenge write-ups.</p></div></div>
+</section>
+</main>
+</div>
+</body>
+</html>

@@ -24,11 +24,15 @@ git clone --depth 1 --branch "${REPO_BRANCH}" "${REPO_URL}" "${WORK_DIR}/repo"
 log "Building blog pages"
 python3 "${WORK_DIR}/repo/scripts/build-blog.py"
 
+log "Building CTF pages"
+python3 "${WORK_DIR}/repo/scripts/build-ctf.py"
+
 log "Syncing site files into ${TARGET_DIR}"
 rsync -a --delete \
   --exclude ".git/" \
   --exclude ".gitignore" \
   --exclude "blog-posts/" \
+  --exclude "ctf-posts/" \
   --exclude "scripts/" \
   --exclude "server-side/" \
   "${WORK_DIR}/repo/" \
