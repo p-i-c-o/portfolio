@@ -5,6 +5,13 @@
   const slug = section.dataset.commentSlug;
   const list = section.querySelector(".comments-list");
   const more = section.querySelector(".comments-more");
+  const retry = document.createElement('button');
+  retry.className = 'retry-button';
+  retry.type = 'button';
+  retry.textContent = 'Try again';
+  retry.hidden = true;
+  more.after(retry);
+  retry.addEventListener('click', () => loadComments(true));
   const sortBar = section.querySelector(".comments-discussion-bar");
   const sortSelect = section.querySelector(".comments-sort");
   const formCard = document.querySelector(".comment-form-card");
@@ -21,6 +28,10 @@
   const accountCard = document.querySelector(".comment-account-card");
   const accountGuest = accountCard.querySelector(".comment-account-guest");
   const accountMember = accountCard.querySelector(".comment-account-member");
+  const accountStatus = document.createElement('p');
+  accountStatus.setAttribute('role', 'status');
+  accountStatus.hidden = true;
+  accountCard.querySelector('.comment-account').append(accountStatus);
   const accountUsername = accountCard.querySelector(".comment-account-username");
   const unreadCount = accountCard.querySelector(".comment-unread-count");
   const identity = form.querySelector('.comment-identity');
@@ -52,6 +63,7 @@
   }
 
   function showAccount(signedInNow, username, unread = 0) {
+    accountStatus.hidden = true;
     currentUsername = signedInNow ? username : null;
     accountGuest.hidden = signedInNow;
     accountMember.hidden = !signedInNow;
@@ -73,13 +85,11 @@
   }
 
   async function api(method, payload) {
-    const response = await fetch("/api/comments.php", {
+    const result = await CommentAPI.request("/api/comments.php", {
       method,
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({ slug, ...payload })
     });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || "The request failed.");
     return result;
   }
 
@@ -440,9 +450,8 @@
           if (reset) { this.offset = 0; this.items = []; replyList.replaceChildren(); }
           try {
             const query = new URLSearchParams({ slug, sort: sortMode, thread_id: String(comment.id), offset: String(this.offset) });
-            const response = await fetch(`/api/comments.php?${query}`, { headers: { Accept: "application/json" } });
-            if (!response.ok) throw new Error("Could not load replies.");
-            const data = await response.json();
+            const data = await CommentAPI.request(`/api/comments.php?${query}`, {},
+              result => Array.isArray(result.comments));
             this.items.push(...data.comments);
             this.render();
             this.offset += data.comments.length;
@@ -466,6 +475,7 @@
       return;
     }
     loading = true;
+    retry.hidden = true;
     more.disabled = true;
     const requestedSort = sortMode;
     const activeId = mode.kind === "edit" ? mode.comment.id : mode.parent;
@@ -478,9 +488,9 @@
     }
     try {
       const query = new URLSearchParams({ slug, sort: requestedSort, offset: String(offset) });
-      const response = await fetch(`/api/comments.php?${query}`, { headers: { Accept: "application/json" } });
-      if (!response.ok) throw new Error("Could not load comments.");
-      const data = await response.json();
+      const data = await CommentAPI.request(`/api/comments.php?${query}`, {},
+        result => Array.isArray(result.comments) && typeof result.signed_in === 'boolean'
+          && typeof result.submission_token === 'string');
       if (requestedSort !== sortMode) return;
       showAccount(Boolean(data.signed_in), data.username, data.unread_count);
       if (!submissionToken || Date.now() / 1000 - Number(submissionToken.split(".")[0]) > 7000) {
@@ -506,8 +516,18 @@
         else resetForm();
       }
     } catch (error) {
-      if (reset) list.textContent = "Comments are unavailable right now.";
+      if (reset) list.textContent = error.message;
       else setStatus(error.message);
+      if (error.serviceUnavailable) {
+        submissionToken = null;
+        updateSubmitReady();
+        accountGuest.hidden = true;
+        accountMember.hidden = true;
+        accountStatus.textContent = error.message;
+        accountStatus.hidden = false;
+        identity.textContent = 'Account status unavailable.';
+      }
+      retry.hidden = false;
     } finally {
       loading = false;
       more.disabled = false;

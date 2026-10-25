@@ -892,7 +892,8 @@
 .account-card input,
 .account-card select,
 .account-card textarea,
-.account-card button {
+.account-card button,
+.retry-button {
   background: var(--panel-bg);
   color: var(--text);
   border: 1px solid var(--text);
@@ -912,18 +913,31 @@
   resize: vertical;
 }
 
-.account-card button {
+.account-card button,
+.retry-button {
   cursor: pointer;
 }
 
-.account-card button:hover:not(:disabled) {
+.account-card button:hover:not(:disabled),
+.retry-button:hover:not(:disabled) {
   background: var(--text);
   color: var(--bg);
 }
 
-.account-card button:disabled {
+.account-card button:disabled,
+.retry-button:disabled {
   opacity: 0.5;
   cursor: wait;
+}
+
+.retry-button {
+  display: block;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.retry-button[hidden] {
+  display: none;
 }
 
 .account-card .account-hint,

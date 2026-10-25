@@ -6,6 +6,7 @@
   const dashboard = find('.account-dashboard');
   const keyCard = find('.account-key-card');
   const loading = find('.account-loading');
+  const retry = find('.account-retry');
   const createForm = find('.account-create-form');
   const loginForm = find('.account-login-form');
   const rotateForm = find('.account-rotate-form');
@@ -62,21 +63,16 @@
   window.addEventListener('hashchange', () => selectTab());
 
   async function get(query) {
-    const response = await fetch(`/api/comments.php?${query}`, { headers: { Accept: 'application/json' } });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || 'The request failed.');
-    return result;
+    return CommentAPI.request(`/api/comments.php?${query}`, {}, result =>
+      query !== 'account=1' || typeof result.signed_in === 'boolean');
   }
 
   async function api(method, payload) {
-    const response = await fetch('/api/comments.php', {
+    return CommentAPI.request('/api/comments.php', {
       method,
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || 'The request failed.');
-    return result;
   }
 
   function dateLabel(value) {
@@ -373,6 +369,10 @@
   }
 
   async function refresh() {
+    retry.disabled = true;
+    retry.hidden = true;
+    loading.textContent = 'Checking your account…';
+    loading.hidden = false;
     try {
       const profile = await get('account=1');
       renderProfile(profile);
@@ -386,8 +386,13 @@
     } catch (error) {
       loading.textContent = error.message;
       loading.hidden = false;
-    }
+      auth.hidden = true;
+      dashboard.hidden = true;
+      retry.hidden = false;
+    } finally { retry.disabled = false; }
   }
+
+  retry.addEventListener('click', refresh);
 
   createName.addEventListener('input', () => {
     clearTimeout(availabilityTimer);
