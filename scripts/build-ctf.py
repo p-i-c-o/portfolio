@@ -16,6 +16,7 @@ markdown_to_html = BLOG["markdown_to_html"]
 page_shell = BLOG["page_shell"]
 article_parts = BLOG["article_parts"]
 file_info = BLOG["file_info"]
+breadcrumb_path = BLOG["breadcrumb_path"]
 escape = html.escape
 
 
@@ -99,14 +100,14 @@ def build(source: Path = ROOT / "ctf-posts", output: Path = ROOT / "ctf") -> Non
     if output.exists():
         shutil.rmtree(output)
     output.mkdir(parents=True)
-    body = panel('<a href="../index.html">home</a> / <span aria-current="page">ctf</span>', f'''<h1>CTF write-ups</h1>
+    body = panel(breadcrumb_path([("home", "../index.html"), ("ctf", None)]), f'''<h1>CTF write-ups</h1>
 <p>Capture the flag challenges, the paths to their solutions, and what I learned along the way.</p>
 <h2 class="ctf-list-title">Events</h2>
 <div class="blog-list">{listing(events, events=True)}</div>''')
     write_page(output / "index.html", "CTF write-ups", body, 1)
     for event in events:
         title = escape(event["title"])
-        body = panel(f'<a href="../../index.html">home</a> / <a href="../">ctf</a> / <span aria-current="page">{title}</span>', f'''<h1>{title}</h1>
+        body = panel(breadcrumb_path([("home", "../../index.html"), ("ctf", "../"), (event["slug"], None)]), f'''<h1>{title}</h1>
 {metadata(event)}{event['body']}
 <h2 class="ctf-list-title">Challenges</h2>
 <div class="blog-list">{listing(event['challenges'])}</div>''')
@@ -116,7 +117,8 @@ def build(source: Path = ROOT / "ctf-posts", output: Path = ROOT / "ctf") -> Non
             index, content = article_parts(challenge["body"], challenge["title"])
             info = file_info(challenge["title"], challenge.get("description", ""),
                              challenge.get("date", ""), challenge.get("author", ""),
-                             f'<a href="../../../index.html">home</a> / <a href="../../">ctf</a> / <a href="../">{title}</a> / <span aria-current="page">{challenge_title}</span>')
+                             breadcrumb_path([("home", "../../../index.html"), ("ctf", "../../"),
+                                              (event["slug"], "../"), (challenge["slug"] + ".md", None)]))
             tags = metadata({key: challenge[key] for key in ("category", "difficulty") if key in challenge})
             body = info + index + f'''<section class="block">
 <div id="article-title" class="body blog-post" aria-label="Article">
