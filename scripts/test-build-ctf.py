@@ -53,7 +53,9 @@ class CTFBuildTests(unittest.TestCase):
         challenge = (self.output / "newer/first/index.html").read_text()
         self.assertIn('href="../">newer</a>/<span aria-current="page">first.md</span>', challenge)
         self.assertIn('href="../../../styles.css"', challenge)
-        self.assertIn("Encoding · Easy", challenge)
+        self.assertIn('<dt>Category</dt><dd>Encoding</dd>', challenge)
+        self.assertIn('<dt>Difficulty</dt><dd>Easy</dd>', challenge)
+        self.assertIn('<dt>CTF</dt><dd>Newer</dd>', challenge)
         self.assertIn('class="copy-code"', challenge)
         self.assertIn("No challenge write-ups published yet", (self.output / "older/index.html").read_text())
 
@@ -85,6 +87,38 @@ class CTFBuildTests(unittest.TestCase):
         index = (self.output / "index.html").read_text()
         self.assertIn("&lt;script&gt;alert(1)&lt;/script&gt;", index)
         self.assertIn("&lt;img src=x&gt;", index)
+
+    def test_ctf_info_distinguishes_creator_and_writer(self):
+        self.content("event/index.md", "Practice CTF")
+        self.content("event/challenge.md", "Challenge", "score: 0\nsolves: 0\ncreator: <creator>\nauthor: Writer\nfiles: evidence.zip\n")
+        self.build()
+        page = (self.output / "event/challenge/index.html").read_text()
+        for row in ('<dt>Score</dt><dd>0</dd>', '<dt>Solves</dt><dd>0</dd>',
+                    '<dt>Creator</dt><dd>&lt;creator&gt;</dd>',
+                    '<dt>Write-up by</dt><dd>Writer</dd>',
+                    '<dt>Files</dt><dd>evidence.zip</dd>'):
+            self.assertIn(row, page)
+        self.assertNotIn('<dt>Difficulty</dt>', page)
+        self.assertNotIn('<dt>Write-up date</dt>', page)
+        self.assertNotIn('<dt>Description</dt>', page)
+        self.assertNotIn('Not specified', page)
+
+    def test_event_groups_categories_and_omits_drafts(self):
+        self.content('event/index.md', 'Event')
+        self.content('event/web-old.md', 'Old web', 'category: Web\ndate: 2025-01-01\n')
+        self.content('event/web-new.md', 'New web', 'category: web\ndate: 2026-01-01\n')
+        self.content('event/crypto.md', 'Crypto challenge', 'category: Crypto\n')
+        self.content('event/uncategorized.md', 'Uncategorized')
+        self.content('event/draft.md', 'Draft', 'category: Hidden\ndraft: true\n')
+        self.build()
+        page = (self.output / 'event/index.html').read_text()
+        self.assertEqual(page.count('class="header ctf-category-header"'), 3)
+        self.assertNotIn('write-ups', page)
+        self.assertLess(page.index('>Crypto</span>'), page.index('>web</span>'))
+        self.assertLess(page.index('>web</span>'), page.index('>Other</span>'))
+        self.assertLess(page.index('href="web-new/"'), page.index('href="web-old/"'))
+        self.assertNotIn('Hidden', page)
+        self.assertIn('href="uncategorized/"', page)
 
     def test_generated_site_local_links_resolve(self):
         root = Path(__file__).resolve().parents[1]

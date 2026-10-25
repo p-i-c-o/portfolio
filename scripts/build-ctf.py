@@ -67,18 +67,42 @@ def metadata(item: dict) -> str:
     return f'<p class="blog-date">{" · ".join(parts)}</p>' if parts else ""
 
 
-def listing(items: list[dict], events: bool = False) -> str:
+def listing(items: list[dict], events: bool = False, show_category: bool = True) -> str:
     entries = []
     for item in items:
         count = len(item.get("challenges", []))
         detail = f'<p>{count} write-up{"s" if count != 1 else ""}</p>' if events else ""
         description = f'<p>{escape(item["description"])}</p>' if item.get("description") else ""
+        details = metadata(item if show_category else {key: value for key, value in item.items() if key != "category"})
         entries.append(f'''<article class="blog-list-entry">
 <h3><a href="{item['slug']}/">{escape(item['title'])}</a></h3>
-{metadata(item)}{description}{detail}
+{details}{description}{detail}
 </article>''')
     empty = "No CTFs published yet. Check back for challenge write-ups." if events else "No challenge write-ups published yet. Check back soon."
     return "\n".join(entries) or f"<p>{empty}</p>"
+
+
+def category_blocks(challenges: list[dict]) -> str:
+    groups: dict[str, list[dict]] = {}
+    labels: dict[str, str] = {}
+    for challenge in challenges:
+        label = challenge.get("category", "").strip() or "Other"
+        key = label.casefold()
+        labels.setdefault(key, label)
+        groups.setdefault(key, []).append(challenge)
+
+    if not groups:
+        return ('<section class="block"><h2 class="header">Challenges</h2>'
+                f'<div class="body blog-list">{listing([])}</div></section>')
+
+    blocks = []
+    for number, key in enumerate(sorted(groups, key=lambda key: (key == "other", key)), start=1):
+        items = groups[key]
+        blocks.append(f'''<section class="block" aria-labelledby="category-{number}">
+<h2 class="header ctf-category-header" id="category-{number}"><span>{escape(labels[key])}</span></h2>
+<div class="body blog-list">{listing(items, show_category=False)}</div>
+</section>''')
+    return "\n".join(blocks)
 
 
 def write_page(path: Path, title: str, body: str, depth: int) -> None:
@@ -108,21 +132,27 @@ def build(source: Path = ROOT / "ctf-posts", output: Path = ROOT / "ctf") -> Non
     for event in events:
         title = escape(event["title"])
         body = panel(breadcrumb_path([("home", "../../index.html"), ("ctf", "../"), (event["slug"], None)]), f'''<h1>{title}</h1>
-{metadata(event)}{event['body']}
-<h2 class="ctf-list-title">Challenges</h2>
-<div class="blog-list">{listing(event['challenges'])}</div>''')
+{metadata(event)}{event['body']}''')
+        body += category_blocks(event["challenges"])
         write_page(output / event["slug"] / "index.html", event["title"], body, 2)
         for challenge in event["challenges"]:
-            challenge_title = escape(challenge["title"])
             index, content = article_parts(challenge["body"], challenge["title"])
+            fields = [("CTF", event["title"])] + [
+                (label, challenge.get(key, "")) for key, label in (
+                    ("category", "Category"), ("difficulty", "Difficulty"),
+                    ("score", "Score"), ("solves", "Solves"),
+                    ("creator", "Creator"), ("files", "Files"),
+                )
+            ]
             info = file_info(challenge["title"], challenge.get("description", ""),
                              challenge.get("date", ""), challenge.get("author", ""),
                              breadcrumb_path([("home", "../../../index.html"), ("ctf", "../../"),
-                                              (event["slug"], "../"), (challenge["slug"] + ".md", None)]))
-            tags = metadata({key: challenge[key] for key in ("category", "difficulty") if key in challenge})
+                                              (event["slug"], "../"), (challenge["slug"] + ".md", None)]),
+                             extra_fields=fields, date_label="Write-up date", author_label="Write-up by",
+                             hide_empty=True)
             body = info + index + f'''<section class="block">
 <div id="article-title" class="body blog-post" aria-label="Article">
-{tags}{content}
+{content}
 <p class="ctf-back"><a href="../">← All challenges in {title}</a></p>
 </div></section>'''
             write_page(output / event["slug"] / challenge["slug"] / "index.html", f"{challenge['title']} | {event['title']}", body, 3)

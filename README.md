@@ -154,6 +154,17 @@ an entire event. Empty published events show a message until write-ups are added
 Write-ups support the same Markdown, code blocks, tables, math, diagrams, and
 charts as the blog.
 
+CTF file info includes the event name and any populated `category`, `difficulty`,
+`score`, `solves`, `creator`, and `files` fields. Use `creator` for the challenge
+creator and `author` for the write-up author. `files` is a plain-text list of
+provided filenames. Scores and solve counts are recorded snapshots, not live
+values. Blank optional fields are omitted from the info box.
+
+Each event page groups published write-ups into separate category blocks,
+sorted alphabetically. Categories ignore capitalization and surrounding spaces;
+challenges without a category appear under “Other,” last. Within each category,
+the existing newest-first order is preserved.
+
 Rebuild after changing the sources, then refresh the running local site:
 
 ```bash
