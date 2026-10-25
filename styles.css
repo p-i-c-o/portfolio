@@ -336,6 +336,14 @@
   gap: 20px;
 }
 
+.ctf-category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
 .file-info a,
 .file-info a:visited {
   color: var(--text);

@@ -588,16 +588,28 @@ def breadcrumb_path(parts: list[tuple[str, str | None]]) -> str:
     )
 
 
-def file_info(title: str, description: str, date: str, author: str, breadcrumbs: str) -> str:
+def file_info(title: str, description: str, date: str, author: str, breadcrumbs: str,
+              *, extra_fields: list[tuple[str, str]] | None = None,
+              date_label: str = "Published", author_label: str = "Author",
+              hide_empty: bool = False) -> str:
     """Shared metadata block for blog posts and CTF write-ups."""
+    extra_rows = "".join(
+        f"<dt>{html.escape(label)}</dt><dd>{html.escape(value)}</dd>"
+        for label, value in (extra_fields or []) if value
+    )
+    def row(label: str, value: str, fallback: str = "Not specified") -> str:
+        if hide_empty and not value.strip():
+            return ""
+        return f"<dt>{html.escape(label)}</dt><dd>{html.escape(value or fallback)}</dd>"
+
     return f'''<section class="block file-info" aria-label="File info">
 <nav class="header path-header" aria-label="Breadcrumb">{breadcrumbs}</nav>
 <div class="body">
 <dl class="file-info-fields">
 <dt>Title</dt><dd><h1>{html.escape(title)}</h1></dd>
-<dt>Description</dt><dd>{html.escape(description or "Not specified")}</dd>
-<dt>Published</dt><dd>{html.escape(date or "Not specified")}</dd>
-<dt>Author</dt><dd>{html.escape(author or "Elie Monnickendam")}</dd>
+{row("Description", description)}
+{extra_rows}{row(date_label, date)}
+{row(author_label, author, "Elie Monnickendam")}
 </dl>
 </div>
 </section>'''

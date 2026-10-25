@@ -281,21 +281,16 @@
 <dl class="file-info-fields">
 <dt>Title</dt><dd><h1>Broken File</h1></dd>
 <dt>Description</dt><dd>Unwrapping 1,001 nested archives and repairing a one-byte PNG signature to recover the flag.</dd>
-<dt>Published</dt><dd>Not specified</dd>
-<dt>Author</dt><dd>Elie Monnickendam</dd>
+<dt>CTF</dt><dd>Warwick CyberSoc Gym</dd><dt>Category</dt><dd>Misc</dd><dt>Difficulty</dt><dd>Easy</dd><dt>Score</dt><dd>500</dd><dt>Creator</dt><dd>jdb_jdb</dd><dt>Files</dt><dd>1000.tar.gz</dd>
+
 </dl>
 </div>
 </section><nav class="block article-index" aria-labelledby="article-index-title"><h2 class="header" id="article-index-title">Article contents</h2><div class="body"><ol class="article-index-list"><li style="--index-number-width: 1ch"><a href="#section-the-challenge"><span class="article-index-number">1</span> <span class="article-index-label">The challenge</span></a></li><li style="--index-number-width: 1ch"><a href="#section-following-the-archive-chain"><span class="article-index-number">2</span> <span class="article-index-label">Following the archive chain</span></a></li><li style="--index-number-width: 1ch"><a href="#section-discovering-where-the-chain-ends"><span class="article-index-number">3</span> <span class="article-index-label">Discovering where the chain ends</span></a></li><li style="--index-number-width: 1ch"><a href="#section-a-png-by-name-but-not-by-signature"><span class="article-index-number">4</span> <span class="article-index-label">A PNG by name, but not by signature</span></a></li><li style="--index-number-width: 1ch"><a href="#section-repairing-one-byte"><span class="article-index-number">5</span> <span class="article-index-label">Repairing one byte</span></a></li><li style="--index-number-width: 1ch"><a href="#section-result"><span class="article-index-number">6</span> <span class="article-index-label">Result</span></a></li><li style="--index-number-width: 1ch"><a href="#section-takeaway"><span class="article-index-number">7</span> <span class="article-index-label">Takeaway</span></a></li></ol></div></nav><section class="block">
 <div id="article-title" class="body blog-post" aria-label="Article">
-<p class="blog-date">Misc · Easy</p><h2 id="section-the-challenge" class="article-heading"><span class="article-heading-number">1</span><span>The challenge</span></h2>
+<h2 id="section-the-challenge" class="article-heading"><span class="article-heading-number">1</span><span>The challenge</span></h2>
 <blockquote>
   <p>Our picture is broken but we&#x27;re not sure why. We archived it up to keep it from breaking even more.</p>
 </blockquote>
-<ul>
-  <li><strong>Creator:</strong> jdb_jdb</li>
-  <li><strong>Score:</strong> 500</li>
-  <li><strong>Provided file:</strong> <code>1000.tar.gz</code></li>
-</ul>
 <p>I needed to recover the picture and find the flag. Before investigating the image itself, I had to get through its packaging.</p>
 <h2 id="section-following-the-archive-chain" class="article-heading"><span class="article-heading-number">2</span><span>Following the archive chain</span></h2>
 <p>I started by checking the file type and listing the archive&#x27;s contents:</p>

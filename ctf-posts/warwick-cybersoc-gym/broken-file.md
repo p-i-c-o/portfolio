@@ -2,16 +2,15 @@
 title: Broken File
 category: Misc
 difficulty: Easy
+score: 500
+creator: jdb_jdb
+files: 1000.tar.gz
 description: Unwrapping 1,001 nested archives and repairing a one-byte PNG signature to recover the flag.
 ---
 
 ## The challenge
 
 > Our picture is broken but we're not sure why. We archived it up to keep it from breaking even more.
-
-- **Creator:** jdb_jdb
-- **Score:** 500
-- **Provided file:** `1000.tar.gz`
 
 I needed to recover the picture and find the flag. Before investigating the image itself, I had to get through its packaging.
 

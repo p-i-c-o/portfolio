@@ -3,6 +3,11 @@ title: Challenge Name
 category: Misc
 description:
 difficulty:
+score:
+solves:
+creator:
+files:
+author:
 date:
 draft: true
 ---
