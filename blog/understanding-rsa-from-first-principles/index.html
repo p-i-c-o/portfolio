@@ -274,15 +274,25 @@
     <a class="banner" href="../../index.html">
       <img src="../../assets/banner.png" alt="monnickendam.ch">
     </a>
+<section class="block file-info" aria-label="File info">
+<nav class="header path-header" aria-label="Breadcrumb"><a href="../../index.html">home</a>/<a href="../">blog</a>/understanding-rsa-from-first-principles.md</nav>
+<div class="body">
+<dl class="file-info-fields">
+<dt>Title</dt><dd><h1>Understanding RSA From First Principles</h1></dd>
+<dt>Description</dt><dd>A beginner-friendly explanation of RSA, from modular arithmetic and key generation to encryption, decryption, and the small-message weakness in textbook RSA.</dd>
+<dt>Published</dt><dd>2026-10-24 18:28</dd>
+<dt>Author</dt><dd>Elie Monnickendam</dd>
+</dl>
+</div>
+</section>
+    <nav class="block article-index" aria-labelledby="article-index-title"><h2 class="header" id="article-index-title">Article contents</h2><div class="body"><ol class="article-index-list"><li style="--index-number-width: 2ch"><a href="#section-one-key-to-encrypt-another-to-decrypt"><span class="article-index-number">1</span> <span class="article-index-label">One Key to Encrypt, Another to Decrypt</span></a></li><li style="--index-number-width: 2ch"><a href="#section-the-first-ingredient-powers"><span class="article-index-number">2</span> <span class="article-index-label">The First Ingredient: Powers</span></a></li><li style="--index-number-width: 2ch"><a href="#section-the-second-ingredient-modulo"><span class="article-index-number">3</span> <span class="article-index-label">The Second Ingredient: Modulo</span></a></li><li style="--index-number-width: 2ch"><a href="#section-putting-powers-and-modulo-together"><span class="article-index-number">4</span> <span class="article-index-label">Putting Powers and Modulo Together</span></a></li><li style="--index-number-width: 2ch"><a href="#section-why-rsa-uses-prime-numbers"><span class="article-index-number">5</span> <span class="article-index-label">Why RSA Uses Prime Numbers</span></a></li><li style="--index-number-width: 2ch"><a href="#section-building-a-small-rsa-key-pair"><span class="article-index-number">6</span> <span class="article-index-label">Building a Small RSA Key Pair</span></a></li><li style="--index-number-width: 2ch"><a href="#section-encrypting-and-decrypting-a-message"><span class="article-index-number">7</span> <span class="article-index-label">Encrypting and Decrypting a Message</span></a><ol class="article-index-subsections"><li style="--index-number-width: 3ch"><a href="#section-why-does-the-private-exponent-work"><span class="article-index-number">7.1</span> <span class="article-index-label">Why Does the Private Exponent Work?</span></a></li></ol></li><li style="--index-number-width: 2ch"><a href="#section-when-textbook-rsa-goes-wrong"><span class="article-index-number">8</span> <span class="article-index-label">When Textbook RSA Goes Wrong</span></a><ol class="article-index-subsections"><li style="--index-number-width: 3ch"><a href="#section-the-condition-behind-the-attack"><span class="article-index-number">8.1</span> <span class="article-index-label">The Condition Behind the Attack</span></a></li></ol></li><li style="--index-number-width: 2ch"><a href="#section-testing-for-an-exact-root"><span class="article-index-number">9</span> <span class="article-index-label">Testing for an Exact Root</span></a></li><li style="--index-number-width: 2ch"><a href="#section-what-if-modulo-actually-changed-the-result"><span class="article-index-number">10</span> <span class="article-index-label">What If Modulo Actually Changed the Result?</span></a></li><li style="--index-number-width: 2ch"><a href="#section-why-real-rsa-encryption-uses-oaep"><span class="article-index-number">11</span> <span class="article-index-label">Why Real RSA Encryption Uses OAEP</span></a></li><li style="--index-number-width: 2ch"><a href="#section-what-actually-makes-rsa-secure"><span class="article-index-number">12</span> <span class="article-index-label">What Actually Makes RSA Secure?</span></a></li></ol></div></nav>
     <div class="block">
-        <div class="header path-header"><a href="../../index.html">home</a>/<a href="../">blog</a>/understanding-rsa-from-first-principles.md</div>
-        <div class="body blog-post">
-          <h1>Understanding RSA From First Principles</h1>
-          <p class="blog-date">2026-10-24 18:28</p>
+        <div id="article-title" class="body blog-post" aria-label="Article">
+<h1 id="section-understanding-rsa-from-first-principles" class="article-heading"><span>Understanding RSA From First Principles</span></h1>
 <p>RSA is built from familiar mathematical operations: multiplication, powers, and division with remainders. None of those operations is especially mysterious on its own. The interesting part is how RSA combines them to let someone publish an encryption key without also giving away the ability to decrypt messages.</p>
 <p>There is a catch, though. The underlying RSA calculation is not a complete, secure encryption system by itself. Used incorrectly, it can expose a message even when the key contains enormous numbers.</p>
 <p>To see both sides of RSA, we&#x27;ll start with small numbers that are easy to check, build a working key pair, and then look at exactly where <em>textbook RSA</em> can fail. The numbers and programs here are educational, not suitable for protecting real data.</p>
-<h2>One Key to Encrypt, Another to Decrypt</h2>
+<h2 id="section-one-key-to-encrypt-another-to-decrypt" class="article-heading"><span class="article-heading-number">1</span><span>One Key to Encrypt, Another to Decrypt</span></h2>
 <p>Imagine Alice wants Bob to send her a confidential message. With symmetric encryption, the two would first need to share a secret key securely. RSA takes a different approach: Alice can publish a key that Bob uses for encryption while keeping a separate key for decryption to herself.</p>
 <div class="mermaid">sequenceDiagram
     participant A as Alice
@@ -294,13 +304,13 @@
 <p>The readable message is the <strong>plaintext</strong>. After encryption, the result is the <strong>ciphertext</strong>. Everyone is allowed to know the public key. An RSA system should remain secure without treating that key as a secret.</p>
 <p>RSA performs calculations on integers, so text must first be represented numerically. For instance, the bytes for <code>AB</code> are <code>0x41</code> and <code>0x42</code>. Read together as one big-endian hexadecimal integer, they form <code>0x4142</code>, which is 16706 in decimal. The bytes can later be recovered from that number, provided the encoding conventions are known.</p>
 <p>We&#x27;ll call this integer the message, or <code>m</code>.</p>
-<h2>The First Ingredient: Powers</h2>
+<h2 id="section-the-first-ingredient-powers" class="article-heading"><span class="article-heading-number">2</span><span>The First Ingredient: Powers</span></h2>
 <p>A power means repeated multiplication:</p>
 <p>$$ 5^3 = 5 \times 5 \times 5 = 125 $$</p>
 <p>Here, 5 is the <strong>base</strong> and 3 is the <strong>exponent</strong>. If we know the result is 125 and that it was produced by cubing a positive integer, we can undo it by taking a cube root:</p>
 <p>$$ \sqrt[3]{125} = 5 $$</p>
 <p>The same applies to fourth powers, fifth powers, and so on. Raising a message to a known power, <em>without doing anything else</em>, would be easy to reverse. RSA needs another mathematical ingredient.</p>
-<h2>The Second Ingredient: Modulo</h2>
+<h2 id="section-the-second-ingredient-modulo" class="article-heading"><span class="article-heading-number">3</span><span>The Second Ingredient: Modulo</span></h2>
 <p><strong>Modulo</strong> means taking the remainder after division. For example, 17 divided by 5 gives three complete groups of five and a remainder of 2:</p>
 <p>$$ 17 = 3 \times 5 + 2 $$</p>
 <p>So we write:</p>
@@ -340,7 +350,7 @@
   </tbody>
 </table>
 </div>
-<h2>Putting Powers and Modulo Together</h2>
+<h2 id="section-putting-powers-and-modulo-together" class="article-heading"><span class="article-heading-number">4</span><span>Putting Powers and Modulo Together</span></h2>
 <p>The basic RSA encryption operation is:</p>
 <p>$$ \boxed{c = m^e \bmod n} $$</p>
 <p>Each letter has a job:</p>
@@ -381,13 +391,13 @@
     P --&gt; R[Reduce modulo n]
     R --&gt; C[Ciphertext c]</div>
 <p>We now know what the encryption operation does. The next question is how RSA chooses the exponent and modulus so that a recipient can reverse it with a <em>different</em> exponent.</p>
-<h2>Why RSA Uses Prime Numbers</h2>
+<h2 id="section-why-rsa-uses-prime-numbers" class="article-heading"><span class="article-heading-number">5</span><span>Why RSA Uses Prime Numbers</span></h2>
 <p>A <strong>prime number</strong> is a whole number greater than 1 that can be divided evenly only by 1 and itself. Examples are 5, 7, 11, and 13.</p>
 <p>RSA begins with two distinct primes, called <code>p</code> and <code>q</code>, and multiplies them:</p>
 <p>$$ \boxed{n = pq} $$</p>
 <p>Multiplying primes is straightforward. Recovering the original factors from a sufficiently large product is much more difficult. The primes are secret, but their product <code>n</code> is public.</p>
 <p>This factorisation difficulty is central to RSA&#x27;s design. It is not the whole security story, as we&#x27;ll see once we try encrypting an especially small message.</p>
-<h2>Building a Small RSA Key Pair</h2>
+<h2 id="section-building-a-small-rsa-key-pair" class="article-heading"><span class="article-heading-number">6</span><span>Building a Small RSA Key Pair</span></h2>
 <p>Let&#x27;s construct a complete, valid <em>toy</em> RSA key using numbers we can verify by hand. Choose:</p>
 <p>$$ p = 5, \qquad q = 11 $$</p>
 <p>Our modulus is:</p>
@@ -428,7 +438,7 @@
 </table>
 </div>
 <p>The private exponent is <em>not</em> an arbitrary password. It is chosen for its mathematical relationship with the public exponent.</p>
-<h2>Encrypting and Decrypting a Message</h2>
+<h2 id="section-encrypting-and-decrypting-a-message" class="article-heading"><span class="article-heading-number">7</span><span>Encrypting and Decrypting a Message</span></h2>
 <p>Let&#x27;s encrypt the integer 7 with our public key:</p>
 <p>$$ c = 7^3 \bmod 55 $$</p>
 <p>Since <code>7³ = 343</code>, and <code>343 = 6(55) + 13</code>:</p>
@@ -446,13 +456,13 @@
 <p>Python&#x27;s three-argument <code>pow()</code> function performs modular exponentiation efficiently. We don&#x27;t need to calculate a huge intermediate power and then divide it:</p>
 <div class="code-block"><div class="code-label">python</div><button class="copy-code" type="button">copy</button><pre><code class="language-python"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">n = <span class="tok-number">55</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">2</span><span class="line-content">public_exponent = <span class="tok-number">3</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">3</span><span class="line-content">private_exponent = <span class="tok-number">27</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">4</span><span class="line-content">message = <span class="tok-number">7</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">5</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">6</span><span class="line-content">ciphertext = pow(message, public_exponent, n)</span></span><span class="code-line"><span class="line-number" aria-hidden="true">7</span><span class="line-content">recovered = pow(ciphertext, private_exponent, n)</span></span><span class="code-line"><span class="line-number" aria-hidden="true">8</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">9</span><span class="line-content">print(ciphertext)  <span class="tok-comment"># 13</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">10</span><span class="line-content">print(recovered)   <span class="tok-comment"># 7</span></span></span></code></pre></div>
 <p>This snippet only calculates and prints values; it does not write files or change keys.</p>
-<h3>Why Does the Private Exponent Work?</h3>
+<h3 id="section-why-does-the-private-exponent-work" class="article-heading"><span class="article-heading-number">7.1</span><span>Why Does the Private Exponent Work?</span></h3>
 <p>The answer lies in the relationship we built into the keys:</p>
 <p>$$ ed \bmod \varphi(n) = 1 $$</p>
 <p>It means that <code>ed</code> is one more than a whole-number multiple of <code>φ(n)</code>. In this example, <code>3 × 27 = 81 = 2 × 40 + 1</code>.</p>
 <p>A theorem from number theory, <strong>Euler&#x27;s theorem</strong>, explains why this matters for messages that share no common factor with <code>n</code>. It says that raising such a message to the power <code>φ(n)</code> leaves a remainder of 1 modulo <code>n</code>. This allows the public and private exponents to undo each other.</p>
 <p>The full correctness result also covers the remaining messages for this ordinary two-prime RSA construction; that part can be shown using the <strong>Chinese remainder theorem</strong>. The key idea is enough for now: RSA creates <code>d</code> deliberately so that modular exponentiation can be reversed by someone who knows the private key.</p>
-<h2>When Textbook RSA Goes Wrong</h2>
+<h2 id="section-when-textbook-rsa-goes-wrong" class="article-heading"><span class="article-heading-number">8</span><span>When Textbook RSA Goes Wrong</span></h2>
 <p>Everything so far has described the underlying RSA mathematics. But consider a different message encrypted with the <strong>same valid toy public key</strong>, <code>(n, e) = (55, 3)</code>.</p>
 <p>This time our plaintext is 2:</p>
 <p>$$ c = 2^3 \bmod 55 $$</p>
@@ -467,7 +477,7 @@
 <p>$$ \sqrt[3]{8} = 2 $$</p>
 <p>The plaintext is recovered without knowing the primes or the private exponent.</p>
 <p>This example is deliberately tiny, but the underlying mistake is not limited to tiny RSA moduli. A message can be small <em>relative to</em> a very large modulus. If the system encrypts it directly as an integer, the same problem occurs.</p>
-<h3>The Condition Behind the Attack</h3>
+<h3 id="section-the-condition-behind-the-attack" class="article-heading"><span class="article-heading-number">8.1</span><span>The Condition Behind the Attack</span></h3>
 <p>The encryption equation is:</p>
 <p>$$ c = m^e \bmod n $$</p>
 <p>If the powered message is still smaller than the modulus:</p>
@@ -517,20 +527,20 @@
 </table>
 </div>
 <p>A &#x27;No&#x27; here does <strong>not</strong> mean secure; it only means that taking the root of the ciphertext <em>directly</em> doesn&#x27;t return the original message.</p>
-<h2>Testing for an Exact Root</h2>
+<h2 id="section-testing-for-an-exact-root" class="article-heading"><span class="article-heading-number">9</span><span>Testing for an Exact Root</span></h2>
 <p>For large integers, floating-point approximations are unreliable. An integer-root function can tell us whether a ciphertext is <em>exactly</em> an integer power.</p>
 <p>For instance, using <code>gmpy2</code>:</p>
 <div class="code-block"><div class="code-label">python</div><button class="copy-code" type="button">copy</button><pre><code class="language-python"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content"><span class="tok-keyword">from</span> gmpy2 <span class="tok-keyword">import</span> iroot</span></span><span class="code-line"><span class="line-number" aria-hidden="true">2</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">3</span><span class="line-content">ciphertext = <span class="tok-number">8</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">4</span><span class="line-content">exponent = <span class="tok-number">3</span></span></span><span class="code-line"><span class="line-number" aria-hidden="true">5</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">6</span><span class="line-content">message, exact = iroot(ciphertext, exponent)</span></span><span class="code-line"><span class="line-number" aria-hidden="true">7</span><span class="line-content"></span></span><span class="code-line"><span class="line-number" aria-hidden="true">8</span><span class="line-content"><span class="tok-keyword">if</span> exact:</span></span><span class="code-line"><span class="line-number" aria-hidden="true">9</span><span class="line-content">    print(int(message))  <span class="tok-comment"># 2</span></span></span></code></pre></div>
 <p><code>iroot</code> returns the integer root rounded down and a Boolean indicating whether the power is exact. Here, <code>exact</code> is true because <code>2³ = 8</code>.</p>
 <p>An exact root gives a possible plaintext under the small-message assumption. It does not, by itself, prove that this was the message originally intended.</p>
-<h2>What If Modulo Actually Changed the Result?</h2>
+<h2 id="section-what-if-modulo-actually-changed-the-result" class="article-heading"><span class="article-heading-number">10</span><span>What If Modulo Actually Changed the Result?</span></h2>
 <p>Return to the boxes: if someone reports 25 sweets left over from boxes of 100, the original total might have been 25, 125, 225, 325, and so on.</p>
 <p>The same reasoning applies to modular exponentiation. There is some nonnegative whole number <code>k</code> such that:</p>
 <p>$$ m^e = c + kn $$</p>
 <p>The <code>k</code> is how many complete multiples of the modulus were removed. For example:</p>
 <p>$$ 5^4 = 625 = 25 + 6(100) $$</p>
 <p>An attacker might try adding multiples of <code>n</code> to <code>c</code> and checking for a perfect power. This can succeed in carefully constructed examples where <code>k</code> is small. But it is not a general way to decrypt RSA: <code>k</code> may be enormous, and a matching perfect power may be only a candidate rather than the intended message.</p>
-<h2>Why Real RSA Encryption Uses OAEP</h2>
+<h2 id="section-why-real-rsa-encryption-uses-oaep" class="article-heading"><span class="article-heading-number">11</span><span>Why Real RSA Encryption Uses OAEP</span></h2>
 <p>It might sound as though increasing <code>e</code> is the solution. That can make the direct-root condition less likely, but it does not fix the deeper problem: <strong>textbook RSA is not secure encryption for arbitrary messages</strong>.</p>
 <p>Raw RSA is deterministic. Encrypt the same message twice under the same public key and you get the same ciphertext. That is a problem for short or predictable messages. Raw RSA also has algebraic properties that enable other attacks.</p>
 <p>Real applications therefore use an encoding scheme before applying the RSA operation. A widely used scheme for encryption is <strong>RSA-OAEP</strong> (<em>Optimal Asymmetric Encryption Padding</em>). OAEP includes randomness and structure in the encoded message, so encryption does not simply raise the original small plaintext integer directly to a power.</p>
@@ -541,7 +551,7 @@
     R --&gt; C[Ciphertext]</div>
 <p>OAEP should be provided by a trusted cryptographic library, not implemented from scratch. The RSA key must also be generated correctly, with adequately sized primes and valid exponents. A conventional public exponent for modern RSA is 65537.</p>
 <p>RSA is generally not used to encrypt large files directly. A common design is <strong>hybrid encryption</strong>: an authenticated symmetric cipher encrypts the actual data, while RSA-OAEP encrypts the random symmetric key. RSA can also produce digital signatures, but that is a separate operation with its own secure schemes, such as RSA-PSS.</p>
-<h2>What Actually Makes RSA Secure?</h2>
+<h2 id="section-what-actually-makes-rsa-secure" class="article-heading"><span class="article-heading-number">12</span><span>What Actually Makes RSA Secure?</span></h2>
 <p>RSA isn&#x27;t protected by the mere presence of enormous prime numbers. Its security depends on a complete design: sound key generation, valid exponents, sufficient modulus size, secure padding, protected private keys, and careful implementation.</p>
 <p>The simplest vulnerability in this article needed none of the usual hard problems to be solved. An attacker did not need to factor the modulus. The message&#x27;s power was smaller than the modulus, so the modulo operation never changed it. Taking a root was enough.</p>
 <p>That is the distinction worth remembering: <strong>understanding the RSA equation is not the same as having a secure RSA encryption system</strong>. The mathematics is the foundation; the surrounding design determines whether it is safe to use.</p>
