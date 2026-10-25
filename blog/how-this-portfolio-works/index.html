@@ -274,19 +274,29 @@
     <a class="banner" href="../../index.html">
       <img src="../../assets/banner.png" alt="monnickendam.ch">
     </a>
+<section class="block file-info" aria-label="File info">
+<nav class="header path-header" aria-label="Breadcrumb"><a href="../../index.html">home</a>/<a href="../">blog</a>/how-this-portfolio-works.md</nav>
+<div class="body">
+<dl class="file-info-fields">
+<dt>Title</dt><dd><h1>How This Portfolio Works</h1></dd>
+<dt>Description</dt><dd>How monnickendam.ch is built as a small static website with a Markdown-powered blog and a simple deployment script.</dd>
+<dt>Published</dt><dd>2026-08-11 23:58</dd>
+<dt>Author</dt><dd>Elie Monnickendam</dd>
+</dl>
+</div>
+</section>
+    <nav class="block article-index" aria-labelledby="article-index-title"><h2 class="header" id="article-index-title">Article contents</h2><div class="body"><ol class="article-index-list"><li style="--index-number-width: 1ch"><a href="#section-the-shape-of-the-site"><span class="article-index-number">1</span> <span class="article-index-label">The Shape Of The Site</span></a></li><li style="--index-number-width: 1ch"><a href="#section-writing-posts-without-a-cms"><span class="article-index-number">2</span> <span class="article-index-label">Writing Posts Without A CMS</span></a></li><li style="--index-number-width: 1ch"><a href="#section-the-build-step"><span class="article-index-number">3</span> <span class="article-index-label">The Build Step</span></a></li><li style="--index-number-width: 1ch"><a href="#section-deployment"><span class="article-index-number">4</span> <span class="article-index-label">Deployment</span></a></li><li style="--index-number-width: 1ch"><a href="#section-what-happens-when-someone-visits"><span class="article-index-number">5</span> <span class="article-index-label">What Happens When Someone Visits</span></a></li><li style="--index-number-width: 1ch"><a href="#section-why-keep-it-this-small"><span class="article-index-number">6</span> <span class="article-index-label">Why Keep It This Small?</span></a></li></ol></div></nav>
     <div class="block">
-        <div class="header path-header"><a href="../../index.html">home</a>/<a href="../">blog</a>/how-this-portfolio-works.md</div>
-        <div class="body blog-post">
-          <h1>How This Portfolio Works</h1>
-          <p class="blog-date">2026-08-11 23:58</p>
+        <div id="article-title" class="body blog-post" aria-label="Article">
+<h1 id="section-how-this-portfolio-works" class="article-heading"><span>How This Portfolio Works</span></h1>
 <p>I built this website in a way that I can actually keep in my head. That was the main rule. I did not want a portfolio that only made sense while the development server was running, or one that needed a dashboard, a database, and a pile of dependencies just to publish a few pages.</p>
 <p>So <code>monnickendam.ch</code> is mostly just files. HTML, CSS, a bit of JavaScript, some assets, and generated blog pages. When someone opens the site, the server does not do anything clever. It sends the files over and the browser renders them.</p>
 <p>This is not the fanciest way to build a website, but it is a very maintainable way to build this website.</p>
-<h2>The Shape Of The Site</h2>
+<h2 id="section-the-shape-of-the-site" class="article-heading"><span class="article-heading-number">1</span><span>The Shape Of The Site</span></h2>
 <p>The homepage is plain <code>index.html</code>. That file is the front door: intro, projects, certifications, experience, contact form, and links. The styling is in <code>styles.css</code>, and the font is bundled locally in <code>assets/fonts/</code>.</p>
 <p>The visual style is intentionally narrow. Off-black, off-white, hard borders, monospace. I like websites that look like they have rules. This one is not trying to look like a startup landing page. It is closer to a document or a small terminal interface.</p>
 <p>The contact form is the one part of the homepage that talks to anything outside the site. The code for that lives in <code>contact.js</code>, and it sends the form submission to a webhook. The rest of the homepage is static.</p>
-<h2>Writing Posts Without A CMS</h2>
+<h2 id="section-writing-posts-without-a-cms" class="article-heading"><span class="article-heading-number">2</span><span>Writing Posts Without A CMS</span></h2>
 <p>The blog is the only part that needs a small build step. I do not want to write full HTML every time I publish something, but I also do not want to run a full blogging platform. Markdown is enough.</p>
 <p>Every post starts as a file in <code>blog-posts/</code>.</p>
 <p>Each article starts with a small front matter block:</p>
@@ -299,7 +309,7 @@
 <p>turns into this published page:</p>
 <div class="code-block"><div class="code-label">text</div><button class="copy-code" type="button">copy</button><pre><code class="language-text"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">blog/how-this-portfolio-works/index.html</span></span></code></pre></div>
 <p>The blog index is rebuilt at the same time. It shows newest posts first, but the numbers are based on publication order from oldest to newest. So if an article is <code>[04]</code>, it stays <code>[04]</code>. New posts do not reshuffle old ones.</p>
-<h2>The Build Step</h2>
+<h2 id="section-the-build-step" class="article-heading"><span class="article-heading-number">3</span><span>The Build Step</span></h2>
 <p>This build script is probably the closest thing the site has to a backend. It runs before the site is deployed. It does not run when someone visits a page.</p>
 <div class="mermaid">flowchart TD
     subgraph Source[repository source]
@@ -323,7 +333,7 @@
     SHELL --&gt; SITE</div>
 <p>The Markdown renderer is small on purpose. It supports the things I actually use here: headings, paragraphs, lists, tables, blockquotes, code blocks, math blocks, Mermaid diagrams, and Chart.js graphs.</p>
 <p>The more complicated rendering is handed off to proper libraries. Mermaid draws diagrams. MathJax handles math. Chart.js handles graphs. The Python script just prepares the page around them.</p>
-<h2>Deployment</h2>
+<h2 id="section-deployment" class="article-heading"><span class="article-heading-number">4</span><span>Deployment</span></h2>
 <p>Deployment is deliberately plain. The web directory is not special and it does not need to be a Git repository. It is just the folder that receives the built site.</p>
 <p>The deploy script is <code>server-side/deploy-monnickendam.sh</code>. It can be run manually, but the intended use is cron. It clones the GitHub repo into a temporary directory, builds the blog, and syncs the result into:</p>
 <div class="code-block"><div class="code-label">text</div><button class="copy-code" type="button">copy</button><pre><code class="language-text"><span class="code-line"><span class="line-number" aria-hidden="true">1</span><span class="line-content">~/www/monnickendam.ch</span></span></code></pre></div>
@@ -345,7 +355,7 @@
     Script-&gt;&gt;Web: rsync static output
     Script-&gt;&gt;Temp: delete temporary clone</div>
 <p>I like this because the live folder is disposable. If something goes wrong, there are only a few places to look: the repo, the build script, or the deploy script. There should not be some mystery state on the server that only exists because I clicked something months ago.</p>
-<h2>What Happens When Someone Visits</h2>
+<h2 id="section-what-happens-when-someone-visits" class="article-heading"><span class="article-heading-number">5</span><span>What Happens When Someone Visits</span></h2>
 <p>Once the site is deployed, visitors get the boring path:</p>
 <div class="mermaid">flowchart LR
     USER[visitor browser] --&gt; WEB[static web server]
@@ -358,7 +368,7 @@
     CDN --&gt; CHARTJS[Chart.js]</div>
 <p>No Python runs here. The Markdown has already been turned into HTML. The browser gets static files, loads the CSS, and pulls in the few runtime libraries needed for diagrams, math, and charts.</p>
 <p>That keeps hosting simple. A basic static web server is enough.</p>
-<h2>Why Keep It This Small?</h2>
+<h2 id="section-why-keep-it-this-small" class="article-heading"><span class="article-heading-number">6</span><span>Why Keep It This Small?</span></h2>
 <p>A bigger framework would make some things easier. I am not pretending otherwise. But it would also make the site feel less like mine. For a personal portfolio, I care more about being able to understand the whole thing than having every possible feature ready in advance.</p>
 <p>There are tradeoffs. The Markdown parser is small and opinionated. The build script is very specific to this site. If I want a new content feature, I usually have to edit the script. That is fine. The project is narrow enough that those choices are still easy to see.</p>
 <p>The entire site mostly lives in a few files:</p>

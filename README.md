@@ -65,6 +65,17 @@ date: 2026-08-11 19:00
 
 The blog index displays newest posts first, but article numbers are assigned from oldest to newest publication timestamp, so existing articles keep their number when newer posts are added.
 
+Blog articles and CTF write-ups automatically receive a file-info block and a
+linked contents block. File info uses the front matter title, description, date,
+and optional `author` (default: Elie Monnickendam). Missing dates are displayed
+as “Not specified.”
+
+An opening `# Title` stays in the article, without a number or contents entry.
+Use `##` for main sections numbered `1`, `2`, and so on; `###` headings become
+`1.1`, `1.2`, with deeper levels supported through `######`. Contents links and
+heading numbers are generated on rebuild. Articles without sections display
+“No subsections.” in their contents block.
+
 ### Graphs
 
 Use `mermaid` fences for diagrams such as flowcharts, sequence diagrams, state machines, and git graphs.

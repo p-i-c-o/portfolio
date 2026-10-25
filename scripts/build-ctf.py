@@ -13,8 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 BLOG = runpy.run_path(str(ROOT / "scripts/build-blog.py"))
 parse_front_matter = BLOG["parse_front_matter"]
 markdown_to_html = BLOG["markdown_to_html"]
-remove_duplicate_title_heading = BLOG["remove_duplicate_title_heading"]
 page_shell = BLOG["page_shell"]
+article_parts = BLOG["article_parts"]
+file_info = BLOG["file_info"]
 escape = html.escape
 
 
@@ -26,7 +27,7 @@ def read_content(path: Path) -> dict:
         date.fromisoformat(meta["date"])
     if meta.get("draft", "false").lower() not in {"true", "false"}:
         raise ValueError(f"{path}: draft must be true or false")
-    meta["body"] = markdown_to_html(remove_duplicate_title_heading(body, meta["title"]))
+    meta["body"] = markdown_to_html(body)
     return meta
 
 
@@ -82,7 +83,7 @@ def listing(items: list[dict], events: bool = False) -> str:
 def write_page(path: Path, title: str, body: str, depth: int) -> None:
     prefix = "../" * depth
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(page_shell(title, f"<main>\n{body}\n</main>", prefix + "styles.css", prefix + "assets/banner.png", prefix + "index.html"), encoding="utf-8")
+    path.write_text(page_shell(title, f'<main class="ctf-page">\n{body}\n</main>', prefix + "styles.css", prefix + "assets/banner.png", prefix + "index.html"), encoding="utf-8")
 
 
 def panel(breadcrumbs: str, content: str) -> str:
@@ -112,9 +113,16 @@ def build(source: Path = ROOT / "ctf-posts", output: Path = ROOT / "ctf") -> Non
         write_page(output / event["slug"] / "index.html", event["title"], body, 2)
         for challenge in event["challenges"]:
             challenge_title = escape(challenge["title"])
-            body = panel(f'<a href="../../../index.html">home</a> / <a href="../../">ctf</a> / <a href="../">{title}</a> / <span aria-current="page">{challenge_title}</span>', f'''<h1>{challenge_title}</h1>
-{metadata(challenge)}{challenge['body']}
-<p class="ctf-back"><a href="../">← All challenges in {title}</a></p>''')
+            index, content = article_parts(challenge["body"], challenge["title"])
+            info = file_info(challenge["title"], challenge.get("description", ""),
+                             challenge.get("date", ""), challenge.get("author", ""),
+                             f'<a href="../../../index.html">home</a> / <a href="../../">ctf</a> / <a href="../">{title}</a> / <span aria-current="page">{challenge_title}</span>')
+            tags = metadata({key: challenge[key] for key in ("category", "difficulty") if key in challenge})
+            body = info + index + f'''<section class="block">
+<div id="article-title" class="body blog-post" aria-label="Article">
+{tags}{content}
+<p class="ctf-back"><a href="../">← All challenges in {title}</a></p>
+</div></section>'''
             write_page(output / event["slug"] / challenge["slug"] / "index.html", f"{challenge['title']} | {event['title']}", body, 3)
     print(f"Built {len(events)} CTF event(s) and {sum(len(event['challenges']) for event in events)} write-up(s)")
 

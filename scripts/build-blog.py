@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 import shutil
+from html.parser import HTMLParser
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -23,6 +24,7 @@ class Post:
     description: str
     body: str
     html: str
+    author: str = "Elie Monnickendam"
 
 
 @dataclass
@@ -438,7 +440,7 @@ def markdown_to_html(markdown: str) -> str:
             quote_lines.append(line.removeprefix(">").strip())
             continue
 
-        heading = re.match(r"^(#{1,3})\s+(.+)$", line)
+        heading = re.match(r"^(#{1,6})\s+(.+)$", line)
         if heading:
             flush_paragraph(paragraph, output)
             flush_list(list_items, output)
@@ -478,16 +480,118 @@ def markdown_to_html(markdown: str) -> str:
     return "\n".join(output)
 
 
-def remove_duplicate_title_heading(body: str, title: str) -> str:
-    lines = body.splitlines()
-    if not lines:
-        return body
+def article_parts(content: str, title: str = "") -> tuple[str, str]:
+    """Add unique heading anchors and a compact, script-free article outline."""
+    class HeadingText(HTMLParser):
+        def __init__(self) -> None:
+            super().__init__()
+            self.parts: list[str] = []
 
-    first_heading = re.match(r"^#\s+(.+)$", lines[0].strip())
-    if first_heading and first_heading.group(1).strip().lower() == title.strip().lower():
-        return "\n".join(lines[1:]).lstrip()
+        def handle_data(self, data: str) -> None:
+            self.parts.append(data)
 
-    return body
+    headings: list[tuple[int, str, str, str]] = []
+    first_heading = re.search(r"<h([1-6])>", content)
+    starts_with_h1 = first_heading is not None and first_heading.group(1) == "1"
+    counters = [0, 0, 0, 0, 0, 0]
+    used_ids: set[str] = set()
+
+    def anchor_heading(match: re.Match[str]) -> str:
+        level, label = int(match.group(1)), match.group(2)
+        parser = HeadingText()
+        parser.feed(label)
+        heading_text = "".join(parser.parts)
+        base = "section-" + slugify(heading_text)
+        anchor = base
+        suffix = 2
+        while anchor in used_ids:
+            anchor = f"{base}-{suffix}"
+            suffix += 1
+        used_ids.add(anchor)
+
+        # An opening H1 is the document title, not a numbered section.
+        is_title = starts_with_h1 and match.start() == first_heading.start()
+        if is_title:
+            return (
+                f'<h{level} id="{anchor}" class="article-heading">'
+                f'<span>{label}</span></h{level}>'
+            )
+
+        # H2 is section 1, H3 is 1.1, etc. Shift one level when
+        # the document has an H1 title; also support H2-first documents.
+        section_level = max(1, level - 1)
+        for parent in range(section_level - 1):
+            if counters[parent] == 0:
+                counters[parent] = 1
+        counters[section_level - 1] += 1
+        counters[section_level:] = [0] * (6 - section_level)
+        number = ".".join(str(value) for value in counters[:section_level])
+        headings.append((level, anchor, heading_text, number))
+        return (
+            f'<h{level} id="{anchor}" class="article-heading">'
+            f'<span class="article-heading-number">{number}</span>'
+            f'<span>{label}</span></h{level}>'
+        )
+
+    content = re.sub(r"<h([1-6])>(.*?)</h\1>", anchor_heading, content)
+    # Build the outline by actual heading depth, including skipped levels.
+    roots = []
+    stack = []
+    for heading in headings:
+        node = {"heading": heading, "children": []}
+        while stack and stack[-1]["heading"][0] >= heading[0]:
+            stack.pop()
+        if stack:
+            stack[-1]["children"].append(node)
+        else:
+            roots.append(node)
+        stack.append(node)
+
+    number_widths = {
+        level: max(len(heading[3]) for heading in headings if heading[0] == level)
+        for level in {heading[0] for heading in headings}
+    }
+
+    def render_items(nodes: list[dict]) -> str:
+        items = []
+        for node in nodes:
+            level, anchor, text, number = node["heading"]
+            nested = ""
+            if node["children"]:
+                nested = ('<ol class="article-index-subsections">'
+                          + render_items(node["children"]) + "</ol>")
+            items.append(
+                f'<li style="--index-number-width: {number_widths[level]}ch"><a href="#{anchor}">'
+                f'<span class="article-index-number">{number}</span> '
+                f'<span class="article-index-label">{html.escape(text)}</span></a>{nested}</li>'
+            )
+        return "".join(items)
+
+    index = (
+        '<nav class="block article-index" aria-labelledby="article-index-title">'
+        '<h2 class="header" id="article-index-title">Article contents</h2>'
+        '<div class="body">'
+        + ('<ol class="article-index-list">' + render_items(roots) + '</ol>'
+           if roots else '<p class="article-index-empty">No subsections.</p>')
+        + "</div></nav>"
+    )
+    return index, content
+
+
+
+def file_info(title: str, description: str, date: str, author: str, breadcrumbs: str) -> str:
+    """Shared metadata block for blog posts and CTF write-ups."""
+    return f'''<section class="block file-info" aria-label="File info">
+<nav class="header path-header" aria-label="Breadcrumb">{breadcrumbs}</nav>
+<div class="body">
+<dl class="file-info-fields">
+<dt>Title</dt><dd><h1>{html.escape(title)}</h1></dd>
+<dt>Description</dt><dd>{html.escape(description or "Not specified")}</dd>
+<dt>Published</dt><dd>{html.escape(date or "Not specified")}</dd>
+<dt>Author</dt><dd>{html.escape(author or "Elie Monnickendam")}</dd>
+</dl>
+</div>
+</section>'''
 
 
 def page_shell(title: str, body: str, stylesheet: str, banner: str, home: str) -> str:
@@ -783,7 +887,6 @@ def read_posts() -> list[Post]:
         slug = meta.get("slug", slugify(title))
         date = meta.get("date", "")
         description = meta.get("description", "")
-        body = remove_duplicate_title_heading(body, title)
         posts.append(
             Post(
                 title=title,
@@ -792,6 +895,7 @@ def read_posts() -> list[Post]:
                 description=description,
                 body=body,
                 html=markdown_to_html(body),
+                author=meta.get("author", "Elie Monnickendam"),
             )
         )
 
@@ -854,13 +958,14 @@ def build_post(post: Post) -> None:
     post_dir = OUTPUT_DIR / post.slug
     post_dir.mkdir(parents=True, exist_ok=True)
 
-    date = f"<p class=\"blog-date\">{html.escape(post.date)}</p>" if post.date else ""
-    body = f"""    <div class="block">
-        <div class="header path-header"><a href="../../index.html">home</a>/<a href="../">blog</a>/{html.escape(post.slug)}.md</div>
-        <div class="body blog-post">
-          <h1>{html.escape(post.title)}</h1>
-          {date}
-{post.html}
+    index, content = article_parts(post.html, post.title)
+    info = file_info(post.title, post.description, post.date, post.author,
+                     f'<a href="../../index.html">home</a>/<a href="../">blog</a>/{html.escape(post.slug)}.md')
+    body = f"""{info}
+    {index}
+    <div class="block">
+        <div id="article-title" class="body blog-post" aria-label="Article">
+{content}
         </div>
     </div>
     <div class="block comment-account-card">
