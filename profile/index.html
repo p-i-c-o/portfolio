@@ -6,7 +6,8 @@
   <title>Profile | monnickendam.ch</title>
   <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
   <link rel="stylesheet" href="../styles.css?v=comments14">
-  <script defer src="../profile.js?v=1"></script>
+  <script defer src="../comment-api.js?v=1"></script>
+  <script defer src="../profile.js?v=2"></script>
 </head>
 <body>
 <main class="container profile-page">
@@ -22,6 +23,8 @@
     <h2 class="header" id="profile-comments-title">Public comments</h2>
     <div class="body account-card">
       <div class="profile-comments" role="status" aria-live="polite">Loading…</div>
+      <p class="profile-status" role="status" aria-live="polite"></p>
+      <button class="profile-retry retry-button" type="button" hidden>Try again</button>
       <button class="profile-more" type="button" hidden>Load more comments</button>
     </div>
   </section>

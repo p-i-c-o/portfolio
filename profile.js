@@ -7,6 +7,8 @@
   const avatar = page.querySelector('.profile-avatar');
   const list = page.querySelector('.profile-comments');
   const more = page.querySelector('.profile-more');
+  const retry = page.querySelector('.profile-retry');
+  const status = page.querySelector('.profile-status');
   let offset = 0;
 
   function dateLabel(value) {
@@ -36,11 +38,13 @@
     }
     if (reset) { offset = 0; list.replaceChildren(); }
     more.disabled = true;
+    retry.hidden = true;
+    status.textContent = '';
     try {
       const query = new URLSearchParams({ profile: requested, offset: String(offset) });
-      const response = await fetch(`/api/comments.php?${query}`, { headers: { Accept: 'application/json' } });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Could not load profile.');
+      const result = await CommentAPI.request(`/api/comments.php?${query}`, {}, data =>
+        typeof data.username === 'string' && typeof data.created_at === 'string'
+        && typeof data.avatar_seed === 'string' && Array.isArray(data.comments));
       name.textContent = result.username;
       document.title = `${result.username} | monnickendam.ch`;
       meta.textContent = `${result.comment_count} public comments · joined ${dateLabel(result.created_at)}`;
@@ -65,11 +69,13 @@
       offset += result.comments.length;
       more.hidden = !result.has_more;
     } catch (error) {
-      if (reset) list.textContent = error.message;
-      else list.append(document.createTextNode(error.message));
+      status.textContent = error.message;
+      retry.hidden = false;
+      if (reset) more.hidden = true;
     } finally { more.disabled = false; }
   }
 
   more.addEventListener('click', () => load());
+  retry.addEventListener('click', () => load(offset === 0));
   load(true);
 })();

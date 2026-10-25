@@ -967,7 +967,8 @@ def build_index(posts: list[Post]) -> None:
 {chr(10).join(items)}
         </div>
     </div>
-    <script defer src="../blog-account.js?v=1"></script>"""
+    <script defer src="../comment-api.js?v=1"></script>
+    <script defer src="../blog-account.js?v=2"></script>"""
 
     (OUTPUT_DIR / "index.html").write_text(
         page_shell("Blog", body, "../styles.css?v=comments14", "../assets/banner.png", "../index.html"),
@@ -1040,7 +1041,8 @@ def build_post(post: Post) -> None:
             <button class="comments-more" type="button" hidden>Load more comments</button>
         </div>
     </div>
-    <script defer src="../../comments.js?v=14"></script>"""
+    <script defer src="../../comment-api.js?v=1"></script>
+    <script defer src="../../comments.js?v=15"></script>"""
 
     (post_dir / "index.html").write_text(
         page_shell(

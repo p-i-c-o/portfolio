@@ -210,6 +210,14 @@ If the contact workflow changes, update the `WEBHOOK_URL` constant in `contact.j
 
 ## Blog Comments
 
+Account, profile, and comment requests share `comment-api.js`. When the API or
+database is unavailable (including a static local server without PHP), pages
+show an unavailable message and offer a retry instead of exposing response
+parsing errors. Account state is not treated as signed out during an outage;
+saved keys and comment ownership tokens are retained. Writes are never retried
+automatically. Run `node scripts/test-comment-api.cjs` to check these failure
+and recovery paths without a live database.
+
 Article pages include public comments with threaded replies, upvotes and downvotes, sorting by newest or score, reporting, and editing or deleting your comments. Visitors can create an anonymous account with a unique username and a 12-character login key at `/account/`; guest comments use the name “Anonymous commenter.” Account features include reply notifications, comment management, session controls, export, and deletion. Public profiles are available at `/profile/?u=USERNAME`. Comments are published immediately and stored in Hostpoint MariaDB through `api/comments.php`. The PHP endpoint is deployed with the static site; the Markdown blog remains statically generated. See [server-side/README.md](server-side/README.md#blog-comments) for setup.
 
 ## Notes
