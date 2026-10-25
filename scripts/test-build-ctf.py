@@ -51,7 +51,7 @@ class CTFBuildTests(unittest.TestCase):
         self.assertIn('href="first/"', event)
         self.assertIn('href="second/"', event)
         challenge = (self.output / "newer/first/index.html").read_text()
-        self.assertIn('href="../">Newer</a>', challenge)
+        self.assertIn('href="../">newer</a>/<span aria-current="page">first.md</span>', challenge)
         self.assertIn('href="../../../styles.css"', challenge)
         self.assertIn("Encoding · Easy", challenge)
         self.assertIn('class="copy-code"', challenge)

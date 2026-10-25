@@ -579,6 +579,15 @@ def article_parts(content: str, title: str = "") -> tuple[str, str]:
 
 
 
+def breadcrumb_path(parts: list[tuple[str, str | None]]) -> str:
+    """Use compact, escaped file paths for breadcrumbs across the site."""
+    return "/".join(
+        f'<a href="{html.escape(url, quote=True)}">{html.escape(label)}</a>'
+        if url is not None else f'<span aria-current="page">{html.escape(label)}</span>'
+        for label, url in parts
+    )
+
+
 def file_info(title: str, description: str, date: str, author: str, breadcrumbs: str) -> str:
     """Shared metadata block for blog posts and CTF write-ups."""
     return f'''<section class="block file-info" aria-label="File info">
@@ -941,7 +950,7 @@ def build_index(posts: list[Post]) -> None:
         </div>
     </div>
     <div class="block">
-        <div class="header path-header"><a href="../index.html">home</a>/blog</div>
+        <nav class="header path-header" aria-label="Breadcrumb">{breadcrumb_path([("home", "../index.html"), ("blog", None)])}</nav>
         <div class="body blog-list">
 {chr(10).join(items)}
         </div>
@@ -960,7 +969,7 @@ def build_post(post: Post) -> None:
 
     index, content = article_parts(post.html, post.title)
     info = file_info(post.title, post.description, post.date, post.author,
-                     f'<a href="../../index.html">home</a>/<a href="../">blog</a>/{html.escape(post.slug)}.md')
+                     breadcrumb_path([("home", "../../index.html"), ("blog", "../"), (post.slug + ".md", None)]))
     body = f"""{info}
     {index}
     <div class="block">
